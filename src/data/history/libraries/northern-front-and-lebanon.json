@@ -1,0 +1,281 @@
+{
+  "id": "northern-front-and-lebanon",
+  "label": "Northern front and Lebanon campaigns",
+  "scope": "Northern border and Lebanon-focused campaigns that best match the game's existing northern-front map framing and escalation model.",
+  "operations": [
+    {
+      "id": "operation-litani",
+      "name": "Operation Litani",
+      "dateRange": {
+        "start": "1978-03-14",
+        "end": "1978-03-21"
+      },
+      "theater": "South Lebanon up to the Litani River",
+      "operationTypes": [
+        "cross-border offensive",
+        "counter-infiltration campaign",
+        "northern front maneuver"
+      ],
+      "adversaries": [
+        "PLO formations in Lebanon"
+      ],
+      "summary": "A cross-border operation in south Lebanon launched after a deadly coastal attack, intended to push hostile armed groups away from the Israeli border.",
+      "historicalDynamics": [
+        "northern villages were vulnerable to infiltration and shelling",
+        "buffer depth was treated as a security objective",
+        "short campaigns could still create long-term border commitments"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Buffer Zone",
+        "defenseRegionIds": [
+          "north"
+        ],
+        "pressureStyle": [
+          "border infiltration",
+          "population-center defense"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "army",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "plo-lebanon"
+        ],
+        "candidateObjectives": [
+          "reduce infiltration pressure on northern towns",
+          "build a security buffer without stalling into attrition",
+          "hold border communities while pushing hostile launch sites back"
+        ],
+        "mechanicIdeas": [
+          "border raid events that bypass front lines unless buffer sectors are held",
+          "security-zone control that reduces future spawn frequency",
+          "civilian evacuation meter tied to northern morale"
+        ]
+      }
+    },
+    {
+      "id": "operation-peace-for-galilee",
+      "name": "Operation Peace for Galilee",
+      "dateRange": {
+        "start": "1982-06-06",
+        "end": "1982-09-29"
+      },
+      "theater": "Lebanon from the border to Beirut",
+      "operationTypes": [
+        "major invasion",
+        "multi-phase campaign",
+        "urban warfare"
+      ],
+      "adversaries": [
+        "PLO formations",
+        "Syrian forces",
+        "Lebanese militias"
+      ],
+      "summary": "A large-scale Lebanon campaign that began as a northern security operation and expanded into a broader and more politically fraught war.",
+      "historicalDynamics": [
+        "mission expansion changed the scale and cost of the conflict",
+        "urban fighting created a slower and more punishing tempo",
+        "initial border-security logic did not capture the full campaign burden"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Mission Creep",
+        "defenseRegionIds": [
+          "north",
+          "central"
+        ],
+        "pressureStyle": [
+          "multi-front escalation",
+          "urban attrition"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "army",
+          "economy",
+          "morale",
+          "population"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "plo-lebanon",
+          "syria-1982"
+        ],
+        "candidateObjectives": [
+          "decide whether to stop at a limited objective or push deeper",
+          "manage rising costs as urban warfare expands",
+          "protect northern cities while operating far from home bases"
+        ],
+        "mechanicIdeas": [
+          "optional objectives that increase reward but raise escalation",
+          "occupation fatigue reducing income over time",
+          "mission-branching between limited and expanded end states"
+        ]
+      }
+    },
+    {
+      "id": "operation-accountability",
+      "name": "Operation Accountability",
+      "dateRange": {
+        "start": "1993-07-25",
+        "end": "1993-07-31"
+      },
+      "theater": "Southern Lebanon and northern Israel",
+      "operationTypes": [
+        "air-artillery campaign",
+        "deterrence operation",
+        "rocket suppression"
+      ],
+      "adversaries": [
+        "Hezbollah"
+      ],
+      "summary": "A week-long campaign aimed at suppressing Hezbollah attacks and restoring deterrence on the northern border.",
+      "historicalDynamics": [
+        "rocket and artillery pressure created short warning cycles",
+        "political goals centered on deterrence more than occupation",
+        "civilian displacement shaped both sides of the campaign"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Northern Warning Sirens",
+        "defenseRegionIds": [
+          "north",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "population-center defense"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "morale",
+          "population",
+          "army"
+        ],
+        "existingFactionIds": [
+          "hezbollah-lebanon"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "limit rocket damage to northern population centers",
+          "build deterrence score without triggering unsustainable escalation",
+          "keep shelters and emergency services effective under repeated attacks"
+        ],
+        "mechanicIdeas": [
+          "deterrence score that modifies next-wave intensity",
+          "civil-defense purchases that specifically protect northern cities",
+          "rocket launch cells that relocate unless pinned quickly"
+        ]
+      }
+    },
+    {
+      "id": "operation-grapes-of-wrath",
+      "name": "Operation Grapes of Wrath",
+      "dateRange": {
+        "start": "1996-04-11",
+        "end": "1996-04-27"
+      },
+      "theater": "Southern Lebanon and northern Israel",
+      "operationTypes": [
+        "air-artillery campaign",
+        "deterrence operation",
+        "northern front escalation"
+      ],
+      "adversaries": [
+        "Hezbollah"
+      ],
+      "summary": "A sustained northern campaign against Hezbollah marked by heavy bombardment, large-scale civilian disruption, and a ceasefire framework focused on limiting attacks on civilians.",
+      "historicalDynamics": [
+        "northern civilian pressure was central to strategic decision-making",
+        "the campaign mixed military pressure with political signaling",
+        "rapid tactical actions had outsized strategic consequences"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Escalation Ladder",
+        "defenseRegionIds": [
+          "north",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "multi-front escalation"
+        ],
+        "pacingModel": "sustained attrition",
+        "resourcePressure": [
+          "morale",
+          "economy",
+          "population"
+        ],
+        "existingFactionIds": [
+          "hezbollah-lebanon"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "protect northern towns through a long barrage cycle",
+          "balance military retaliation with restraint thresholds",
+          "sustain economy and morale while waves remain unpredictable"
+        ],
+        "mechanicIdeas": [
+          "escalation meter that punishes overuse of the strongest response tools",
+          "ceasefire threshold that can end the level early if conditions hold",
+          "northern economy penalties that stack with every successful rocket hit"
+        ]
+      }
+    },
+    {
+      "id": "second-lebanon-war",
+      "name": "Second Lebanon War",
+      "dateRange": {
+        "start": "2006-07-12",
+        "end": "2006-08-14"
+      },
+      "theater": "Northern Israel and Lebanon",
+      "operationTypes": [
+        "air campaign",
+        "ground incursion",
+        "rocket-war escalation"
+      ],
+      "adversaries": [
+        "Hezbollah"
+      ],
+      "summary": "A month-long war on the northern front marked by mass rocket fire into Israel, air operations, and contested ground actions in Lebanon.",
+      "historicalDynamics": [
+        "large rocket salvos stressed civilian resilience and interception capacity",
+        "air power alone could not fully remove dispersed launch threats",
+        "northern daily life became part of the strategic battlespace"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Northern Barrage",
+        "defenseRegionIds": [
+          "north",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "multi-front escalation",
+          "population-center defense"
+        ],
+        "pacingModel": "sustained attrition",
+        "resourcePressure": [
+          "morale",
+          "population",
+          "army",
+          "economy"
+        ],
+        "existingFactionIds": [
+          "hezbollah-lebanon"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "maintain northern city functionality during prolonged rocket fire",
+          "use layered defenses to absorb varied salvo sizes",
+          "decide when to spend on civil resilience versus offensive suppression"
+        ],
+        "mechanicIdeas": [
+          "long-duration barrage waves with limited recovery windows",
+          "city resilience stat that affects economy and morale losses",
+          "hybrid level structure combining interception and cross-border pressure"
+        ]
+      }
+    }
+  ]
+}

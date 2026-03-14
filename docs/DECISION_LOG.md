@@ -44,7 +44,9 @@ This file is a compact "what is true now" reference.
 3. Persistence policy: browser `localStorage` only (when persistence is used).
 4. Map assets must remain legally redistributable and attributed.
 5. Gameplay config is now data-driven from JSON under `src/data/`.
-6. Runtime architecture is modularized with:
+6. Historical operations research for future levels is stored in structured JSON under `src/data/history/`.
+7. Each historical entry tracks map-region fit, resource pressure, and faction/data gaps before implementation.
+8. Runtime architecture is modularized with:
    - `MapSystem`
    - `WaveSystem`
    - `ResourceSystem`

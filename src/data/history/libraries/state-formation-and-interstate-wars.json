@@ -1,0 +1,387 @@
+{
+  "id": "state-formation-and-interstate-wars",
+  "label": "State formation and interstate wars",
+  "scope": "Curated major operations from the 1948 war through the 1973 counteroffensive period that can inspire large-scale campaign levels.",
+  "operations": [
+    {
+      "id": "operation-nachshon",
+      "name": "Operation Nachshon",
+      "dateRange": {
+        "start": "1948-04-05",
+        "end": "1948-04-20"
+      },
+      "theater": "Jerusalem corridor",
+      "operationTypes": [
+        "ground offensive",
+        "convoy relief",
+        "supply corridor reopening"
+      ],
+      "adversaries": [
+        "Arab Liberation Army",
+        "local Arab forces"
+      ],
+      "summary": "A Haganah offensive intended to reopen the road to Jerusalem during the 1948 war and break the siege pressure on the city.",
+      "historicalDynamics": [
+        "road control decided survival",
+        "convoys needed protection across choke points",
+        "limited reserves had to be shifted quickly"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Road to Jerusalem",
+        "defenseRegionIds": [
+          "central",
+          "west-bank"
+        ],
+        "pressureStyle": [
+          "supply corridor protection",
+          "maneuver breakthrough"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "army",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "1948-arab-liberation-army"
+        ],
+        "candidateObjectives": [
+          "hold corridor nodes long enough for relief convoys to pass",
+          "spend reserves to reopen blocked route segments",
+          "avoid morale collapse from repeated convoy losses"
+        ],
+        "mechanicIdeas": [
+          "escort timed convoy waves between map nodes",
+          "temporary road-control bonuses that can flip under pressure",
+          "reinforcement cards unlocked by restoring route continuity"
+        ]
+      }
+    },
+    {
+      "id": "operation-dani",
+      "name": "Operation Dani",
+      "dateRange": {
+        "start": "1948-07-09",
+        "end": "1948-07-18"
+      },
+      "theater": "Central front around Lydda, Ramle, and approaches to Jerusalem",
+      "operationTypes": [
+        "ground offensive",
+        "air-ground coordination",
+        "corridor expansion"
+      ],
+      "adversaries": [
+        "Arab Legion",
+        "local Arab forces"
+      ],
+      "summary": "An operation on the central front aimed at widening control around the road network leading toward Jerusalem and reducing pressure in the center of the country.",
+      "historicalDynamics": [
+        "central plains and inland routes were tightly linked",
+        "rapid territorial shifts affected civilian movement and morale",
+        "command had to decide between momentum and consolidation"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Central Corridor Expansion",
+        "defenseRegionIds": [
+          "central",
+          "west-bank"
+        ],
+        "pressureStyle": [
+          "population-center defense",
+          "maneuver breakthrough"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "army",
+          "population",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "arab-legion-1948"
+        ],
+        "candidateObjectives": [
+          "secure central hubs without overextending",
+          "protect routes into Jerusalem while urban pressure rises",
+          "trade mobility against static defense investments"
+        ],
+        "mechanicIdeas": [
+          "capture-and-hold sectors that buff nearby routes",
+          "civilian pressure events that reduce income if unresolved",
+          "momentum meter that rewards quick successive wins"
+        ]
+      }
+    },
+    {
+      "id": "operation-yoav",
+      "name": "Operation Yoav",
+      "dateRange": {
+        "start": "1948-10-15",
+        "end": "1948-10-22"
+      },
+      "theater": "Northern Negev and Gaza approaches",
+      "operationTypes": [
+        "ground offensive",
+        "breakout operation",
+        "southern front campaign"
+      ],
+      "adversaries": [
+        "Egyptian Army"
+      ],
+      "summary": "A southern offensive during the 1948 war intended to break the Egyptian hold on the northern Negev and reopen access to isolated areas.",
+      "historicalDynamics": [
+        "desert routes and road junctions mattered more than dense urban control",
+        "southern isolation created pressure on logistics and morale",
+        "frontline breakthroughs changed strategic depth quickly"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Negev Breakthrough",
+        "defenseRegionIds": [
+          "south",
+          "gaza-border"
+        ],
+        "pressureStyle": [
+          "border infiltration",
+          "maneuver breakthrough"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "army",
+          "economy",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "egypt-1948"
+        ],
+        "candidateObjectives": [
+          "reconnect isolated southern sectors",
+          "control key desert junctions before reinforcements arrive",
+          "balance aggressive pushes with supply exhaustion"
+        ],
+        "mechanicIdeas": [
+          "long supply lines that weaken units when overstretched",
+          "desert visibility bonuses for recon purchases",
+          "junction capture mechanic that shortens enemy spawn paths"
+        ]
+      }
+    },
+    {
+      "id": "operation-horev",
+      "name": "Operation Horev",
+      "dateRange": {
+        "start": "1948-12-22",
+        "end": "1949-01-07"
+      },
+      "theater": "Southern desert front and Sinai approaches",
+      "operationTypes": [
+        "encirclement campaign",
+        "ground maneuver",
+        "desert warfare"
+      ],
+      "adversaries": [
+        "Egyptian Army"
+      ],
+      "summary": "A late-war operation meant to drive Egyptian forces from the Negev and improve Israel's bargaining position before armistice arrangements.",
+      "historicalDynamics": [
+        "desert maneuver and encirclement mattered more than city-by-city fighting",
+        "weather, distance, and logistics amplified attrition",
+        "operational success had immediate political effects"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Winter in the Negev",
+        "defenseRegionIds": [
+          "south"
+        ],
+        "pressureStyle": [
+          "maneuver breakthrough",
+          "urban attrition"
+        ],
+        "pacingModel": "sustained attrition",
+        "resourcePressure": [
+          "army",
+          "economy"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "egypt-1948"
+        ],
+        "candidateObjectives": [
+          "survive a long southern campaign without supply collapse",
+          "encircle high-value formations rather than chase every incursion",
+          "convert battlefield momentum into ceasefire advantage"
+        ],
+        "mechanicIdeas": [
+          "supply depots that determine reinforcement quality",
+          "weather turns that alter mobility and air support",
+          "armistice score that rewards territorial continuity"
+        ]
+      }
+    },
+    {
+      "id": "operation-kadesh",
+      "name": "Operation Kadesh",
+      "dateRange": {
+        "start": "1956-10-29",
+        "end": "1956-11-05"
+      },
+      "theater": "Sinai Peninsula",
+      "operationTypes": [
+        "combined arms offensive",
+        "airborne insertion",
+        "desert maneuver"
+      ],
+      "adversaries": [
+        "Egypt"
+      ],
+      "summary": "Israel's Sinai campaign during the Suez Crisis emphasized speed, airborne moves, and deep maneuver through open desert terrain.",
+      "historicalDynamics": [
+        "tempo and surprise created operational openings",
+        "desert maneuver rewarded mobility over static defense",
+        "international timing pressure limited campaign length"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Dash Across Sinai",
+        "defenseRegionIds": [
+          "south"
+        ],
+        "pressureStyle": [
+          "maneuver breakthrough",
+          "deep-strike timing"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "army",
+          "money",
+          "economy"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "egypt-1956"
+        ],
+        "candidateObjectives": [
+          "seize distant objectives before diplomatic pressure ends the mission",
+          "use high-mobility units to avoid being fixed in place",
+          "keep logistics alive across a widening desert front"
+        ],
+        "mechanicIdeas": [
+          "turn-limited campaign clock",
+          "forward airstrip unlocks for faster deployments",
+          "mobility bonuses that decay when roads are cut"
+        ]
+      }
+    },
+    {
+      "id": "operation-focus",
+      "name": "Operation Focus",
+      "dateRange": {
+        "start": "1967-06-05",
+        "end": "1967-06-05"
+      },
+      "theater": "Egyptian, Syrian, and Jordanian airfields",
+      "operationTypes": [
+        "preemptive airstrike",
+        "air superiority campaign",
+        "strategic suppression"
+      ],
+      "adversaries": [
+        "Egypt",
+        "Syria",
+        "Jordan"
+      ],
+      "summary": "The opening air offensive of the Six-Day War sought to destroy opposing air power on the ground and create rapid air superiority.",
+      "historicalDynamics": [
+        "timing and surprise were decisive",
+        "success dramatically changed all following fronts",
+        "the opening strike determined campaign tempo"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "First Strike Window",
+        "defenseRegionIds": [
+          "north",
+          "central",
+          "south"
+        ],
+        "pressureStyle": [
+          "air superiority race",
+          "deep-strike timing"
+        ],
+        "pacingModel": "single decisive strike",
+        "resourcePressure": [
+          "army",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "egypt-1967",
+          "syria-1967",
+          "jordan-1967"
+        ],
+        "candidateObjectives": [
+          "gain a temporary campaign-wide advantage by winning an opening strike contest",
+          "commit scarce air power to the right targets within a short launch window",
+          "accept risk on one front to stabilize another"
+        ],
+        "mechanicIdeas": [
+          "pre-battle planning phase that buffs later waves",
+          "target priority system with incomplete intelligence",
+          "campaign modifier that changes spawn density after mission outcome"
+        ]
+      }
+    },
+    {
+      "id": "operation-abiray-lev",
+      "name": "Operation Abiray-Lev",
+      "dateRange": {
+        "start": "1973-10-15",
+        "end": "1973-10-24"
+      },
+      "theater": "Suez Canal crossing during the Yom Kippur War",
+      "operationTypes": [
+        "counteroffensive",
+        "crossing operation",
+        "combined arms maneuver"
+      ],
+      "adversaries": [
+        "Egypt"
+      ],
+      "summary": "A mid-war Israeli counteroffensive that crossed the Suez Canal and sought to reverse battlefield momentum after the initial surprise of the Yom Kippur War.",
+      "historicalDynamics": [
+        "opening setbacks forced rapid adaptation",
+        "bridging and crossing points became strategic bottlenecks",
+        "counterattack timing mattered as much as force size"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Crossing the Canal",
+        "defenseRegionIds": [
+          "south",
+          "central"
+        ],
+        "pressureStyle": [
+          "maneuver breakthrough",
+          "multi-front escalation"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "army",
+          "morale",
+          "economy"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "egypt-1973"
+        ],
+        "candidateObjectives": [
+          "recover from a disadvantaged opening state",
+          "protect bridging assets long enough to reverse momentum",
+          "manage reserve mobilization under heavy pressure"
+        ],
+        "mechanicIdeas": [
+          "battlefield state that starts with debuffs and improves through objectives",
+          "bridgehead zones that unlock new lanes when held",
+          "reserve mobilization mechanic that costs economy to restore army strength"
+        ]
+      }
+    }
+  ]
+}

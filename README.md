@@ -14,6 +14,7 @@ Current implementation includes:
 - resource HUD (money, morale, population, army, economy)
 - category-based purchase menu (air defense, air force, ground troops)
 - debug menu with instant wave launch
+- structured historical operations research under `src/data/history/` for future level design
 
 ## Run locally
 
@@ -42,6 +43,7 @@ Expected URL format:
 - [Project blueprint](./docs/PROJECT_BLUEPRINT.md)
 - [Roadmap](./docs/ROADMAP.md)
 - [Decision log](./docs/DECISION_LOG.md)
+- [Historical operations library](./docs/HISTORICAL_OPERATIONS_LIBRARY.md)
 - [Architecture Decision Records](./docs/adr/)
 - [Agent Playbook (mandatory rules)](./docs/AGENT_PLAYBOOK.md)
 

@@ -68,6 +68,7 @@
 
 - Externalize current hardcoded gameplay constants to data files.
 - Add more unit archetypes and faction-specific behaviors.
+- Convert curated historical operations from `src/data/history/` into level-specific configs.
 - Tune wave difficulty and economy progression.
 
 ### Exit criteria

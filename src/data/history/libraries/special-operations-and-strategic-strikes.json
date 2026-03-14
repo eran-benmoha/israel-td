@@ -1,0 +1,171 @@
+{
+  "id": "special-operations-and-strategic-strikes",
+  "label": "Special operations and strategic strikes",
+  "scope": "Operations suited to short, high-intensity scenario design where intelligence, timing, and surprise matter more than wave endurance.",
+  "operations": [
+    {
+      "id": "operation-entebbe",
+      "name": "Operation Entebbe",
+      "alternateNames": [
+        "Operation Thunderbolt",
+        "Operation Yonatan"
+      ],
+      "dateRange": {
+        "start": "1976-07-03",
+        "end": "1976-07-04"
+      },
+      "theater": "Entebbe Airport, Uganda",
+      "operationTypes": [
+        "hostage rescue",
+        "special operations raid",
+        "long-range expedition"
+      ],
+      "adversaries": [
+        "aircraft hijackers",
+        "Ugandan supporting forces"
+      ],
+      "summary": "A long-range special operations raid that rescued hostages held at Entebbe Airport, relying on intelligence, surprise, and precise execution.",
+      "historicalDynamics": [
+        "mission success depended on intelligence quality",
+        "timing failures could collapse the entire raid",
+        "distance and isolation limited reinforcements"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Night Rescue at Entebbe",
+        "defenseRegionIds": [
+          "central"
+        ],
+        "pressureStyle": [
+          "hostage rescue sprint",
+          "deep-strike timing"
+        ],
+        "pacingModel": "time-critical rescue",
+        "resourcePressure": [
+          "army",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "hijacker-cell",
+          "uganda-1976"
+        ],
+        "candidateObjectives": [
+          "secure hostages before alert level maxes out",
+          "identify the correct objective room using intelligence clues",
+          "minimize collateral losses while racing the clock"
+        ],
+        "mechanicIdeas": [
+          "fog-of-war intelligence cards",
+          "alarm meter that spawns stronger defenders if mistakes stack",
+          "extraction phase after rescue rather than immediate victory"
+        ]
+      }
+    },
+    {
+      "id": "operation-opera",
+      "name": "Operation Opera",
+      "dateRange": {
+        "start": "1981-06-07",
+        "end": "1981-06-07"
+      },
+      "theater": "Osirak reactor complex, Iraq",
+      "operationTypes": [
+        "long-range airstrike",
+        "strategic strike",
+        "one-wave precision mission"
+      ],
+      "adversaries": [
+        "Iraq"
+      ],
+      "summary": "A long-range Israeli airstrike against Iraq's Osirak reactor, built around a narrow timing window and careful route planning.",
+      "historicalDynamics": [
+        "single-mission success mattered more than sustained combat",
+        "route planning and fuel constraints shaped the operation",
+        "surprise had to hold until weapons release"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Long Reach",
+        "defenseRegionIds": [
+          "central",
+          "south"
+        ],
+        "pressureStyle": [
+          "deep-strike timing",
+          "air superiority race"
+        ],
+        "pacingModel": "single decisive strike",
+        "resourcePressure": [
+          "army",
+          "money"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "iraq-1981"
+        ],
+        "candidateObjectives": [
+          "choose a strike package that can survive a single pass",
+          "cross long distance without exhausting mission resources",
+          "trade stealth against payload strength"
+        ],
+        "mechanicIdeas": [
+          "route-selection layer before launch",
+          "fuel budget represented as a hard mission resource",
+          "one-pass damage scoring rather than endless attrition"
+        ]
+      }
+    },
+    {
+      "id": "operation-orchard",
+      "name": "Operation Orchard",
+      "dateRange": {
+        "start": "2007-09-06",
+        "end": "2007-09-06"
+      },
+      "theater": "Deir ez-Zor region, Syria",
+      "operationTypes": [
+        "airstrike",
+        "strategic suppression",
+        "limited-duration covert mission"
+      ],
+      "adversaries": [
+        "Syria"
+      ],
+      "summary": "A covert Israeli airstrike in Syria associated with a suspected nuclear facility, remembered for secrecy, deception, and precision.",
+      "historicalDynamics": [
+        "limited visibility and political ambiguity framed the mission",
+        "covert success depended on remaining below escalation thresholds",
+        "the strike was strategically significant despite short duration"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Silent Window",
+        "defenseRegionIds": [
+          "north",
+          "central"
+        ],
+        "pressureStyle": [
+          "deep-strike timing",
+          "air superiority race"
+        ],
+        "pacingModel": "single decisive strike",
+        "resourcePressure": [
+          "army",
+          "morale"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "syria-2007"
+        ],
+        "candidateObjectives": [
+          "complete a precise mission while keeping escalation hidden",
+          "avoid detection thresholds that trigger a wider confrontation",
+          "favor intelligence and preparation over brute force"
+        ],
+        "mechanicIdeas": [
+          "stealth score that affects post-mission fallout",
+          "electronic warfare buffs with limited charges",
+          "campaign branch outcome based on whether the strike stays covert"
+        ]
+      }
+    }
+  ]
+}

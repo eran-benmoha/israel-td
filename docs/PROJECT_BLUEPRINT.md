@@ -46,6 +46,8 @@ Why this stack:
 │  │  └─ config/       (target extraction from scene)
 │  ├─ ui/
 │  └─ data/
+│     ├─ levels/
+│     └─ history/      (historical research library for future level seeds)
 ├─ index.html
 └─ package.json
 ```
@@ -78,8 +80,10 @@ Balance and content should move to JSON files:
 
 - `units.json`
 - `factions.json`
-- `waves/default.json`
-- `map/middle-east-relief.json`
+- `levels/*.json`
+- `history/index.json`
+- `history/libraries/*.json`
+- `map-view.json`
 
 This reduces code churn while tuning.
 
@@ -118,6 +122,7 @@ Current approach:
    - explicit lose/win conditions
 4. **Content expansion** 🚧
    - deeper faction behavior and content data externalization
+   - historical operation libraries for future level seeds
 5. **Release hardening** 🚧
    - tests, optimization, stronger architecture modularization
 

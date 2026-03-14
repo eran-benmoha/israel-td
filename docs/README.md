@@ -15,6 +15,7 @@ This folder is the source of truth for product and technical decisions.
 - [Project Blueprint](./PROJECT_BLUEPRINT.md) - high-level build strategy.
 - [Roadmap](./ROADMAP.md) - phased delivery plan.
 - [Decision Log](./DECISION_LOG.md) - concise snapshot of implemented choices.
+- [Historical Operations Library](./HISTORICAL_OPERATIONS_LIBRARY.md) - structured research for future level design.
 - [Agent Playbook](./AGENT_PLAYBOOK.md) - mandatory implementation rules and guardrails.
 - [ADRs](./adr/) - architecture/design decisions and rationale.
 
@@ -22,7 +23,7 @@ This folder is the source of truth for product and technical decisions.
 
 We use ADRs (Architecture Decision Records):
 
-1. Open a new file in `docs/adr/` with the next number (`0012-...`, etc.).
+1. Open a new file in `docs/adr/` with the next number (`0014-...`, etc.).
 2. Include: context, decision, consequences, alternatives.
 3. Never rewrite history in older ADRs; supersede with a new ADR.
 
@@ -41,3 +42,4 @@ We use ADRs (Architecture Decision Records):
 11. Data-driven level/faction/unit/map configs stored in JSON files.
 12. Modular system architecture with event bus + shared state layer.
 13. GitHub Actions deployment to GitHub Pages.
+14. Historical operations research is stored in structured JSON libraries under `src/data/history/`.

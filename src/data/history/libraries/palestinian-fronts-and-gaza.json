@@ -1,0 +1,292 @@
+{
+  "id": "palestinian-fronts-and-gaza",
+  "label": "West Bank and Gaza campaigns",
+  "scope": "Operations most directly connected to the game's current southern and urban defense framing, especially rocket pressure, tunnel threats, and city protection.",
+  "operations": [
+    {
+      "id": "operation-defensive-shield",
+      "name": "Operation Defensive Shield",
+      "dateRange": {
+        "start": "2002-03-29",
+        "end": "2002-05-10"
+      },
+      "theater": "West Bank cities",
+      "operationTypes": [
+        "counterterror campaign",
+        "urban raids",
+        "multi-city operation"
+      ],
+      "adversaries": [
+        "Palestinian militant networks"
+      ],
+      "summary": "A major Israeli operation in the West Bank during the Second Intifada focused on dismantling militant infrastructure across multiple urban centers.",
+      "historicalDynamics": [
+        "urban operations were intelligence-heavy and manpower-intensive",
+        "multiple cities had to be addressed in sequence without losing the initiative",
+        "security pressure and civilian disruption were tightly linked"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "City by City",
+        "defenseRegionIds": [
+          "west-bank",
+          "central"
+        ],
+        "pressureStyle": [
+          "urban attrition",
+          "border infiltration"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "army",
+          "morale",
+          "economy"
+        ],
+        "existingFactionIds": [],
+        "needsNewFactionData": [
+          "west-bank-militant-network"
+        ],
+        "candidateObjectives": [
+          "clear multiple threat hubs before attacks cascade into the center",
+          "use intelligence upgrades to reduce ambush risk",
+          "hold public morale while the campaign stretches across several cities"
+        ],
+        "mechanicIdeas": [
+          "linked city sectors where unfinished threats spill into neighboring zones",
+          "intel spending that reveals hidden threat nodes",
+          "fatigue mechanic that weakens repeated raids without recovery"
+        ]
+      }
+    },
+    {
+      "id": "operation-cast-lead",
+      "name": "Operation Cast Lead",
+      "dateRange": {
+        "start": "2008-12-27",
+        "end": "2009-01-18"
+      },
+      "theater": "Gaza Strip and southern Israel",
+      "operationTypes": [
+        "air-ground campaign",
+        "rocket suppression",
+        "urban combat"
+      ],
+      "adversaries": [
+        "Hamas",
+        "other Gaza militant groups"
+      ],
+      "summary": "A Gaza campaign built around reducing rocket fire into southern Israel through airstrikes followed by ground operations.",
+      "historicalDynamics": [
+        "southern towns faced repeated short-warning attacks",
+        "airpower opened the campaign but did not remove all launch capability",
+        "urban density complicated sustained operations"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Southern Barrage",
+        "defenseRegionIds": [
+          "gaza-border",
+          "south",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "population-center defense",
+          "urban attrition"
+        ],
+        "pacingModel": "multi-phase campaign",
+        "resourcePressure": [
+          "morale",
+          "population",
+          "army"
+        ],
+        "existingFactionIds": [
+          "hamas-gaza"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "protect southern cities during an opening rocket wave surge",
+          "choose when to shift from defense-only to suppression-oriented play",
+          "avoid exhausting morale during a long urban-heavy phase"
+        ],
+        "mechanicIdeas": [
+          "opening salvo phase followed by a ground-pressure modifier",
+          "southern shelter network upgrades that reduce civilian loss",
+          "urban density penalties that weaken the strongest offensive options"
+        ]
+      }
+    },
+    {
+      "id": "operation-pillar-of-defense",
+      "name": "Operation Pillar of Defense",
+      "dateRange": {
+        "start": "2012-11-14",
+        "end": "2012-11-21"
+      },
+      "theater": "Gaza Strip and central/southern Israel",
+      "operationTypes": [
+        "air campaign",
+        "rocket-defense contest",
+        "short escalation cycle"
+      ],
+      "adversaries": [
+        "Hamas",
+        "other Gaza militant groups"
+      ],
+      "summary": "A short Gaza conflict centered on airstrikes and rocket exchanges, including pressure on more distant Israeli population centers than earlier rounds.",
+      "historicalDynamics": [
+        "short campaigns could still widen the threatened map footprint",
+        "salvos into central Israel changed the sense of national reach",
+        "brief escalation windows rewarded rapid readiness"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Extended Range",
+        "defenseRegionIds": [
+          "gaza-border",
+          "south",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "multi-front escalation"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "morale",
+          "money",
+          "army"
+        ],
+        "existingFactionIds": [
+          "hamas-gaza"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "adapt quickly when central cities enter the threat envelope",
+          "prioritize long-range threats without neglecting border towns",
+          "win a short campaign before resource recovery matters"
+        ],
+        "mechanicIdeas": [
+          "range-class escalation where later waves unlock deeper targets",
+          "ready-reserve purchases that are efficient only early in the level",
+          "rapid-response score bonus for intercepting first-contact salvos"
+        ]
+      }
+    },
+    {
+      "id": "operation-protective-edge",
+      "name": "Operation Protective Edge",
+      "dateRange": {
+        "start": "2014-07-08",
+        "end": "2014-08-26"
+      },
+      "theater": "Gaza Strip and Israel's southern and central regions",
+      "operationTypes": [
+        "air-ground campaign",
+        "tunnel-focused operation",
+        "prolonged rocket war"
+      ],
+      "adversaries": [
+        "Hamas",
+        "other Gaza militant groups"
+      ],
+      "summary": "A prolonged Gaza conflict combining sustained rocket fire with Israeli efforts to target tunnels and other militant infrastructure.",
+      "historicalDynamics": [
+        "tunnel threats created a different kind of border pressure than rockets alone",
+        "duration increased the importance of morale and economy management",
+        "the battle rhythm alternated between barrages and localized ground objectives"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Below the Border",
+        "defenseRegionIds": [
+          "gaza-border",
+          "south",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "tunnel and subterranean threat",
+          "population-center defense"
+        ],
+        "pacingModel": "sustained attrition",
+        "resourcePressure": [
+          "morale",
+          "economy",
+          "population",
+          "army"
+        ],
+        "existingFactionIds": [
+          "hamas-gaza"
+        ],
+        "needsNewFactionData": [],
+        "candidateObjectives": [
+          "defend southern communities from both rockets and infiltration routes",
+          "spend limited army capacity on tunnel detection versus interceptors",
+          "survive a long conflict without collapsing the home front"
+        ],
+        "mechanicIdeas": [
+          "hidden tunnel nodes that periodically trigger border breach events",
+          "dual-threat waves mixing rockets and infiltration alerts",
+          "fatigue penalties that intensify if the level drags on too long"
+        ]
+      }
+    },
+    {
+      "id": "operation-guardian-of-the-walls",
+      "name": "Operation Guardian of the Walls",
+      "dateRange": {
+        "start": "2021-05-10",
+        "end": "2021-05-21"
+      },
+      "theater": "Gaza Strip and multiple Israeli cities",
+      "operationTypes": [
+        "air campaign",
+        "rocket-defense contest",
+        "multi-city home-front pressure"
+      ],
+      "adversaries": [
+        "Hamas",
+        "Palestinian Islamic Jihad",
+        "other Gaza militant groups"
+      ],
+      "summary": "An eleven-day conflict featuring large rocket salvos, heavy pressure on multiple Israeli cities, and a strong home-front resilience dimension.",
+      "historicalDynamics": [
+        "large salvo size stressed interception capacity",
+        "pressure extended across several population centers in quick succession",
+        "home-front disruption became a core gameplay analogue"
+      ],
+      "gameHooks": {
+        "candidateLevelName": "Salvo Saturation",
+        "defenseRegionIds": [
+          "gaza-border",
+          "south",
+          "central"
+        ],
+        "pressureStyle": [
+          "counter-rocket suppression",
+          "multi-front escalation",
+          "population-center defense"
+        ],
+        "pacingModel": "short intense burst",
+        "resourcePressure": [
+          "morale",
+          "population",
+          "money"
+        ],
+        "existingFactionIds": [
+          "hamas-gaza"
+        ],
+        "needsNewFactionData": [
+          "palestinian-islamic-jihad"
+        ],
+        "candidateObjectives": [
+          "prevent interceptor saturation during heavy salvo spikes",
+          "keep major cities functioning while under repeated alarm cycles",
+          "use flexible defense layering instead of relying on one system"
+        ],
+        "mechanicIdeas": [
+          "salvo saturation mechanic that punishes over-concentration of defenses",
+          "city panic meter affected by near-simultaneous alarms",
+          "temporary reserve interceptors with limited recharge"
+        ]
+      }
+    }
+  ]
+}

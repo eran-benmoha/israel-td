@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "purpose": "Curated historical operations research for future level design. This library is descriptive, not exhaustive, and is meant to translate broad historical dynamics into abstracted game scenarios.",
+  "librarySchemaVersion": 1,
+  "sharedGameAxes": {
+    "defenseRegionIds": [
+      "north",
+      "central",
+      "south",
+      "gaza-border",
+      "west-bank"
+    ],
+    "pressureStyles": [
+      "air superiority race",
+      "border infiltration",
+      "counter-rocket suppression",
+      "deep-strike timing",
+      "hostage rescue sprint",
+      "maneuver breakthrough",
+      "multi-front escalation",
+      "population-center defense",
+      "supply corridor protection",
+      "tunnel and subterranean threat",
+      "urban attrition"
+    ],
+    "resourcePressures": [
+      "army",
+      "economy",
+      "money",
+      "morale",
+      "population"
+    ],
+    "pacingModels": [
+      "single decisive strike",
+      "short intense burst",
+      "multi-phase campaign",
+      "sustained attrition",
+      "time-critical rescue"
+    ]
+  },
+  "libraries": [
+    {
+      "id": "state-formation-and-interstate-wars",
+      "label": "State formation and interstate wars",
+      "file": "./libraries/state-formation-and-interstate-wars.json",
+      "timeRange": {
+        "startYear": 1948,
+        "endYear": 1973
+      },
+      "focus": "Large-scale state survival, maneuver warfare, supply corridors, and conventional fronts."
+    },
+    {
+      "id": "special-operations-and-strategic-strikes",
+      "label": "Special operations and strategic strikes",
+      "file": "./libraries/special-operations-and-strategic-strikes.json",
+      "timeRange": {
+        "startYear": 1976,
+        "endYear": 2007
+      },
+      "focus": "Short-duration missions built around surprise, intelligence, and deep reach."
+    },
+    {
+      "id": "northern-front-and-lebanon",
+      "label": "Northern front and Lebanon campaigns",
+      "file": "./libraries/northern-front-and-lebanon.json",
+      "timeRange": {
+        "startYear": 1978,
+        "endYear": 2006
+      },
+      "focus": "Northern border pressure, rocket campaigns, and deterrence cycles from Lebanon."
+    },
+    {
+      "id": "palestinian-fronts-and-gaza",
+      "label": "West Bank and Gaza campaigns",
+      "file": "./libraries/palestinian-fronts-and-gaza.json",
+      "timeRange": {
+        "startYear": 2002,
+        "endYear": 2021
+      },
+      "focus": "Urban pressure, rocket defense, tunnels, raids, and short-interval escalation."
+    }
+  ]
+}
