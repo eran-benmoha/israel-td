@@ -38,4 +38,6 @@ We use ADRs (Architecture Decision Records):
 8. Resource model: money, morale, population, army, economy.
 9. Categorized purchase menu (air defense, air force, ground troops).
 10. All menus must be viewport-safe and support show/hide.
-11. GitHub Actions deployment to GitHub Pages.
+11. Data-driven level/faction/unit/map configs stored in JSON files.
+12. Modular system architecture with event bus + shared state layer.
+13. GitHub Actions deployment to GitHub Pages.

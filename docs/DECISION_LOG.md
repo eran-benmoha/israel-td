@@ -43,6 +43,15 @@ This file is a compact "what is true now" reference.
 2. Hosting: GitHub Pages via GitHub Actions.
 3. Persistence policy: browser `localStorage` only (when persistence is used).
 4. Map assets must remain legally redistributable and attributed.
+5. Gameplay config is now data-driven from JSON under `src/data/`.
+6. Runtime architecture is modularized with:
+   - `MapSystem`
+   - `WaveSystem`
+   - `ResourceSystem`
+   - `FactionSystem`
+   - `UiSystem`
+   - `EventBus`
+   - `GameState`
 
 ## Governance choices
 

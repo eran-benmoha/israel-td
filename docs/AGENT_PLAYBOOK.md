@@ -49,6 +49,8 @@ This file defines mandatory rules for any future agent/contributor working on th
 1. Stack remains Phaser + Vite + JavaScript ES modules unless superseded by ADR.
 2. Browser `localStorage` is the only persistence approach unless superseded by ADR.
 3. Map assets must remain legally redistributable with attribution file updates.
+4. Keep data-driven configs in `src/data/` as source of truth for levels/factions/units/map metadata.
+5. Preserve modular system boundaries (`MapSystem`, `WaveSystem`, `ResourceSystem`, `FactionSystem`, `UiSystem`) unless formally redesigned.
 
 ## 6) Change policy
 
