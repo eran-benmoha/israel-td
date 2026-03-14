@@ -9,12 +9,14 @@ import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
 import israelData from "../../data/israel.json";
-import level01 from "../../data/levels/level-01.json";
+import { getLevelCatalog, resolveInitialLevelConfig } from "../../data/levels/index.js";
 
 export class BootScene extends Phaser.Scene {
   constructor() {
     super("boot");
-    this.state = new GameState();
+    this.levelConfig = resolveInitialLevelConfig();
+    this.state = new GameState({ levelConfig: this.levelConfig });
+    this.levelCatalog = getLevelCatalog();
     this.mapSystem = null;
     this.factionSystem = null;
     this.resourceSystem = null;
@@ -46,7 +48,7 @@ export class BootScene extends Phaser.Scene {
       scene: this,
       eventBus,
       gameState: this.state,
-      levelConfig: level01,
+      levelConfig: this.levelConfig,
       israelData,
       factionSystem: this.factionSystem,
       mapSystem: this.mapSystem,
@@ -56,23 +58,28 @@ export class BootScene extends Phaser.Scene {
     this.resourceSystem.start();
     this.waveSystem.start();
     this.createStaticTitle();
-    eventBus.emit("ui/debug-status", { message: "Debug ready." });
+    eventBus.emit("ui/debug-status", {
+      message: `Loaded ${this.levelConfig.name} (${this.levelConfig.id}) • ${this.levelCatalog.length} levels available.`,
+    });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
   }
 
   createStaticTitle() {
     const { width } = this.scale;
+    const subtitle = this.levelConfig.subtitle ?? "Drag + pinch/scroll zoom • Hostile waves";
     this.titleText = this.add
-      .text(width / 2, 34, "Drag + pinch/scroll zoom • Hostile waves", {
+      .text(width / 2, 34, `${this.levelConfig.name}\n${subtitle}`, {
         fontFamily: "Arial",
-        fontSize: "18px",
+        fontSize: "16px",
         color: "#dbe9ff",
         backgroundColor: "rgba(0, 0, 0, 0.45)",
         padding: { x: 10, y: 6 },
       })
       .setOrigin(0.5, 0)
       .setScrollFactor(0);
+    this.titleText.setAlign("center");
+    this.titleText.setLineSpacing(2);
 
     this.resizeHandler = (gameSize) => {
       if (this.titleText) {

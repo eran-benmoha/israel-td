@@ -1,0 +1,35 @@
+{
+  "id": "level-07-guardian-of-the-walls",
+  "name": "Operation Guardian of the Walls",
+  "subtitle": "Historical adaptation • Short, dense Gaza salvo cycle aimed deeper into Israel",
+  "summary": "Playable adaptation of the 2021 Gaza conflict, tuned as a fast Hamas saturation scenario with compressed delays.",
+  "historySourceId": "operation-guardian-of-the-walls",
+  "historyLibraryId": "palestinian-fronts-and-gaza",
+  "levelTags": ["history-adaptation", "gaza", "hamas", "salvo-saturation"],
+  "startingResources": {
+    "money": 142,
+    "morale": 92,
+    "population": 99,
+    "army": 93
+  },
+  "simulation": {
+    "startDateUtc": "2021-05-10T00:00:00Z",
+    "hoursPerSecond": 14
+  },
+  "waveTiming": {
+    "minDelayMs": 10000,
+    "maxDelayMs": 26000
+  },
+  "waves": [
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 },
+    { "factionId": "hamas-gaza", "intensityBonus": 5 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 }
+  ]
+}

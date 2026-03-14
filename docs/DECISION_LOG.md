@@ -46,7 +46,9 @@ This file is a compact "what is true now" reference.
 5. Gameplay config is now data-driven from JSON under `src/data/`.
 6. Historical operations research for future levels is stored in structured JSON under `src/data/history/`.
 7. Each historical entry tracks map-region fit, resource pressure, and faction/data gaps before implementation.
-8. Runtime architecture is modularized with:
+8. Multiple history-inspired level configs now exist under `src/data/levels/`.
+9. The runtime can select a level by URL query parameter (`?level=<level-id>`) and remember that selection in browser storage.
+10. Runtime architecture is modularized with:
    - `MapSystem`
    - `WaveSystem`
    - `ResourceSystem`

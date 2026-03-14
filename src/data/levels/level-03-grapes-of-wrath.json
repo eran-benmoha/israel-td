@@ -1,0 +1,37 @@
+{
+  "id": "level-03-grapes-of-wrath",
+  "name": "Operation Grapes of Wrath",
+  "subtitle": "Historical adaptation • Sustained northern escalation with little recovery time",
+  "summary": "Playable adaptation of the April 1996 Lebanon campaign, tuned as an attritional Hezbollah barrage scenario.",
+  "historySourceId": "operation-grapes-of-wrath",
+  "historyLibraryId": "northern-front-and-lebanon",
+  "levelTags": ["history-adaptation", "north", "hezbollah", "attrition"],
+  "startingResources": {
+    "money": 145,
+    "morale": 92,
+    "population": 100,
+    "army": 95
+  },
+  "simulation": {
+    "startDateUtc": "1996-04-11T00:00:00Z",
+    "hoursPerSecond": 8
+  },
+  "waveTiming": {
+    "minDelayMs": 16000,
+    "maxDelayMs": 42000
+  },
+  "waves": [
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 0 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 }
+  ]
+}

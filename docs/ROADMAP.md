@@ -71,6 +71,10 @@
 - Convert curated historical operations from `src/data/history/` into level-specific configs.
 - Tune wave difficulty and economy progression.
 
+### Progress update
+
+- Initial playable historical adaptations now exist for selected Lebanon and Gaza operations.
+
 ### Exit criteria
 
 - At least 3 viable strategies to beat the first level.

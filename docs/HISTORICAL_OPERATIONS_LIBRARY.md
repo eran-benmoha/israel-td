@@ -115,6 +115,8 @@ These can be converted into new level JSON first, because they map more naturall
 3. Expand `src/data/factions.json` only when a historical scenario requires a new actor not already modeled.
 4. Keep level mechanics abstracted; use history for framing, pacing, and constraints rather than literal simulation.
 
+For the practical conversion workflow and current playable level IDs, see [Historical Level Conversion Notes](./HISTORICAL_LEVEL_CONVERSION.md).
+
 ## Content note
 
 These files are intended for broad historical framing and level design research. Before turning any entry into player-facing text, verify dates, names, and wording again so scenario copy remains careful and consistent.

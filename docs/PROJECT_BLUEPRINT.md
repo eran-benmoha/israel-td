@@ -123,6 +123,7 @@ Current approach:
 4. **Content expansion** 🚧
    - deeper faction behavior and content data externalization
    - historical operation libraries for future level seeds
+   - first playable history-inspired level configs
 5. **Release hardening** 🚧
    - tests, optimization, stronger architecture modularization
 

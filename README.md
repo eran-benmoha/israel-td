@@ -15,6 +15,7 @@ Current implementation includes:
 - category-based purchase menu (air defense, air force, ground troops)
 - debug menu with instant wave launch
 - structured historical operations research under `src/data/history/` for future level design
+- playable history-inspired level configs selectable with `?level=<level-id>`
 
 ## Run locally
 
@@ -44,6 +45,7 @@ Expected URL format:
 - [Roadmap](./docs/ROADMAP.md)
 - [Decision log](./docs/DECISION_LOG.md)
 - [Historical operations library](./docs/HISTORICAL_OPERATIONS_LIBRARY.md)
+- [Historical level conversion notes](./docs/HISTORICAL_LEVEL_CONVERSION.md)
 - [Architecture Decision Records](./docs/adr/)
 - [Agent Playbook (mandatory rules)](./docs/AGENT_PLAYBOOK.md)
 

@@ -1,0 +1,37 @@
+{
+  "id": "level-05-cast-lead",
+  "name": "Operation Cast Lead",
+  "subtitle": "Historical adaptation • Southern rocket pressure with a longer campaign tail",
+  "summary": "Playable adaptation of the 2008-2009 Gaza campaign, tuned around repeated Hamas launches into the south and center.",
+  "historySourceId": "operation-cast-lead",
+  "historyLibraryId": "palestinian-fronts-and-gaza",
+  "levelTags": ["history-adaptation", "gaza", "hamas", "southern-front"],
+  "startingResources": {
+    "money": 138,
+    "morale": 93,
+    "population": 99,
+    "army": 95
+  },
+  "simulation": {
+    "startDateUtc": "2008-12-27T00:00:00Z",
+    "hoursPerSecond": 7
+  },
+  "waveTiming": {
+    "minDelayMs": 16000,
+    "maxDelayMs": 50000
+  },
+  "waves": [
+    { "factionId": "hamas-gaza", "intensityBonus": 0 },
+    { "factionId": "hamas-gaza", "intensityBonus": 0 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 }
+  ]
+}

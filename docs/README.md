@@ -16,6 +16,7 @@ This folder is the source of truth for product and technical decisions.
 - [Roadmap](./ROADMAP.md) - phased delivery plan.
 - [Decision Log](./DECISION_LOG.md) - concise snapshot of implemented choices.
 - [Historical Operations Library](./HISTORICAL_OPERATIONS_LIBRARY.md) - structured research for future level design.
+- [Historical Level Conversion Notes](./HISTORICAL_LEVEL_CONVERSION.md) - how to turn research entries into playable level configs.
 - [Agent Playbook](./AGENT_PLAYBOOK.md) - mandatory implementation rules and guardrails.
 - [ADRs](./adr/) - architecture/design decisions and rationale.
 

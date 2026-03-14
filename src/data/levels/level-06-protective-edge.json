@@ -1,0 +1,39 @@
+{
+  "id": "level-06-protective-edge",
+  "name": "Operation Protective Edge",
+  "subtitle": "Historical adaptation • Sustained Gaza conflict with cumulative home-front strain",
+  "summary": "Playable adaptation of the 2014 Gaza campaign, tuned as a longer Hamas-driven level with higher resource fatigue.",
+  "historySourceId": "operation-protective-edge",
+  "historyLibraryId": "palestinian-fronts-and-gaza",
+  "levelTags": ["history-adaptation", "gaza", "hamas", "attrition"],
+  "startingResources": {
+    "money": 152,
+    "morale": 90,
+    "population": 99,
+    "army": 95
+  },
+  "simulation": {
+    "startDateUtc": "2014-07-08T00:00:00Z",
+    "hoursPerSecond": 10
+  },
+  "waveTiming": {
+    "minDelayMs": 14000,
+    "maxDelayMs": 42000
+  },
+  "waves": [
+    { "factionId": "hamas-gaza", "intensityBonus": 0 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 3 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 },
+    { "factionId": "hamas-gaza", "intensityBonus": 5 },
+    { "factionId": "hamas-gaza", "intensityBonus": 4 },
+    { "factionId": "hamas-gaza", "intensityBonus": 5 }
+  ]
+}

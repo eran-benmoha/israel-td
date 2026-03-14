@@ -1,0 +1,39 @@
+{
+  "id": "level-04-second-lebanon-war",
+  "name": "Second Lebanon War",
+  "subtitle": "Historical adaptation • Long northern barrage with escalating salvo size",
+  "summary": "Playable adaptation of the 2006 northern war, focused on repeated Hezbollah salvos and reduced recovery windows.",
+  "historySourceId": "second-lebanon-war",
+  "historyLibraryId": "northern-front-and-lebanon",
+  "levelTags": ["history-adaptation", "north", "hezbollah", "long-war"],
+  "startingResources": {
+    "money": 160,
+    "morale": 90,
+    "population": 98,
+    "army": 96
+  },
+  "simulation": {
+    "startDateUtc": "2006-07-12T00:00:00Z",
+    "hoursPerSecond": 10
+  },
+  "waveTiming": {
+    "minDelayMs": 12000,
+    "maxDelayMs": 34000
+  },
+  "waves": [
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 5 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 4 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 5 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 5 }
+  ]
+}

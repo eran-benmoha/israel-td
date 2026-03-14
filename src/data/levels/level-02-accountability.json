@@ -1,0 +1,35 @@
+{
+  "id": "level-02-accountability",
+  "name": "Operation Accountability",
+  "subtitle": "Historical adaptation • Northern deterrence under recurring rocket pressure",
+  "summary": "Playable adaptation of the July 1993 northern campaign, tuned as a shorter Hezbollah-focused deterrence scenario.",
+  "historySourceId": "operation-accountability",
+  "historyLibraryId": "northern-front-and-lebanon",
+  "levelTags": ["history-adaptation", "north", "hezbollah", "deterrence"],
+  "startingResources": {
+    "money": 135,
+    "morale": 95,
+    "population": 100,
+    "army": 94
+  },
+  "simulation": {
+    "startDateUtc": "1993-07-25T00:00:00Z",
+    "hoursPerSecond": 6
+  },
+  "waveTiming": {
+    "minDelayMs": 18000,
+    "maxDelayMs": 52000
+  },
+  "waves": [
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 0 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 3 }
+  ]
+}

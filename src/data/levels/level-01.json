@@ -1,6 +1,9 @@
 {
   "id": "level-01",
   "name": "Multi-Front Pressure",
+  "subtitle": "Prototype sandbox with rotating modern threat sources",
+  "summary": "Baseline sandbox level that rotates through the current faction roster and keeps pressure spread across multiple fronts.",
+  "levelTags": ["sandbox", "multi-front", "modern"],
   "simulation": {
     "startDateUtc": "2022-01-01T00:00:00Z",
     "hoursPerSecond": 3
