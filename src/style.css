@@ -139,6 +139,7 @@ body {
   position: relative;
   width: 100%;
   min-height: 0;
+  touch-action: none;
 }
 
 #game-root canvas {

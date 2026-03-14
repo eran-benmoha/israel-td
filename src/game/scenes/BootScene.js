@@ -65,6 +65,12 @@ export class BootScene extends Phaser.Scene {
     super("boot");
     this.mapImage = null;
     this.mapContainer = null;
+    this.baseMapScale = 1;
+    this.zoomLevel = 1;
+    this.minZoomLevel = 1;
+    this.maxZoomLevel = 4;
+    this.pinchStartDistance = 0;
+    this.pinchStartZoomLevel = 1;
     this.waveNumber = 0;
     this.nextWaveAt = 0;
     this.nextWaveEvent = null;
@@ -104,17 +110,59 @@ export class BootScene extends Phaser.Scene {
     this.mapImage = mapImage;
     this.mapContainer = mapContainer;
 
-    mapContainer.setScale(this.getMapCoverScale(width, height, mapImage));
+    this.baseMapScale = this.getMapCoverScale(width, height, mapImage);
+    mapContainer.setScale(this.baseMapScale * this.zoomLevel);
     this.clampMapPosition(mapContainer, mapImage, width, height);
 
+    this.input.addPointer(1);
     let isDragging = false;
+    let dragPointerId = null;
     let dragStartX = 0;
     let dragStartY = 0;
     let mapStartX = mapContainer.x;
     let mapStartY = mapContainer.y;
 
+    const getActiveTouchPointers = () => [this.input.pointer1, this.input.pointer2].filter((pointer) => pointer?.isDown);
+    const isPinching = () => getActiveTouchPointers().length >= 2;
+
+    const beginPinch = () => {
+      const [pointerA, pointerB] = getActiveTouchPointers();
+      if (!pointerA || !pointerB) {
+        return;
+      }
+
+      this.pinchStartDistance = Phaser.Math.Distance.Between(pointerA.x, pointerA.y, pointerB.x, pointerB.y);
+      this.pinchStartZoomLevel = this.zoomLevel;
+      isDragging = false;
+      dragPointerId = null;
+    };
+
+    const applyPinchZoom = () => {
+      const [pointerA, pointerB] = getActiveTouchPointers();
+      if (!pointerA || !pointerB) {
+        return;
+      }
+
+      if (this.pinchStartDistance <= 0) {
+        beginPinch();
+      }
+
+      const distance = Phaser.Math.Distance.Between(pointerA.x, pointerA.y, pointerB.x, pointerB.y);
+      const midpointX = (pointerA.x + pointerB.x) / 2;
+      const midpointY = (pointerA.y + pointerB.y) / 2;
+      const ratio = this.pinchStartDistance > 0 ? distance / this.pinchStartDistance : 1;
+      const nextZoom = Phaser.Math.Clamp(this.pinchStartZoomLevel * ratio, this.minZoomLevel, this.maxZoomLevel);
+      this.applyZoomAtScreenPoint(nextZoom, midpointX, midpointY, width, height);
+    };
+
     this.input.on("pointerdown", (pointer) => {
+      if (isPinching()) {
+        beginPinch();
+        return;
+      }
+
       isDragging = true;
+      dragPointerId = pointer.id;
       dragStartX = pointer.x;
       dragStartY = pointer.y;
       mapStartX = mapContainer.x;
@@ -122,7 +170,12 @@ export class BootScene extends Phaser.Scene {
     });
 
     this.input.on("pointermove", (pointer) => {
-      if (!isDragging || !pointer.isDown) {
+      if (isPinching()) {
+        applyPinchZoom();
+        return;
+      }
+
+      if (!isDragging || !pointer.isDown || pointer.id !== dragPointerId) {
         return;
       }
 
@@ -132,14 +185,36 @@ export class BootScene extends Phaser.Scene {
     });
 
     const stopDrag = () => {
+      if (isPinching()) {
+        beginPinch();
+        return;
+      }
+
       isDragging = false;
+      dragPointerId = null;
+      this.pinchStartDistance = 0;
+
+      const [remainingPointer] = getActiveTouchPointers();
+      if (remainingPointer) {
+        isDragging = true;
+        dragPointerId = remainingPointer.id;
+        dragStartX = remainingPointer.x;
+        dragStartY = remainingPointer.y;
+        mapStartX = mapContainer.x;
+        mapStartY = mapContainer.y;
+      }
     };
 
     this.input.on("pointerup", stopDrag);
     this.input.on("pointerupoutside", stopDrag);
+    this.input.on("wheel", (pointer, _gameObjects, _deltaX, deltaY) => {
+      const zoomFactor = Math.exp(-deltaY * 0.0012);
+      const nextZoom = Phaser.Math.Clamp(this.zoomLevel * zoomFactor, this.minZoomLevel, this.maxZoomLevel);
+      this.applyZoomAtScreenPoint(nextZoom, pointer.x, pointer.y, width, height);
+    });
 
     const title = this.add
-      .text(width / 2, 34, "Drag map • Gaza rocket waves every 60s", {
+      .text(width / 2, 34, "Drag + pinch/scroll zoom • Gaza waves every 60s", {
         fontFamily: "Arial",
         fontSize: "18px",
         color: "#dbe9ff",
@@ -149,9 +224,15 @@ export class BootScene extends Phaser.Scene {
       .setOrigin(0.5, 0);
 
     this.scale.on("resize", (gameSize) => {
+      const oldScale = mapContainer.scaleX;
+      const centerWorldX = (width / 2 - mapContainer.x) / oldScale;
+      const centerWorldY = (height / 2 - mapContainer.y) / oldScale;
       width = gameSize.width;
       height = gameSize.height;
-      mapContainer.setScale(this.getMapCoverScale(width, height, mapImage));
+      this.baseMapScale = this.getMapCoverScale(width, height, mapImage);
+      mapContainer.setScale(this.baseMapScale * this.zoomLevel);
+      mapContainer.x = width / 2 - centerWorldX * mapContainer.scaleX;
+      mapContainer.y = height / 2 - centerWorldY * mapContainer.scaleY;
       this.clampMapPosition(mapContainer, mapImage, width, height);
       title.setPosition(width / 2, 34);
     });
@@ -185,6 +266,28 @@ export class BootScene extends Phaser.Scene {
       const maxY = 0;
       mapContainer.y = Phaser.Math.Clamp(mapContainer.y, minY, maxY);
     }
+  }
+
+  applyZoomAtScreenPoint(nextZoomLevel, screenX, screenY, viewportWidth, viewportHeight) {
+    if (!this.mapContainer || !this.mapImage) {
+      return;
+    }
+
+    const clampedZoom = Phaser.Math.Clamp(nextZoomLevel, this.minZoomLevel, this.maxZoomLevel);
+    if (Math.abs(clampedZoom - this.zoomLevel) < 0.0001) {
+      return;
+    }
+
+    const currentScale = this.mapContainer.scaleX;
+    const worldX = (screenX - this.mapContainer.x) / currentScale;
+    const worldY = (screenY - this.mapContainer.y) / currentScale;
+
+    this.zoomLevel = clampedZoom;
+    const nextScale = this.baseMapScale * this.zoomLevel;
+    this.mapContainer.setScale(nextScale);
+    this.mapContainer.x = screenX - worldX * nextScale;
+    this.mapContainer.y = screenY - worldY * nextScale;
+    this.clampMapPosition(this.mapContainer, this.mapImage, viewportWidth, viewportHeight);
   }
 
   initializeWaveHud() {
