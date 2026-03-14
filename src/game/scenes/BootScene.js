@@ -84,12 +84,14 @@ export class BootScene extends Phaser.Scene {
       morale: 100,
       population: 100,
       army: 100,
+      economy: 100,
     };
     this.maxResources = {
       money: 1000,
       morale: 100,
       population: 100,
       army: 100,
+      economy: 100,
     };
     this.resourceElements = {};
   }
@@ -368,6 +370,10 @@ export class BootScene extends Phaser.Scene {
         value: document.getElementById("resource-army-value"),
         fill: document.getElementById("resource-army-fill"),
       },
+      economy: {
+        value: document.getElementById("resource-economy-value"),
+        fill: document.getElementById("resource-economy-fill"),
+      },
     };
     this.updateResourceHud();
   }
@@ -379,7 +385,8 @@ export class BootScene extends Phaser.Scene {
   }
 
   updateResourceHud() {
-    const resources = ["money", "morale", "population", "army"];
+    this.recalculateEconomy();
+    const resources = ["money", "morale", "population", "army", "economy"];
     resources.forEach((key) => {
       const elements = this.resourceElements[key];
       if (!elements) {
@@ -402,6 +409,13 @@ export class BootScene extends Phaser.Scene {
         }
       }
     });
+  }
+
+  recalculateEconomy() {
+    const moneyPercent = (this.resources.money / this.maxResources.money) * 100;
+    const weightedEconomy =
+      moneyPercent * 0.45 + this.resources.morale * 0.2 + this.resources.population * 0.2 + this.resources.army * 0.15;
+    this.resources.economy = Phaser.Math.Clamp(weightedEconomy, 0, 100);
   }
 
   registerDebugMenuHooks() {

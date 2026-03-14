@@ -65,6 +65,10 @@ body {
   min-width: 0;
 }
 
+.resource--wide {
+  grid-column: 1 / -1;
+}
+
 .resource__meta {
   display: flex;
   justify-content: space-between;
@@ -111,6 +115,10 @@ body {
 
 .resource__fill--army {
   background: linear-gradient(90deg, #cb82ff, #e0c3ff);
+}
+
+.resource__fill--economy {
+  background: linear-gradient(90deg, #ff9f5e, #ffd27f);
 }
 
 .hud__wave {
