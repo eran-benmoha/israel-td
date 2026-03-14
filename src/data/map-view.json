@@ -9,12 +9,12 @@
     "yAnchor": 1.714427893
   },
   "initial": {
-    "zoomLevel": 1.7,
+    "zoomLevel": 1,
     "focus": { "lat": 31.45, "lon": 34.95 },
-    "rotationDeg": -4.5
+    "rotationDeg": 0
   },
   "zoom": {
-    "min": 0.7,
+    "min": 0.5,
     "max": 12
   }
 }

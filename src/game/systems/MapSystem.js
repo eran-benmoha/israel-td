@@ -195,7 +195,8 @@ export class MapSystem {
 
   getMapCoverScale(viewportWidth, viewportHeight) {
     const { width, height } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
-    return Math.max(width / this.mapImage.width, height / this.mapImage.height);
+    // Stability-first default: fit the full map in view at baseline zoom.
+    return Math.min(width / this.mapImage.width, height / this.mapImage.height);
   }
 
   clampMapPosition(viewportWidth, viewportHeight) {
