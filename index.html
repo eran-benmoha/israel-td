@@ -16,11 +16,16 @@
   <body>
     <div id="app">
       <header class="hud">
-        <div class="hud__title">Israel TD</div>
-        <div class="hud__stats">
-          <span>HP: 20</span>
-          <span>Credits: 120</span>
-          <span>Wave: 0/10</span>
+        <div class="hud__left">
+          <div class="hud__title">Israel TD</div>
+          <div class="hud__stats">
+            <span>HP: 20</span>
+            <span>Credits: 120</span>
+          </div>
+        </div>
+        <div class="hud__wave" aria-live="polite">
+          <span id="wave-indicator">Wave 0</span>
+          <span id="wave-timer">Next wave: 60s</span>
         </div>
       </header>
       <main id="game-root" aria-label="Game canvas"></main>

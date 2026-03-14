@@ -8,6 +8,28 @@ const MAP_GEO_BOUNDS = {
   east: 66.0,
 };
 
+const WAVE_INTERVAL_MS = 60_000;
+
+const GAZA_STRIP_BOUNDS = {
+  north: 31.60,
+  south: 31.22,
+  west: 34.20,
+  east: 34.58,
+};
+
+const ISRAEL_TARGETS = [
+  { lat: 32.0853, lon: 34.7818 }, // Tel Aviv
+  { lat: 31.7683, lon: 35.2137 }, // Jerusalem
+  { lat: 32.794, lon: 34.9896 }, // Haifa
+  { lat: 31.252, lon: 34.7915 }, // Be'er Sheva
+  { lat: 31.8014, lon: 34.6435 }, // Ashdod
+  { lat: 32.3215, lon: 34.8532 }, // Netanya
+  { lat: 32.7015, lon: 35.3035 }, // Nazareth
+  { lat: 32.794, lon: 35.5312 }, // Tiberias
+  { lat: 29.5577, lon: 34.9519 }, // Eilat
+  { lat: 31.525, lon: 34.595 }, // Sderot
+];
+
 const ISRAEL_BORDER_LAT_LON = [
   { lat: 33.28, lon: 35.57 },
   { lat: 33.28, lon: 35.76 },
@@ -41,6 +63,13 @@ const ISRAEL_BORDER_LAT_LON = [
 export class BootScene extends Phaser.Scene {
   constructor() {
     super("boot");
+    this.mapImage = null;
+    this.mapContainer = null;
+    this.waveNumber = 0;
+    this.nextWaveAt = 0;
+    this.waveIndicatorEl = null;
+    this.waveTimerEl = null;
+    this.lastTimerSecond = -1;
   }
 
   preload() {
@@ -56,6 +85,8 @@ export class BootScene extends Phaser.Scene {
     const outline = this.add.graphics();
     this.drawIsraelOutline(outline, mapImage.width, mapImage.height);
     const mapContainer = this.add.container(0, 0, [mapImage, outline]);
+    this.mapImage = mapImage;
+    this.mapContainer = mapContainer;
 
     mapContainer.setScale(this.getMapCoverScale(width, height, mapImage));
     this.clampMapPosition(mapContainer, mapImage, width, height);
@@ -92,7 +123,7 @@ export class BootScene extends Phaser.Scene {
     this.input.on("pointerupoutside", stopDrag);
 
     const title = this.add
-      .text(width / 2, 34, "Drag to explore Middle East • Israel outline enabled", {
+      .text(width / 2, 34, "Drag map • Gaza rocket waves every 60s", {
         fontFamily: "Arial",
         fontSize: "18px",
         color: "#dbe9ff",
@@ -108,6 +139,9 @@ export class BootScene extends Phaser.Scene {
       this.clampMapPosition(mapContainer, mapImage, width, height);
       title.setPosition(width / 2, 34);
     });
+
+    this.initializeWaveHud();
+    this.startWaveLoop();
   }
 
   getMapCoverScale(viewportWidth, viewportHeight, mapImage) {
@@ -133,6 +167,137 @@ export class BootScene extends Phaser.Scene {
       const maxY = 0;
       mapContainer.y = Phaser.Math.Clamp(mapContainer.y, minY, maxY);
     }
+  }
+
+  initializeWaveHud() {
+    this.waveIndicatorEl = document.getElementById("wave-indicator");
+    this.waveTimerEl = document.getElementById("wave-timer");
+    this.syncWaveHud(60);
+  }
+
+  startWaveLoop() {
+    this.waveNumber = 0;
+    this.nextWaveAt = this.time.now + WAVE_INTERVAL_MS;
+    this.lastTimerSecond = -1;
+    this.updateWaveCountdown();
+
+    this.time.addEvent({
+      delay: 250,
+      loop: true,
+      callback: this.updateWaveCountdown,
+      callbackScope: this,
+    });
+
+    this.time.addEvent({
+      delay: WAVE_INTERVAL_MS,
+      loop: true,
+      callback: this.launchWave,
+      callbackScope: this,
+    });
+  }
+
+  launchWave() {
+    this.waveNumber += 1;
+    this.nextWaveAt = this.time.now + WAVE_INTERVAL_MS;
+    this.spawnRocketWave();
+    this.syncWaveHud(60);
+  }
+
+  updateWaveCountdown() {
+    const remainingMs = Math.max(0, this.nextWaveAt - this.time.now);
+    const remainingSeconds = Math.ceil(remainingMs / 1000);
+
+    if (remainingSeconds !== this.lastTimerSecond) {
+      this.lastTimerSecond = remainingSeconds;
+      this.syncWaveHud(remainingSeconds);
+    }
+  }
+
+  syncWaveHud(remainingSeconds = 60) {
+    if (this.waveIndicatorEl) {
+      this.waveIndicatorEl.textContent = `Wave ${this.waveNumber}`;
+    }
+
+    if (this.waveTimerEl) {
+      this.waveTimerEl.textContent = `Next wave: ${remainingSeconds}s`;
+    }
+  }
+
+  spawnRocketWave() {
+    const rocketCount = Phaser.Math.Clamp(6 + this.waveNumber * 2, 6, 24);
+
+    for (let i = 0; i < rocketCount; i += 1) {
+      this.time.delayedCall(i * 170, () => this.spawnRocket());
+    }
+  }
+
+  spawnRocket() {
+    if (!this.mapImage || !this.mapContainer) {
+      return;
+    }
+
+    const launchPoint = this.randomPointFromGeoRect(GAZA_STRIP_BOUNDS);
+    const targetPoint = this.getRandomIsraelTargetPoint();
+    const trail = this.add.graphics();
+    const rocket = this.add.circle(launchPoint.x, launchPoint.y, 3.2, 0xff9a5e, 1);
+    rocket.setStrokeStyle(1, 0x3d1200, 0.9);
+    this.mapContainer.add([trail, rocket]);
+
+    const rocketState = { t: 0 };
+    const duration = Phaser.Math.Between(1300, 2400);
+
+    this.tweens.add({
+      targets: rocketState,
+      t: 1,
+      duration,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const x = Phaser.Math.Linear(launchPoint.x, targetPoint.x, rocketState.t);
+        const y = Phaser.Math.Linear(launchPoint.y, targetPoint.y, rocketState.t);
+        rocket.setPosition(x, y);
+
+        trail.clear();
+        trail.lineStyle(2, 0xff7a45, 0.85);
+        trail.beginPath();
+        trail.moveTo(launchPoint.x, launchPoint.y);
+        trail.lineTo(x, y);
+        trail.strokePath();
+      },
+      onComplete: () => {
+        trail.destroy();
+        rocket.destroy();
+        this.createImpactFlash(targetPoint.x, targetPoint.y);
+      },
+    });
+  }
+
+  createImpactFlash(x, y) {
+    if (!this.mapContainer) {
+      return;
+    }
+
+    const impact = this.add.circle(x, y, 3, 0xfff4b8, 0.95);
+    this.mapContainer.add(impact);
+
+    this.tweens.add({
+      targets: impact,
+      scale: 6,
+      alpha: 0,
+      duration: 280,
+      ease: "Cubic.easeOut",
+      onComplete: () => impact.destroy(),
+    });
+  }
+
+  randomPointFromGeoRect(bounds) {
+    const lat = Phaser.Math.FloatBetween(bounds.south, bounds.north);
+    const lon = Phaser.Math.FloatBetween(bounds.west, bounds.east);
+    return this.geoToImagePoint(lat, lon, this.mapImage.width, this.mapImage.height);
+  }
+
+  getRandomIsraelTargetPoint() {
+    const target = Phaser.Utils.Array.GetRandom(ISRAEL_TARGETS);
+    return this.geoToImagePoint(target.lat, target.lon, this.mapImage.width, this.mapImage.height);
   }
 
   drawIsraelOutline(outline, imageWidth, imageHeight) {
