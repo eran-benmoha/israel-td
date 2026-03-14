@@ -1,10 +1,10 @@
-# Project Blueprint: Israel Satellite Tower Defense
+# Project Blueprint: Israel Defense (Middle East Theater)
 
 ## 1) Product Direction
 
 ### Core fantasy
 
-Protect key zones on a satellite-style map of Israel by placing towers, upgrading defenses, and surviving escalating enemy waves.
+Protect key zones in Israel on a Middle East map by purchasing defense capabilities, managing national resources, and surviving escalating hostile waves.
 
 ### Design pillars
 
@@ -19,7 +19,7 @@ Protect key zones on a satellite-style map of Israel by placing towers, upgradin
 - **Language:** JavaScript (ES modules)
 - **Build tool:** Vite
 - **UI:** HTML + CSS overlays (HUD, menus) + Phaser canvas
-- **Data format:** JSON for towers, enemies, waves, and map metadata
+- **Data format:** JSON-style/data-driven configs (target architecture)
 - **Deployment:** GitHub Actions -> GitHub Pages
 
 Why this stack:
@@ -28,7 +28,7 @@ Why this stack:
 - Vite gives fast local iteration and clean static build output.
 - Keeps project aligned with pure HTML/JS requirements.
 
-## 3) Proposed Repository Structure
+## 3) Repository Structure (Current + Target)
 
 ```txt
 /
@@ -37,19 +37,13 @@ Why this stack:
 │  ├─ PROJECT_BLUEPRINT.md
 │  ├─ ROADMAP.md
 │  └─ adr/
-├─ public/
-│  ├─ assets/
-│  │  ├─ maps/
-│  │  ├─ sprites/
-│  │  ├─ audio/
-│  │  └─ ui/
 ├─ src/
 │  ├─ main.js
 │  ├─ game/
 │  │  ├─ scenes/
-│  │  ├─ systems/
-│  │  ├─ entities/
-│  │  └─ config/
+│  │  ├─ systems/      (target extraction from scene)
+│  │  ├─ entities/     (target extraction from scene)
+│  │  └─ config/       (target extraction from scene)
 │  ├─ ui/
 │  └─ data/
 ├─ index.html
@@ -61,17 +55,18 @@ Why this stack:
 ### Runtime layers
 
 1. **Core game loop (Phaser Scene):**
-   - spawn waves
-   - path enemies
-   - apply tower targeting and damage
-   - resolve win/lose state
+   - running simulation clock (starts Jan 2022)
+   - randomized hostile wave scheduling
+   - territory-based launches and city-target impacts
 2. **Gameplay systems:**
-   - economy (money, costs, rewards)
-   - upgrade system
-   - difficulty scaling
+   - resources: money, morale, population, army, economy(derived)
+   - purchase categories: air defense, air force, ground troops
+   - faction profile variation by missile/range behavior
 3. **UI layer:**
-   - build buttons, wave status, health, currency
-   - tower details panel
+   - top HUD (resources, wave index, running clock, wave origin)
+   - bottom purchase menu with category tabs
+   - debug panel with instant wave launch
+   - all menus must support show/hide and viewport-safe behavior
 4. **Persistence layer (browser-only):**
    - Browser `localStorage` is the only persistence mechanism.
    - Store settings, unlocks, and lightweight progression snapshots.
@@ -79,25 +74,25 @@ Why this stack:
 
 ### Data-driven configuration
 
-Balance should live in JSON files:
+Balance and content should move to JSON files:
 
-- `towers.json`
-- `enemies.json`
-- `waves/level-01.json`
-- `levels/israel-core.json`
+- `units.json`
+- `factions.json`
+- `waves/default.json`
+- `map/middle-east-relief.json`
 
 This reduces code churn while tuning.
 
-## 5) Map Strategy (Important)
+## 5) Map Strategy (Implemented)
 
 We must use imagery that is legal to redistribute in a public repo and web build.
 
-Approach:
+Current approach:
 
-1. Source a map image with clear permissive license.
-2. Store source attribution and license in repo.
-3. Process image into optimized web textures (compressed + downscaled variants).
-4. Overlay path nodes and build zones as separate metadata, not painted permanently.
+1. Use high-resolution, redistributable relief map.
+2. Keep source attribution in repo.
+3. Convert geo points to map coordinates using the adopted map projection constants.
+4. Draw overlays as runtime layers (Israel outline, regions, hostile territories, city markers).
 
 ## 6) Mobile-First Implementation Standards
 
@@ -108,20 +103,23 @@ Approach:
 - Support pausing on tab/app background.
 - Performance budget: stable 60 FPS on mid-tier mobile devices, acceptable floor 30 FPS.
 
-## 7) Milestones
+## 7) Milestones (Current status)
 
-1. **Foundation**
+1. **Foundation** ✅
    - project scaffold
    - asset loading
-   - single map scene
-2. **Core gameplay**
-   - one enemy type, two tower types, fixed waves
-3. **Playable vertical slice**
-   - economy, upgrades, lose/win, HUD polish
-4. **Content expansion**
-   - additional towers/enemies, balancing pass
-5. **Release hardening**
-   - mobile UX polish, accessibility, analytics hooks, performance
+   - map scene with drag/zoom
+2. **Core gameplay** ✅ (initial)
+   - faction-based rocket waves
+   - resource and economy bars
+   - category purchase menu
+3. **Playable vertical slice** 🚧
+   - defensive unit effects tied to attack mitigation
+   - explicit lose/win conditions
+4. **Content expansion** 🚧
+   - deeper faction behavior and content data externalization
+5. **Release hardening** 🚧
+   - tests, optimization, stronger architecture modularization
 
 ## 8) Definition of "Buildable"
 

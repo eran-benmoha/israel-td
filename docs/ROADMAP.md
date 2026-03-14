@@ -1,6 +1,6 @@
 # Roadmap
 
-## Phase 0 - Planning and constraints (current)
+## Phase 0 - Planning and constraints ✅
 
 ### Outcomes
 
@@ -10,12 +10,12 @@
 
 ### Exit criteria
 
-- ADRs `0001` to `0005` approved.
-- Backlog for Phase 1 created.
+- ADR baseline approved and extended.
+- Backlog for implementation created.
 
 ---
 
-## Phase 1 - Project bootstrap
+## Phase 1 - Project bootstrap ✅
 
 ### Tasks
 
@@ -26,36 +26,34 @@
 
 ### Exit criteria
 
-- App starts and renders a placeholder map scene.
-- CI publishes preview/build artifacts successfully.
+- App starts and renders map scene.
+- CI publishes to GitHub Pages successfully.
 
 ---
 
-## Phase 2 - Core gameplay loop (MVP)
+## Phase 2 - Core gameplay loop (MVP) ✅ (initial)
 
-### Tasks
+### Tasks completed
 
-- Enemy path following with health and death events.
-- Tower placement on predefined slots.
-- Targeting + projectile or hitscan damage.
-- Currency economy and wave rewards.
-- Base health + lose/win conditions.
+- Running simulation clock + randomized wave intervals.
+- Hostile territory/faction wave sources and missile visuals.
+- Resource economy model and purchase categories.
+- Regional overlays, city markers, and map navigation controls.
 
-### Exit criteria
+### Remaining for full phase completion
 
-- 1 complete level is playable on mobile browser.
-- Round lasts 5-12 minutes.
+- Explicit win/lose loop and persistence of campaign progress.
+- Defense effects tied to actual interception/survivability mechanics.
 
 ---
 
-## Phase 3 - UX and mobile polish
+## Phase 3 - UX and mobile polish 🚧
 
 ### Tasks
 
-- Touch-first HUD and contextual tower panel.
-- Responsive layout and safe-area support (notches).
-- Settings modal (sound, quality, vibration toggle).
-- Tutorial overlays and onboarding hints.
+- Keep viewport-safe menu behavior across all supported screen sizes.
+- Add settings panel and tutorial guidance.
+- Improve readability of layered map overlays at multiple zoom levels.
 
 ### Exit criteria
 
@@ -64,13 +62,13 @@
 
 ---
 
-## Phase 4 - Balancing and content
+## Phase 4 - Balancing and content 🚧
 
 ### Tasks
 
-- Add more tower archetypes and enemy roles.
-- Tune wave difficulty and economy curve.
-- Add map variants and special events.
+- Externalize current hardcoded gameplay constants to data files.
+- Add more unit archetypes and faction-specific behaviors.
+- Tune wave difficulty and economy progression.
 
 ### Exit criteria
 
@@ -79,7 +77,7 @@
 
 ---
 
-## Phase 5 - Release candidate
+## Phase 5 - Release candidate 🚧
 
 ### Tasks
 
