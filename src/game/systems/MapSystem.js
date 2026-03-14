@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import middleEastReliefUrl from "../../assets/maps/middle-east-relief.jpg";
 
 export class MapSystem {
   constructor({ scene, eventBus, mapViewConfig, israelData, factionsConfig }) {
@@ -20,7 +21,9 @@ export class MapSystem {
   }
 
   preload() {
-    const mapUrl = new URL(this.mapViewConfig.mapImagePath, import.meta.url).href;
+    // Keep map texture as a static import so Vite includes it in production bundles.
+    const configuredPath = this.mapViewConfig.mapImagePath ?? "";
+    const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastReliefUrl;
     this.scene.load.image("middle-east-map", mapUrl);
   }
 
@@ -52,14 +55,16 @@ export class MapSystem {
 
     this.resizeHandler = (gameSize) => {
       const oldScale = this.mapContainer.scaleX;
-      const centerWorldX = (width / 2 - this.mapContainer.x) / oldScale;
-      const centerWorldY = (height / 2 - this.mapContainer.y) / oldScale;
+      const centerWorld = camera.getWorldPoint(width / 2, height / 2);
+      const centerWorldX = (centerWorld.x - this.mapContainer.x) / oldScale;
+      const centerWorldY = (centerWorld.y - this.mapContainer.y) / oldScale;
       width = gameSize.width;
       height = gameSize.height;
       this.baseMapScale = this.getMapCoverScale(width, height);
       this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
-      this.mapContainer.x = width / 2 - centerWorldX * this.mapContainer.scaleX;
-      this.mapContainer.y = height / 2 - centerWorldY * this.mapContainer.scaleY;
+      const nextCenterWorld = camera.getWorldPoint(width / 2, height / 2);
+      this.mapContainer.x = nextCenterWorld.x - centerWorldX * this.mapContainer.scaleX;
+      this.mapContainer.y = nextCenterWorld.y - centerWorldY * this.mapContainer.scaleY;
       this.clampMapPosition(width, height);
     };
     this.scene.scale.on("resize", this.resizeHandler);
@@ -78,10 +83,11 @@ export class MapSystem {
   }
 
   registerInputHandlers({ width, height }) {
+    const camera = this.scene.cameras.main;
     let isDragging = false;
     let dragPointerId = null;
-    let dragStartX = 0;
-    let dragStartY = 0;
+    let dragStartWorldX = 0;
+    let dragStartWorldY = 0;
     let mapStartX = this.mapContainer.x;
     let mapStartY = this.mapContainer.y;
 
@@ -120,10 +126,11 @@ export class MapSystem {
         beginPinch();
         return;
       }
+      const startWorld = camera.getWorldPoint(pointer.x, pointer.y);
       isDragging = true;
       dragPointerId = pointer.id;
-      dragStartX = pointer.x;
-      dragStartY = pointer.y;
+      dragStartWorldX = startWorld.x;
+      dragStartWorldY = startWorld.y;
       mapStartX = this.mapContainer.x;
       mapStartY = this.mapContainer.y;
     };
@@ -138,8 +145,9 @@ export class MapSystem {
         return;
       }
 
-      this.mapContainer.x = mapStartX + (pointer.x - dragStartX);
-      this.mapContainer.y = mapStartY + (pointer.y - dragStartY);
+      const currentWorld = camera.getWorldPoint(pointer.x, pointer.y);
+      this.mapContainer.x = mapStartX + (currentWorld.x - dragStartWorldX);
+      this.mapContainer.y = mapStartY + (currentWorld.y - dragStartWorldY);
       this.clampMapPosition(width, height);
     };
 
@@ -154,10 +162,11 @@ export class MapSystem {
       this.pinchStartDistance = 0;
       const [remaining] = getActiveTouchPointers();
       if (remaining) {
+        const remainingWorld = camera.getWorldPoint(remaining.x, remaining.y);
         isDragging = true;
         dragPointerId = remaining.id;
-        dragStartX = remaining.x;
-        dragStartY = remaining.y;
+        dragStartWorldX = remainingWorld.x;
+        dragStartWorldY = remainingWorld.y;
         mapStartX = this.mapContainer.x;
         mapStartY = this.mapContainer.y;
       }
@@ -185,23 +194,32 @@ export class MapSystem {
   }
 
   getMapCoverScale(viewportWidth, viewportHeight) {
-    return Math.max(viewportWidth / this.mapImage.width, viewportHeight / this.mapImage.height);
+    const { width, height } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
+    // Stability-first default: fit the full map in view at baseline zoom.
+    return Math.min(width / this.mapImage.width, height / this.mapImage.height);
   }
 
   clampMapPosition(viewportWidth, viewportHeight) {
+    const camera = this.scene.cameras.main;
+    const viewCenter = camera.getWorldPoint(viewportWidth / 2, viewportHeight / 2);
+    const { width: viewWidth, height: viewHeight } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
+    const viewLeft = viewCenter.x - viewWidth / 2;
+    const viewRight = viewCenter.x + viewWidth / 2;
+    const viewTop = viewCenter.y - viewHeight / 2;
+    const viewBottom = viewCenter.y + viewHeight / 2;
     const scaledWidth = this.mapImage.width * this.mapContainer.scaleX;
     const scaledHeight = this.mapImage.height * this.mapContainer.scaleY;
 
-    if (scaledWidth <= viewportWidth) {
-      this.mapContainer.x = (viewportWidth - scaledWidth) / 2;
+    if (scaledWidth <= viewWidth) {
+      this.mapContainer.x = viewCenter.x - scaledWidth / 2;
     } else {
-      this.mapContainer.x = Phaser.Math.Clamp(this.mapContainer.x, viewportWidth - scaledWidth, 0);
+      this.mapContainer.x = Phaser.Math.Clamp(this.mapContainer.x, viewRight - scaledWidth, viewLeft);
     }
 
-    if (scaledHeight <= viewportHeight) {
-      this.mapContainer.y = (viewportHeight - scaledHeight) / 2;
+    if (scaledHeight <= viewHeight) {
+      this.mapContainer.y = viewCenter.y - scaledHeight / 2;
     } else {
-      this.mapContainer.y = Phaser.Math.Clamp(this.mapContainer.y, viewportHeight - scaledHeight, 0);
+      this.mapContainer.y = Phaser.Math.Clamp(this.mapContainer.y, viewBottom - scaledHeight, viewTop);
     }
   }
 
@@ -213,21 +231,33 @@ export class MapSystem {
   }
 
   applyZoomAtScreenPoint(nextZoomLevel, screenX, screenY, viewportWidth, viewportHeight) {
+    const camera = this.scene.cameras.main;
     const clampedZoom = Phaser.Math.Clamp(nextZoomLevel, this.minZoomLevel, this.maxZoomLevel);
     if (Math.abs(clampedZoom - this.zoomLevel) < 0.0001) {
       return;
     }
 
     const currentScale = this.mapContainer.scaleX;
-    const worldX = (screenX - this.mapContainer.x) / currentScale;
-    const worldY = (screenY - this.mapContainer.y) / currentScale;
+    const screenWorld = camera.getWorldPoint(screenX, screenY);
+    const worldX = (screenWorld.x - this.mapContainer.x) / currentScale;
+    const worldY = (screenWorld.y - this.mapContainer.y) / currentScale;
     this.zoomLevel = clampedZoom;
     const nextScale = this.baseMapScale * this.zoomLevel;
     this.mapContainer.setScale(nextScale);
-    this.mapContainer.x = screenX - worldX * nextScale;
-    this.mapContainer.y = screenY - worldY * nextScale;
+    this.mapContainer.x = screenWorld.x - worldX * nextScale;
+    this.mapContainer.y = screenWorld.y - worldY * nextScale;
     this.clampMapPosition(viewportWidth, viewportHeight);
     this.emitZoom();
+  }
+
+  getEffectiveViewportAabb(viewportWidth, viewportHeight) {
+    const rotationAbs = Math.abs(this.scene.cameras.main.rotation);
+    const cos = Math.abs(Math.cos(rotationAbs));
+    const sin = Math.abs(Math.sin(rotationAbs));
+    return {
+      width: viewportWidth * cos + viewportHeight * sin,
+      height: viewportWidth * sin + viewportHeight * cos,
+    };
   }
 
   emitZoom() {
