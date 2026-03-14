@@ -1,0 +1,52 @@
+{
+  "units": [
+    {
+      "id": "iron-dome-battery",
+      "name": "Iron Dome Battery",
+      "category": "air-defense",
+      "cost": 120,
+      "moraleBoost": 0.8,
+      "armyBoost": 2.2
+    },
+    {
+      "id": "arrow-system",
+      "name": "Arrow Interceptor",
+      "category": "air-defense",
+      "cost": 180,
+      "moraleBoost": 1.1,
+      "armyBoost": 3
+    },
+    {
+      "id": "fighter-sortie",
+      "name": "Fighter Sortie",
+      "category": "air-force",
+      "cost": 160,
+      "moraleBoost": 1,
+      "armyBoost": 2.7
+    },
+    {
+      "id": "precision-strike",
+      "name": "Precision Strike",
+      "category": "air-force",
+      "cost": 210,
+      "moraleBoost": 1.4,
+      "armyBoost": 3.5
+    },
+    {
+      "id": "reserve-brigade",
+      "name": "Reserve Brigade",
+      "category": "ground-troops",
+      "cost": 90,
+      "moraleBoost": 0.6,
+      "armyBoost": 1.8
+    },
+    {
+      "id": "border-defense-line",
+      "name": "Border Defense Line",
+      "category": "ground-troops",
+      "cost": 140,
+      "moraleBoost": 0.9,
+      "armyBoost": 2.4
+    }
+  ]
+}

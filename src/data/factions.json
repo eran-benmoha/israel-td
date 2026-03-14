@@ -1,0 +1,90 @@
+{
+  "factions": [
+    {
+      "id": "hamas-gaza",
+      "name": "Hamas",
+      "territory": "Gaza Strip",
+      "bounds": { "north": 31.6, "south": 31.22, "west": 34.2, "east": 34.58 },
+      "trailColor": 16742981,
+      "rocketColor": 16751246,
+      "baseVolley": 8,
+      "maxVolley": 28,
+      "impactMultiplier": 1,
+      "durationMin": 3800,
+      "durationMax": 6200,
+      "launchCadenceMs": 600,
+      "missileProfiles": [
+        {
+          "id": "hamas-short-range",
+          "label": "short-range",
+          "weight": 8,
+          "minRangeKm": 0,
+          "maxRangeKm": 45,
+          "rocketColor": 16754535,
+          "trailOuterColor": 16758652,
+          "trailInnerColor": 16773280,
+          "flameColor": 16770458,
+          "durationMin": 3600,
+          "durationMax": 5400,
+          "impactScale": 1
+        },
+        {
+          "id": "hamas-long-range",
+          "label": "long-range",
+          "weight": 1,
+          "minRangeKm": 45,
+          "maxRangeKm": 260,
+          "rocketColor": 16744271,
+          "trailOuterColor": 16144941,
+          "trailInnerColor": 16766392,
+          "flameColor": 16764319,
+          "durationMin": 6200,
+          "durationMax": 9300,
+          "impactScale": 1.18
+        }
+      ]
+    },
+    {
+      "id": "hezbollah-lebanon",
+      "name": "Hezbollah",
+      "territory": "South Lebanon",
+      "bounds": { "north": 34.55, "south": 33.05, "west": 35.05, "east": 36.65 },
+      "trailColor": 16756045,
+      "rocketColor": 16763763,
+      "baseVolley": 7,
+      "maxVolley": 24,
+      "impactMultiplier": 1.05,
+      "durationMin": 4200,
+      "durationMax": 7000,
+      "launchCadenceMs": 680
+    },
+    {
+      "id": "houthis-yemen",
+      "name": "Houthis",
+      "territory": "Western Yemen",
+      "bounds": { "north": 17.2, "south": 12.3, "west": 42.1, "east": 46.2 },
+      "trailColor": 16735324,
+      "rocketColor": 16746375,
+      "baseVolley": 5,
+      "maxVolley": 18,
+      "impactMultiplier": 1.2,
+      "durationMin": 6200,
+      "durationMax": 9800,
+      "launchCadenceMs": 820
+    },
+    {
+      "id": "iran-regime",
+      "name": "Iran regime",
+      "territory": "Iran",
+      "bounds": { "north": 38.6, "south": 28, "west": 46, "east": 60.6 },
+      "trailColor": 14055167,
+      "rocketColor": 15048959,
+      "baseVolley": 6,
+      "maxVolley": 22,
+      "impactMultiplier": 1.25,
+      "durationMin": 7000,
+      "durationMax": 11200,
+      "launchCadenceMs": 920
+    }
+  ]
+}

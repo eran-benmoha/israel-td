@@ -1,0 +1,26 @@
+{
+  "id": "level-01",
+  "name": "Multi-Front Pressure",
+  "simulation": {
+    "startDateUtc": "2022-01-01T00:00:00Z",
+    "hoursPerSecond": 3
+  },
+  "waveTiming": {
+    "minDelayMs": 22000,
+    "maxDelayMs": 95000
+  },
+  "waves": [
+    { "factionId": "hamas-gaza", "intensityBonus": 0 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 0 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "houthis-yemen", "intensityBonus": 0 },
+    { "factionId": "iran-regime", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 1 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 1 },
+    { "factionId": "iran-regime", "intensityBonus": 2 },
+    { "factionId": "houthis-yemen", "intensityBonus": 1 },
+    { "factionId": "hamas-gaza", "intensityBonus": 2 },
+    { "factionId": "hezbollah-lebanon", "intensityBonus": 2 },
+    { "factionId": "iran-regime", "intensityBonus": 3 }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "mapImagePath": "../../assets/maps/middle-east-relief.jpg",
+  "projection": {
+    "centralMeridian": 50,
+    "xScale": 143.2394488,
+    "rOffset": 2.238026669,
+    "thetaScale": 0.497465385,
+    "xCompression": 0.654,
+    "yAnchor": 1.714427893
+  },
+  "initial": {
+    "zoomLevel": 2.6,
+    "focus": { "lat": 31.45, "lon": 34.95 },
+    "rotationDeg": -4.5
+  },
+  "zoom": {
+    "min": 1,
+    "max": 12
+  }
+}
