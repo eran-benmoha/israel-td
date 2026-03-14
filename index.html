@@ -18,52 +18,12 @@
       <header class="hud">
         <div class="hud__left">
           <div class="hud__title">Israel TD</div>
-          <div class="resource-bars" aria-label="Resource status">
-            <div class="resource-row">
-              <div class="resource">
-                <div class="resource__meta">
-                  <span class="resource__name">Money</span>
-                  <span id="resource-money-value" class="resource__value">120 / 1000</span>
-                </div>
-                <div class="resource__bar"><div id="resource-money-fill" class="resource__fill resource__fill--money"></div></div>
-              </div>
-              <div class="resource">
-                <div class="resource__meta">
-                  <span class="resource__name">Morale</span>
-                  <span id="resource-morale-value" class="resource__value">100%</span>
-                </div>
-                <div class="resource__bar"><div id="resource-morale-fill" class="resource__fill resource__fill--morale"></div></div>
-              </div>
-            </div>
-            <div class="resource-row">
-              <div class="resource">
-                <div class="resource__meta">
-                  <span class="resource__name">Population</span>
-                  <span id="resource-population-value" class="resource__value">100%</span>
-                </div>
-                <div class="resource__bar">
-                  <div id="resource-population-fill" class="resource__fill resource__fill--population"></div>
-                </div>
-              </div>
-              <div class="resource">
-                <div class="resource__meta">
-                  <span class="resource__name">Army</span>
-                  <span id="resource-army-value" class="resource__value">100%</span>
-                </div>
-                <div class="resource__bar"><div id="resource-army-fill" class="resource__fill resource__fill--army"></div></div>
-              </div>
-            </div>
-            <div class="resource-row">
-              <div class="resource resource--wide">
-                <div class="resource__meta">
-                  <span class="resource__name">Economy</span>
-                  <span id="resource-economy-value" class="resource__value">100%</span>
-                </div>
-                <div class="resource__bar">
-                  <div id="resource-economy-fill" class="resource__fill resource__fill--economy"></div>
-                </div>
-              </div>
-            </div>
+          <div class="resource-icons" aria-label="Resource status">
+            <span id="resource-money-value" class="resource-chip">💰 120</span>
+            <span id="resource-morale-value" class="resource-chip">🙂 100%</span>
+            <span id="resource-population-value" class="resource-chip">🩺 100%</span>
+            <span id="resource-army-value" class="resource-chip">🪖 100%</span>
+            <span id="resource-economy-value" class="resource-chip">📈 100%</span>
           </div>
         </div>
         <div class="hud__wave" aria-live="polite">
@@ -73,19 +33,19 @@
         </div>
       </header>
       <main id="game-root" aria-label="Game canvas"></main>
-      <button id="debug-toggle" class="debug-toggle" type="button" aria-expanded="false">Debug</button>
+      <button id="debug-toggle" class="debug-toggle" type="button" aria-expanded="false">🛠️</button>
       <section id="debug-panel" class="debug-panel" hidden>
-        <div class="debug-panel__title">Debug Menu</div>
-        <button id="debug-launch-wave" class="debug-panel__action" type="button">Launch wave now</button>
-        <div id="debug-zoom" class="debug-panel__status">Zoom: 1.00x</div>
-        <div id="debug-status" class="debug-panel__status">Ready.</div>
+        <div class="debug-panel__title">🛠️ Debug</div>
+        <button id="debug-launch-wave" class="debug-panel__action" type="button">🚀 Launch Wave</button>
+        <div id="debug-zoom" class="debug-panel__status">🔎 1.00x</div>
+        <div id="debug-status" class="debug-panel__status">✅ Ready.</div>
       </section>
       <footer class="shop">
         <div class="shop__head">
-          <span class="shop__title">Purchase Menu</span>
+          <span class="shop__title">🛒 Shop</span>
           <div class="shop__head-right">
-            <span id="shop-money" class="shop__money">Money: 120</span>
-            <button id="shop-toggle" class="shop__toggle" type="button" aria-expanded="true">Hide</button>
+            <span id="shop-money" class="shop__money">💰 120</span>
+            <button id="shop-toggle" class="shop__toggle" type="button" aria-expanded="true">🙈</button>
           </div>
         </div>
         <div id="shop-tabs" class="shop__tabs shop__toggleable" role="tablist" aria-label="Tower categories"></div>

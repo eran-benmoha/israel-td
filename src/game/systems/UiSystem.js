@@ -32,13 +32,6 @@ export class UiSystem {
         army: document.getElementById("resource-army-value"),
         economy: document.getElementById("resource-economy-value"),
       },
-      resourceFills: {
-        money: document.getElementById("resource-money-fill"),
-        morale: document.getElementById("resource-morale-fill"),
-        population: document.getElementById("resource-population-fill"),
-        army: document.getElementById("resource-army-fill"),
-        economy: document.getElementById("resource-economy-fill"),
-      },
     };
   }
 
@@ -105,7 +98,7 @@ export class UiSystem {
     if (shopPanel && shopToggleButton) {
       shopToggleButton.addEventListener("click", () => {
         const isCollapsed = shopPanel.classList.toggle("is-collapsed");
-        shopToggleButton.textContent = isCollapsed ? "Show" : "Hide";
+        shopToggleButton.textContent = isCollapsed ? "👁️" : "🙈";
         shopToggleButton.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
       });
     }
@@ -138,16 +131,14 @@ export class UiSystem {
   updateResourceHud({ resources, maxResources }) {
     Object.keys(resources).forEach((key) => {
       const valueEl = this.elements.resourceValues[key];
-      const fillEl = this.elements.resourceFills[key];
-      if (!valueEl || !fillEl) {
+      if (!valueEl) {
         return;
       }
 
       const value = resources[key];
       const max = maxResources[key];
       const percent = (value / max) * 100;
-      fillEl.style.width = `${percent}%`;
-      valueEl.textContent = key === "money" ? `${Math.round(value)} / ${max}` : `${Math.round(percent)}%`;
+      valueEl.textContent = this.formatResourceChip(key, value, max, percent);
     });
   }
 
@@ -182,7 +173,7 @@ export class UiSystem {
 
   onDebugZoom(zoom) {
     if (this.elements.debugZoom && typeof zoom === "number" && Number.isFinite(zoom)) {
-      this.elements.debugZoom.textContent = `Zoom: ${zoom.toFixed(2)}x`;
+      this.elements.debugZoom.textContent = `🔎 ${zoom.toFixed(2)}x`;
     }
   }
 
@@ -194,7 +185,7 @@ export class UiSystem {
 
   updateShopMoneyLabel() {
     if (this.elements.shopMoney) {
-      this.elements.shopMoney.textContent = `Money: ${Math.round(this.shopUiState.money)}`;
+      this.elements.shopMoney.textContent = `💰 ${Math.round(this.shopUiState.money)}`;
     }
   }
 
@@ -224,7 +215,8 @@ export class UiSystem {
       .map((unit) => {
         const owned = this.shopUiState.purchased[unit.id] ?? 0;
         const canAfford = this.shopUiState.money >= unit.cost;
-        return `<div class="shop__item"><div class="shop__item-name">${unit.name}</div><div class="shop__item-meta"><span>Cost: ${unit.cost}</span><span>Owned: ${owned}</span></div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "Purchase" : "Need more money"}</button></div>`;
+        const icon = this.categoryEmoji(unit.category);
+        return `<div class="shop__item"><div class="shop__item-name">${icon} ${unit.name}</div><div class="shop__item-meta"><span>💸 ${unit.cost}</span><span>📦 ${owned}</span></div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "🛍️ Buy" : "⛔ Funds"}</button></div>`;
       })
       .join("");
   }
@@ -232,13 +224,44 @@ export class UiSystem {
   categoryLabel(categoryKey) {
     switch (categoryKey) {
       case "air-defense":
-        return "Air Defense";
+        return "🛡️ AD";
       case "air-force":
-        return "Air Force";
+        return "✈️ AF";
       case "ground-troops":
-        return "Ground Troops";
+        return "🪖 GT";
       default:
         return categoryKey;
+    }
+  }
+
+  categoryEmoji(categoryKey) {
+    switch (categoryKey) {
+      case "air-defense":
+        return "🛡️";
+      case "air-force":
+        return "✈️";
+      case "ground-troops":
+        return "🪖";
+      default:
+        return "⚙️";
+    }
+  }
+
+  formatResourceChip(resourceKey, value, max, percent) {
+    const roundedPercent = `${Math.round(percent)}%`;
+    switch (resourceKey) {
+      case "money":
+        return `💰 ${Math.round(value)}`;
+      case "morale":
+        return `🙂 ${roundedPercent}`;
+      case "population":
+        return `🩺 ${roundedPercent}`;
+      case "army":
+        return `🪖 ${roundedPercent}`;
+      case "economy":
+        return `📈 ${roundedPercent}`;
+      default:
+        return `${Math.round(value)} / ${max}`;
     }
   }
 }

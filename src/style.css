@@ -49,76 +49,21 @@ body {
   flex: 1;
 }
 
-.resource-bars {
+.resource-icons {
   display: flex;
-  flex-direction: column;
-  gap: 0.42rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
-.resource-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.48rem;
-}
-
-.resource {
-  min-width: 0;
-}
-
-.resource--wide {
-  grid-column: 1 / -1;
-}
-
-.resource__meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.4rem;
-  margin-bottom: 0.18rem;
-  font-size: 0.68rem;
-}
-
-.resource__name {
-  color: #afd2f6;
-  letter-spacing: 0.01em;
-}
-
-.resource__value {
-  color: #dff2ff;
-  font-variant-numeric: tabular-nums;
-}
-
-.resource__bar {
-  height: 8px;
+.resource-chip {
+  border: 1px solid #3d5f82;
   border-radius: 999px;
-  background: #1b2a3d;
-  border: 1px solid #34516e;
-  overflow: hidden;
-}
-
-.resource__fill {
-  height: 100%;
-  width: 0%;
-  transition: width 180ms linear;
-}
-
-.resource__fill--money {
-  background: linear-gradient(90deg, #f0c24a, #ffe48c);
-}
-
-.resource__fill--morale {
-  background: linear-gradient(90deg, #37d3ff, #9befff);
-}
-
-.resource__fill--population {
-  background: linear-gradient(90deg, #57d877, #adf1b1);
-}
-
-.resource__fill--army {
-  background: linear-gradient(90deg, #cb82ff, #e0c3ff);
-}
-
-.resource__fill--economy {
-  background: linear-gradient(90deg, #ff9f5e, #ffd27f);
+  background: rgba(18, 35, 55, 0.85);
+  color: #e9f4ff;
+  padding: 0.16rem 0.46rem;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .hud__wave {
@@ -210,13 +155,13 @@ body {
 }
 
 .shop__toggle {
-  min-width: 44px;
+  min-width: 34px;
   min-height: 32px;
   border: 1px solid #4f6f8f;
   border-radius: 8px;
   background: #1a3248;
   color: #d8ecff;
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
