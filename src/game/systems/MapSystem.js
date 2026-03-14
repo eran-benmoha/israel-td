@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import middleEastReliefUrl from "../../assets/maps/middle-east-relief.jpg";
 
 export class MapSystem {
   constructor({ scene, eventBus, mapViewConfig, israelData, factionsConfig }) {
@@ -20,7 +21,9 @@ export class MapSystem {
   }
 
   preload() {
-    const mapUrl = new URL(this.mapViewConfig.mapImagePath, import.meta.url).href;
+    // Keep map texture as a static import so Vite includes it in production bundles.
+    const configuredPath = this.mapViewConfig.mapImagePath ?? "";
+    const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastReliefUrl;
     this.scene.load.image("middle-east-map", mapUrl);
   }
 
