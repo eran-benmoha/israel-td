@@ -278,7 +278,7 @@ export class BootScene extends Phaser.Scene {
     this.baseMapScale = 1;
     this.zoomLevel = INITIAL_ZOOM_LEVEL;
     this.minZoomLevel = 1;
-    this.maxZoomLevel = 4;
+    this.maxZoomLevel = 12;
     this.pinchStartDistance = 0;
     this.pinchStartZoomLevel = 1;
     this.waveNumber = 0;
