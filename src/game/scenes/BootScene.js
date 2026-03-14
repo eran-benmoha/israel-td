@@ -32,6 +32,57 @@ const ISRAEL_TARGETS = [
   { lat: 31.525, lon: 34.595 }, // Sderot
 ];
 
+const UNIT_CATALOG = [
+  {
+    id: "iron-dome-battery",
+    name: "Iron Dome Battery",
+    category: "air-defense",
+    cost: 120,
+    moraleBoost: 0.8,
+    armyBoost: 2.2,
+  },
+  {
+    id: "arrow-system",
+    name: "Arrow Interceptor",
+    category: "air-defense",
+    cost: 180,
+    moraleBoost: 1.1,
+    armyBoost: 3.0,
+  },
+  {
+    id: "fighter-sortie",
+    name: "Fighter Sortie",
+    category: "air-force",
+    cost: 160,
+    moraleBoost: 1.0,
+    armyBoost: 2.7,
+  },
+  {
+    id: "precision-strike",
+    name: "Precision Strike",
+    category: "air-force",
+    cost: 210,
+    moraleBoost: 1.4,
+    armyBoost: 3.5,
+  },
+  {
+    id: "reserve-brigade",
+    name: "Reserve Brigade",
+    category: "ground-troops",
+    cost: 90,
+    moraleBoost: 0.6,
+    armyBoost: 1.8,
+  },
+  {
+    id: "border-defense-line",
+    name: "Border Defense Line",
+    category: "ground-troops",
+    cost: 140,
+    moraleBoost: 0.9,
+    armyBoost: 2.4,
+  },
+];
+
 const ISRAEL_BORDER_LAT_LON = [
   { lat: 33.28, lon: 35.57 },
   { lat: 33.28, lon: 35.76 },
@@ -96,6 +147,8 @@ export class BootScene extends Phaser.Scene {
       economy: 100,
     };
     this.resourceElements = {};
+    this.shopPurchaseListener = null;
+    this.purchasedUnits = {};
   }
 
   preload() {
@@ -242,6 +295,7 @@ export class BootScene extends Phaser.Scene {
     });
 
     this.initializeWaveHud();
+    this.registerShopHooks();
     this.registerDebugMenuHooks();
     this.startWaveLoop();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanupSceneHooks, this);
@@ -411,6 +465,8 @@ export class BootScene extends Phaser.Scene {
         }
       }
     });
+
+    this.emitShopState();
   }
 
   recalculateEconomy() {
@@ -428,6 +484,71 @@ export class BootScene extends Phaser.Scene {
     this.emitDebugStatus("Debug ready.");
   }
 
+  registerShopHooks() {
+    this.shopPurchaseListener = (event) => {
+      const unitId = event.detail?.unitId;
+      if (typeof unitId !== "string") {
+        return;
+      }
+
+      this.purchaseUnit(unitId);
+    };
+    window.addEventListener("shop:purchaseUnit", this.shopPurchaseListener);
+    this.emitShopCatalog();
+    this.emitShopState();
+  }
+
+  purchaseUnit(unitId) {
+    const unit = UNIT_CATALOG.find((candidate) => candidate.id === unitId);
+    if (!unit) {
+      this.emitShopPurchaseResult(false, "Unit not found.");
+      return;
+    }
+
+    if (this.resources.money < unit.cost) {
+      this.emitShopPurchaseResult(false, `Not enough money for ${unit.name}.`);
+      return;
+    }
+
+    this.adjustResource("money", -unit.cost);
+    this.adjustResource("army", unit.armyBoost);
+    this.adjustResource("morale", unit.moraleBoost);
+    this.purchasedUnits[unit.id] = (this.purchasedUnits[unit.id] ?? 0) + 1;
+    this.updateResourceHud();
+    this.emitDebugStatus(`Purchased ${unit.name}.`);
+    this.emitShopPurchaseResult(true, `Purchased ${unit.name} for ${unit.cost}.`);
+  }
+
+  emitShopCatalog() {
+    window.dispatchEvent(
+      new CustomEvent("shop:catalog", {
+        detail: { units: UNIT_CATALOG },
+      }),
+    );
+  }
+
+  emitShopState() {
+    window.dispatchEvent(
+      new CustomEvent("shop:state", {
+        detail: {
+          money: this.resources.money,
+          purchased: { ...this.purchasedUnits },
+        },
+      }),
+    );
+  }
+
+  emitShopPurchaseResult(success, message) {
+    window.dispatchEvent(
+      new CustomEvent("shop:purchaseResult", {
+        detail: {
+          success,
+          message,
+        },
+      }),
+    );
+  }
+
   cleanupSceneHooks() {
     if (this.waveCountdownEvent) {
       this.waveCountdownEvent.remove(false);
@@ -442,6 +563,11 @@ export class BootScene extends Phaser.Scene {
     if (this.debugInstantWaveListener) {
       window.removeEventListener("debug:launchWaveInstant", this.debugInstantWaveListener);
       this.debugInstantWaveListener = null;
+    }
+
+    if (this.shopPurchaseListener) {
+      window.removeEventListener("shop:purchaseUnit", this.shopPurchaseListener);
+      this.shopPurchaseListener = null;
     }
   }
 

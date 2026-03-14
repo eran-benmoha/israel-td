@@ -78,10 +78,14 @@
         <button id="debug-launch-wave" class="debug-panel__action" type="button">Launch wave now</button>
         <div id="debug-status" class="debug-panel__status">Ready.</div>
       </section>
-      <footer class="hud hud--bottom">
-        <button class="hud__button" type="button" disabled>Tower A</button>
-        <button class="hud__button" type="button" disabled>Tower B</button>
-        <button class="hud__button" type="button" disabled>Start Wave</button>
+      <footer class="shop">
+        <div class="shop__head">
+          <span class="shop__title">Purchase Menu</span>
+          <span id="shop-money" class="shop__money">Money: 120</span>
+        </div>
+        <div id="shop-tabs" class="shop__tabs" role="tablist" aria-label="Tower categories"></div>
+        <div id="shop-items" class="shop__items" aria-live="polite"></div>
+        <div id="shop-status" class="shop__status">Waiting for shop data...</div>
       </footer>
     </div>
     <script type="module" src="./src/main.js"></script>
