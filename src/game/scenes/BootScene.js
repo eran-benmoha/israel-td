@@ -16,9 +16,9 @@ export class BootScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const mapImage = this.add.image(width / 2, height / 2, "israel-map");
 
-    // Fit while preserving aspect ratio so the map is always visible.
-    const fitScale = Math.min(width / mapImage.width, height / mapImage.height);
-    mapImage.setScale(fitScale * 0.96);
+    // Cover the viewport so the map is clearly visible on mobile.
+    const coverScale = Math.max(width / mapImage.width, height / mapImage.height);
+    mapImage.setScale(coverScale);
 
     this.add
       .text(width / 2, 34, "Static Israel map prototype", {
