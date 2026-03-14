@@ -13,6 +13,7 @@ const MIDDLE_EAST_PROJECTION = {
 const WAVE_INTERVAL_MS = 60_000;
 const INITIAL_ZOOM_LEVEL = 2.6;
 const INITIAL_ISRAEL_FOCUS = { lat: 31.45, lon: 34.95 };
+const MAP_VIEW_ROTATION_DEG = -2.5;
 const EARTH_RADIUS_KM = 6371;
 
 const HAMAS_MISSILE_TYPES = {
@@ -314,6 +315,7 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor("#05070e");
+    this.cameras.main.setRotation(Phaser.Math.DegToRad(MAP_VIEW_ROTATION_DEG));
 
     let { width, height } = this.scale;
     const mapImage = this.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
