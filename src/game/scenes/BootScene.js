@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 
 const MAP_GEO_BOUNDS = {
-  // Approximate geographic coverage of the source satellite frame.
-  north: 34.85,
-  south: 28.65,
-  west: 33.45,
-  east: 36.25,
+  // Approximate geographic coverage of the Middle East base map frame.
+  north: 43.5,
+  south: 10.0,
+  west: 23.0,
+  east: 66.0,
 };
 
 const ISRAEL_BORDER_LAT_LON = [
@@ -44,15 +44,15 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    const mapUrl = new URL("../../assets/maps/israel-satellite.jpg", import.meta.url).href;
-    this.load.image("israel-map", mapUrl);
+    const mapUrl = new URL("../../assets/maps/middle-east-geographic.jpg", import.meta.url).href;
+    this.load.image("middle-east-map", mapUrl);
   }
 
   create() {
     this.cameras.main.setBackgroundColor("#05070e");
 
     let { width, height } = this.scale;
-    const mapImage = this.add.image(0, 0, "israel-map").setOrigin(0, 0);
+    const mapImage = this.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
     const outline = this.add.graphics();
     this.drawIsraelOutline(outline, mapImage.width, mapImage.height);
     const mapContainer = this.add.container(0, 0, [mapImage, outline]);
@@ -92,7 +92,7 @@ export class BootScene extends Phaser.Scene {
     this.input.on("pointerupoutside", stopDrag);
 
     const title = this.add
-      .text(width / 2, 34, "Drag map • Israel outline enabled", {
+      .text(width / 2, 34, "Drag to explore Middle East • Israel outline enabled", {
         fontFamily: "Arial",
         fontSize: "18px",
         color: "#dbe9ff",
