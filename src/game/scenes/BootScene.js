@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { eventBus } from "../core/EventBus";
+import { Events } from "../core/events";
 import { GameState } from "../core/GameState";
 import { MapSystem } from "../systems/MapSystem";
 import { FactionSystem } from "../systems/FactionSystem";
@@ -56,7 +57,7 @@ export class BootScene extends Phaser.Scene {
     this.resourceSystem.start();
     this.waveSystem.start();
     this.createStaticTitle();
-    eventBus.emit("ui/debug-status", { message: "Debug ready." });
+    eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
   }
