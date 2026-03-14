@@ -13,6 +13,38 @@ const MIDDLE_EAST_PROJECTION = {
 const WAVE_INTERVAL_MS = 60_000;
 const INITIAL_ZOOM_LEVEL = 2.6;
 const INITIAL_ISRAEL_FOCUS = { lat: 31.45, lon: 34.95 };
+const EARTH_RADIUS_KM = 6371;
+
+const HAMAS_MISSILE_TYPES = {
+  // Approximate gameplay ranges inspired by public reporting on Hamas rocket classes.
+  // Short-range: around tens of km; Long-range: significantly farther but less frequent.
+  shortRange: {
+    id: "hamas-short-range",
+    label: "short-range",
+    minRangeKm: 0,
+    maxRangeKm: 45,
+    rocketColor: 0xffa767,
+    trailOuterColor: 0xffb77c,
+    trailInnerColor: 0xfff0a0,
+    flameColor: 0xffe59a,
+    durationMin: 3600,
+    durationMax: 5400,
+    impactScale: 1.0,
+  },
+  longRange: {
+    id: "hamas-long-range",
+    label: "long-range",
+    minRangeKm: 45,
+    maxRangeKm: 260,
+    rocketColor: 0xff7f4f,
+    trailOuterColor: 0xf65a2d,
+    trailInnerColor: 0xffd5b8,
+    flameColor: 0xffcd9f,
+    durationMin: 6200,
+    durationMax: 9300,
+    impactScale: 1.18,
+  },
+};
 
 const HOSTILE_FACTIONS = [
   {
@@ -677,24 +709,50 @@ export class BootScene extends Phaser.Scene {
     const launchCadenceMs = faction.launchCadenceMs ?? 700;
 
     for (let i = 0; i < rocketCount; i += 1) {
-      this.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction));
+      const missileType = this.getMissileTypeForLaunch(faction, i);
+      this.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction, missileType));
     }
   }
 
-  spawnRocket(faction) {
+  getMissileTypeForLaunch(faction, launchIndex) {
+    if (faction.id !== "hamas-gaza") {
+      return {
+        id: `${faction.id}-standard`,
+        label: "standard",
+        minRangeKm: 0,
+        maxRangeKm: 9999,
+        rocketColor: faction.rocketColor,
+        trailOuterColor: faction.trailColor,
+        trailInnerColor: 0xffe2c6,
+        flameColor: 0xffd7a8,
+        durationMin: faction.durationMin,
+        durationMax: faction.durationMax,
+        impactScale: 1,
+      };
+    }
+
+    // Long-range launches are intentionally much fewer.
+    const shouldUseLongRange = (launchIndex + 1) % 9 === 0;
+    return shouldUseLongRange ? HAMAS_MISSILE_TYPES.longRange : HAMAS_MISSILE_TYPES.shortRange;
+  }
+
+  spawnRocket(faction, missileType) {
     if (!this.mapImage || !this.mapContainer) {
       return;
     }
 
-    const launchPoint = this.randomPointFromGeoRect(faction.bounds);
-    const targetPoint = this.getRandomIsraelTargetPoint();
+    const launch = this.randomGeoPointFromRect(faction.bounds);
+    const target = this.getTargetForMissileType(launch, missileType);
+    const launchPoint = launch.point;
+    const targetPoint = target.point;
     const trail = this.add.graphics();
-    const rocket = this.add.circle(launchPoint.x, launchPoint.y, 3.2, faction.rocketColor, 1);
-    rocket.setStrokeStyle(1, 0x3d1200, 0.9);
-    this.mapContainer.add([trail, rocket]);
+    const rocketVisual = this.createMissileVisual(launchPoint.x, launchPoint.y, missileType);
+    this.mapContainer.add([trail, rocketVisual.container]);
 
     const rocketState = { t: 0 };
-    const duration = Phaser.Math.Between(faction.durationMin, faction.durationMax);
+    let previousX = launchPoint.x;
+    let previousY = launchPoint.y;
+    const duration = Phaser.Math.Between(missileType.durationMin, missileType.durationMax);
 
     this.tweens.add({
       targets: rocketState,
@@ -704,10 +762,20 @@ export class BootScene extends Phaser.Scene {
       onUpdate: () => {
         const x = Phaser.Math.Linear(launchPoint.x, targetPoint.x, rocketState.t);
         const y = Phaser.Math.Linear(launchPoint.y, targetPoint.y, rocketState.t);
-        rocket.setPosition(x, y);
+        const heading = Phaser.Math.Angle.Between(previousX, previousY, x, y);
+        rocketVisual.container.setPosition(x, y);
+        rocketVisual.container.setRotation(heading);
+        rocketVisual.flame.alpha = Phaser.Math.FloatBetween(0.58, 0.95);
+        previousX = x;
+        previousY = y;
 
         trail.clear();
-        trail.lineStyle(2, faction.trailColor, 0.85);
+        trail.lineStyle(4, missileType.trailOuterColor, 0.24);
+        trail.beginPath();
+        trail.moveTo(launchPoint.x, launchPoint.y);
+        trail.lineTo(x, y);
+        trail.strokePath();
+        trail.lineStyle(2, missileType.trailInnerColor, 0.78);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);
@@ -715,25 +783,35 @@ export class BootScene extends Phaser.Scene {
       },
       onComplete: () => {
         trail.destroy();
-        rocket.destroy();
-        this.createImpactFlash(targetPoint.x, targetPoint.y, faction);
+        rocketVisual.container.destroy();
+        this.createImpactFlash(targetPoint.x, targetPoint.y, faction, missileType);
       },
     });
   }
 
-  createImpactFlash(x, y, faction) {
+  createMissileVisual(x, y, missileType) {
+    const container = this.add.container(x, y);
+    const missileBody = this.add.polygon(0, 0, [-10, -2, 6, -2, 10, 0, 6, 2, -10, 2, -8, 0], missileType.rocketColor, 1);
+    missileBody.setStrokeStyle(1, 0x2a0f08, 0.92);
+    const flame = this.add.triangle(-10.5, 0, 0, 0, -6.5, 2.2, -6.5, -2.2, missileType.flameColor, 0.9);
+    const highlight = this.add.rectangle(1.5, -0.8, 5, 0.9, 0xfff4e8, 0.72);
+    container.add([flame, missileBody, highlight]);
+    return { container, flame };
+  }
+
+  createImpactFlash(x, y, faction, missileType) {
     if (!this.mapContainer) {
       return;
     }
 
-    const impactScale = faction?.impactMultiplier ?? 1;
+    const impactScale = (faction?.impactMultiplier ?? 1) * (missileType?.impactScale ?? 1);
     this.adjustResource("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale);
     this.adjustResource("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale);
     this.adjustResource("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale);
     this.adjustResource("money", -Phaser.Math.FloatBetween(1, 4) * impactScale);
     this.updateResourceHud();
 
-    const impactColor = faction?.rocketColor ?? 0xfff4b8;
+    const impactColor = missileType?.rocketColor ?? faction?.rocketColor ?? 0xfff4b8;
     const impact = this.add.circle(x, y, 3, impactColor, 0.95);
     this.mapContainer.add(impact);
 
@@ -751,6 +829,42 @@ export class BootScene extends Phaser.Scene {
     const lat = Phaser.Math.FloatBetween(bounds.south, bounds.north);
     const lon = Phaser.Math.FloatBetween(bounds.west, bounds.east);
     return this.geoToImagePoint(lat, lon, this.mapImage.width, this.mapImage.height);
+  }
+
+  randomGeoPointFromRect(bounds) {
+    const lat = Phaser.Math.FloatBetween(bounds.south, bounds.north);
+    const lon = Phaser.Math.FloatBetween(bounds.west, bounds.east);
+    return {
+      lat,
+      lon,
+      point: this.geoToImagePoint(lat, lon, this.mapImage.width, this.mapImage.height),
+    };
+  }
+
+  getTargetForMissileType(launch, missileType) {
+    const targetsInRange = ISRAEL_TARGETS.filter((candidate) => {
+      const distanceKm = this.distanceKmBetweenPoints(launch.lat, launch.lon, candidate.lat, candidate.lon);
+      return distanceKm >= missileType.minRangeKm && distanceKm <= missileType.maxRangeKm;
+    });
+
+    const targetPool = targetsInRange.length > 0 ? targetsInRange : ISRAEL_TARGETS;
+    const pickedTarget = Phaser.Utils.Array.GetRandom(targetPool);
+    return {
+      ...pickedTarget,
+      point: this.geoToImagePoint(pickedTarget.lat, pickedTarget.lon, this.mapImage.width, this.mapImage.height),
+    };
+  }
+
+  distanceKmBetweenPoints(latA, lonA, latB, lonB) {
+    const dLat = Phaser.Math.DegToRad(latB - latA);
+    const dLon = Phaser.Math.DegToRad(lonB - lonA);
+    const lat1 = Phaser.Math.DegToRad(latA);
+    const lat2 = Phaser.Math.DegToRad(latB);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return EARTH_RADIUS_KM * c;
   }
 
   getRandomIsraelTargetPoint() {
