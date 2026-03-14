@@ -26,7 +26,6 @@ export class MapSystem {
   }
 
   preload() {
-    // Keep map texture as a static import so Vite includes it in production bundles.
     const configuredPath = this.mapViewConfig.mapImagePath ?? "";
     const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastReliefUrl;
     this.scene.load.image("middle-east-map", mapUrl);
@@ -37,6 +36,8 @@ export class MapSystem {
     camera.setBackgroundColor("#05070e");
     camera.setRotation(Phaser.Math.DegToRad(this.mapViewConfig.initial.rotationDeg));
 
+    this._applyTextureFiltering();
+
     let { width, height } = this.scene.scale;
     this.mapImage = this.scene.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
     this.mapRenderer.setMapImage(this.mapImage);
@@ -46,6 +47,11 @@ export class MapSystem {
     this.mapRenderer.setMapContainer(this.mapContainer);
     this.baseMapScale = this.getMapCoverScale(width, height);
     this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
+
+    const referenceScale = this.baseMapScale * this.mapViewConfig.initial.zoomLevel;
+    this.mapRenderer.setReferenceScale(referenceScale);
+    this.mapRenderer.updateForZoom(this.mapContainer.scaleX);
+
     this.focusMapOnGeoPoint(width, height, this.mapViewConfig.initial.focus.lat, this.mapViewConfig.initial.focus.lon);
     this.emitZoom();
 
@@ -61,6 +67,11 @@ export class MapSystem {
       height = gameSize.height;
       this.baseMapScale = this.getMapCoverScale(width, height);
       this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
+
+      const newRef = this.baseMapScale * this.mapViewConfig.initial.zoomLevel;
+      this.mapRenderer.setReferenceScale(newRef);
+      this.mapRenderer.updateForZoom(this.mapContainer.scaleX);
+
       const nextCenterWorld = camera.getWorldPoint(width / 2, height / 2);
       this.mapContainer.x = nextCenterWorld.x - centerWorldX * this.mapContainer.scaleX;
       this.mapContainer.y = nextCenterWorld.y - centerWorldY * this.mapContainer.scaleY;
@@ -78,6 +89,13 @@ export class MapSystem {
     if (this.resizeHandler) {
       this.scene.scale.off("resize", this.resizeHandler);
       this.resizeHandler = null;
+    }
+  }
+
+  _applyTextureFiltering() {
+    const tex = this.scene.textures.get("middle-east-map");
+    if (tex && tex.source && tex.source[0]) {
+      tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
   }
 
@@ -194,7 +212,6 @@ export class MapSystem {
 
   getMapCoverScale(viewportWidth, viewportHeight) {
     const { width, height } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
-    // Stability-first default: fit the full map in view at baseline zoom.
     return Math.min(width / this.mapImage.width, height / this.mapImage.height);
   }
 
@@ -246,6 +263,7 @@ export class MapSystem {
     this.mapContainer.x = screenWorld.x - worldX * nextScale;
     this.mapContainer.y = screenWorld.y - worldY * nextScale;
     this.clampMapPosition(viewportWidth, viewportHeight);
+    this.mapRenderer.updateForZoom(nextScale);
     this.emitZoom();
   }
 
