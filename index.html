@@ -68,7 +68,7 @@
         </div>
         <div class="hud__wave" aria-live="polite">
           <span id="wave-indicator">Wave 0</span>
-          <span id="wave-timer">Next wave: 60s</span>
+          <span id="wave-timer">Clock: Jan 2022</span>
           <span id="wave-origin">Next source: Gaza Strip</span>
         </div>
       </header>
@@ -82,11 +82,14 @@
       <footer class="shop">
         <div class="shop__head">
           <span class="shop__title">Purchase Menu</span>
-          <span id="shop-money" class="shop__money">Money: 120</span>
+          <div class="shop__head-right">
+            <span id="shop-money" class="shop__money">Money: 120</span>
+            <button id="shop-toggle" class="shop__toggle" type="button" aria-expanded="true">Hide</button>
+          </div>
         </div>
-        <div id="shop-tabs" class="shop__tabs" role="tablist" aria-label="Tower categories"></div>
-        <div id="shop-items" class="shop__items" aria-live="polite"></div>
-        <div id="shop-status" class="shop__status">Waiting for shop data...</div>
+        <div id="shop-tabs" class="shop__tabs shop__toggleable" role="tablist" aria-label="Tower categories"></div>
+        <div id="shop-items" class="shop__items shop__toggleable" aria-live="polite"></div>
+        <div id="shop-status" class="shop__status shop__toggleable">Waiting for shop data...</div>
       </footer>
     </div>
     <script type="module" src="./src/main.js"></script>

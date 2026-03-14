@@ -189,6 +189,12 @@ body {
   align-items: center;
 }
 
+.shop__head-right {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .shop__title {
   font-size: 0.84rem;
   font-weight: 700;
@@ -199,6 +205,21 @@ body {
   font-size: 0.8rem;
   color: #ffd588;
   font-variant-numeric: tabular-nums;
+}
+
+.shop__toggle {
+  min-width: 44px;
+  min-height: 32px;
+  border: 1px solid #4f6f8f;
+  border-radius: 8px;
+  background: #1a3248;
+  color: #d8ecff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.shop.is-collapsed .shop__toggleable {
+  display: none;
 }
 
 .shop__tabs {

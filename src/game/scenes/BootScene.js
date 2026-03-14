@@ -10,11 +10,14 @@ const MIDDLE_EAST_PROJECTION = {
   yAnchor: 1.714427893,
 };
 
-const WAVE_INTERVAL_MS = 60_000;
 const INITIAL_ZOOM_LEVEL = 2.6;
 const INITIAL_ISRAEL_FOCUS = { lat: 31.45, lon: 34.95 };
 const MAP_VIEW_ROTATION_DEG = -2.5;
 const EARTH_RADIUS_KM = 6371;
+const SIMULATION_START_UTC_MS = Date.UTC(2022, 0, 1, 0, 0, 0);
+const SIMULATION_HOURS_PER_REAL_SECOND = 3;
+const WAVE_INTERVAL_MIN_MS = 22_000;
+const WAVE_INTERVAL_MAX_MS = 95_000;
 
 const HAMAS_MISSILE_TYPES = {
   // Approximate gameplay ranges inspired by public reporting on Hamas rocket classes.
@@ -283,11 +286,12 @@ export class BootScene extends Phaser.Scene {
     this.upcomingFaction = HOSTILE_FACTIONS[0];
     this.nextWaveAt = 0;
     this.nextWaveEvent = null;
-    this.waveCountdownEvent = null;
+    this.clockTickEvent = null;
     this.waveIndicatorEl = null;
     this.waveTimerEl = null;
     this.waveOriginEl = null;
-    this.lastTimerSecond = -1;
+    this.simulationClockMs = SIMULATION_START_UTC_MS;
+    this.lastSimulationUpdateAt = 0;
     this.debugInstantWaveListener = null;
     this.resources = {
       money: 120,
@@ -524,23 +528,26 @@ export class BootScene extends Phaser.Scene {
     this.waveTimerEl = document.getElementById("wave-timer");
     this.waveOriginEl = document.getElementById("wave-origin");
     this.initializeResourceHud();
-    this.syncWaveHud(60);
+    this.syncWaveHud();
   }
 
   startWaveLoop() {
     this.waveNumber = 0;
-    this.lastTimerSecond = -1;
+    this.activeFaction = null;
+    this.upcomingFaction = this.getFactionForWave(1);
+    this.simulationClockMs = SIMULATION_START_UTC_MS;
+    this.lastSimulationUpdateAt = this.time.now;
     this.scheduleNextWave();
-    this.waveCountdownEvent = this.time.addEvent({
+    this.clockTickEvent = this.time.addEvent({
       delay: 250,
       loop: true,
-      callback: this.updateWaveCountdown,
+      callback: this.tickSimulationClock,
       callbackScope: this,
     });
-    this.updateWaveCountdown();
+    this.syncWaveHud();
   }
 
-  scheduleNextWave(delayMs = WAVE_INTERVAL_MS) {
+  scheduleNextWave(delayMs = this.getRandomWaveDelayMs()) {
     if (this.nextWaveEvent) {
       this.nextWaveEvent.remove(false);
     }
@@ -555,7 +562,7 @@ export class BootScene extends Phaser.Scene {
     this.upcomingFaction = this.getFactionForWave(this.waveNumber + 1);
     this.spawnRocketWave(this.activeFaction);
     this.scheduleNextWave();
-    this.syncWaveHud(60);
+    this.syncWaveHud();
     this.adjustResource("money", 28 + this.waveNumber * 3);
     this.adjustResource("army", 0.75);
     this.updateResourceHud();
@@ -566,23 +573,35 @@ export class BootScene extends Phaser.Scene {
     );
   }
 
-  updateWaveCountdown() {
-    const remainingMs = Math.max(0, this.nextWaveAt - this.time.now);
-    const remainingSeconds = Math.ceil(remainingMs / 1000);
-
-    if (remainingSeconds !== this.lastTimerSecond) {
-      this.lastTimerSecond = remainingSeconds;
-      this.syncWaveHud(remainingSeconds);
-    }
+  getRandomWaveDelayMs() {
+    return Phaser.Math.Between(WAVE_INTERVAL_MIN_MS, WAVE_INTERVAL_MAX_MS);
   }
 
-  syncWaveHud(remainingSeconds = 60) {
+  tickSimulationClock() {
+    const now = this.time.now;
+    const elapsedRealMs = Math.max(0, now - this.lastSimulationUpdateAt);
+    this.lastSimulationUpdateAt = now;
+    this.simulationClockMs += (elapsedRealMs * SIMULATION_HOURS_PER_REAL_SECOND * 60 * 60 * 1000) / 1000;
+    this.syncWaveHud();
+  }
+
+  formatSimulationClock() {
+    const date = new Date(this.simulationClockMs);
+    const month = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const year = date.getUTCFullYear();
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    return `${day} ${month} ${year} ${hours}:${minutes} UTC`;
+  }
+
+  syncWaveHud() {
     if (this.waveIndicatorEl) {
       this.waveIndicatorEl.textContent = `Wave ${this.waveNumber}`;
     }
 
     if (this.waveTimerEl) {
-      this.waveTimerEl.textContent = `Next wave: ${remainingSeconds}s`;
+      this.waveTimerEl.textContent = `Clock: ${this.formatSimulationClock()}`;
     }
 
     if (this.waveOriginEl) {
@@ -736,9 +755,9 @@ export class BootScene extends Phaser.Scene {
   }
 
   cleanupSceneHooks() {
-    if (this.waveCountdownEvent) {
-      this.waveCountdownEvent.remove(false);
-      this.waveCountdownEvent = null;
+    if (this.clockTickEvent) {
+      this.clockTickEvent.remove(false);
+      this.clockTickEvent = null;
     }
 
     if (this.nextWaveEvent) {

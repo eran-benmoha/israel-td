@@ -6,10 +6,12 @@ const debugToggleButton = document.getElementById("debug-toggle");
 const debugPanel = document.getElementById("debug-panel");
 const debugLaunchWaveButton = document.getElementById("debug-launch-wave");
 const debugStatus = document.getElementById("debug-status");
+const shopPanel = document.querySelector(".shop");
 const shopTabs = document.getElementById("shop-tabs");
 const shopItems = document.getElementById("shop-items");
 const shopStatus = document.getElementById("shop-status");
 const shopMoney = document.getElementById("shop-money");
+const shopToggleButton = document.getElementById("shop-toggle");
 
 const config = {
   type: Phaser.AUTO,
@@ -134,6 +136,14 @@ if (shopItems) {
     }
 
     window.dispatchEvent(new CustomEvent("shop:purchaseUnit", { detail: { unitId } }));
+  });
+}
+
+if (shopPanel && shopToggleButton) {
+  shopToggleButton.addEventListener("click", () => {
+    const isCollapsed = shopPanel.classList.toggle("is-collapsed");
+    shopToggleButton.textContent = isCollapsed ? "Show" : "Hide";
+    shopToggleButton.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
   });
 }
 
