@@ -11,6 +11,8 @@ const MIDDLE_EAST_PROJECTION = {
 };
 
 const WAVE_INTERVAL_MS = 60_000;
+const INITIAL_ZOOM_LEVEL = 2.6;
+const INITIAL_ISRAEL_FOCUS = { lat: 31.45, lon: 34.95 };
 
 const HOSTILE_FACTIONS = [
   {
@@ -23,8 +25,9 @@ const HOSTILE_FACTIONS = [
     baseVolley: 8,
     maxVolley: 28,
     impactMultiplier: 1.0,
-    durationMin: 1250,
-    durationMax: 2100,
+    durationMin: 3800,
+    durationMax: 6200,
+    launchCadenceMs: 600,
   },
   {
     id: "hezbollah-lebanon",
@@ -36,8 +39,9 @@ const HOSTILE_FACTIONS = [
     baseVolley: 7,
     maxVolley: 24,
     impactMultiplier: 1.05,
-    durationMin: 1300,
-    durationMax: 2350,
+    durationMin: 4200,
+    durationMax: 7000,
+    launchCadenceMs: 680,
   },
   {
     id: "houthis-yemen",
@@ -49,8 +53,9 @@ const HOSTILE_FACTIONS = [
     baseVolley: 5,
     maxVolley: 18,
     impactMultiplier: 1.2,
-    durationMin: 1700,
-    durationMax: 2800,
+    durationMin: 6200,
+    durationMax: 9800,
+    launchCadenceMs: 820,
   },
   {
     id: "iran-regime",
@@ -62,8 +67,9 @@ const HOSTILE_FACTIONS = [
     baseVolley: 6,
     maxVolley: 22,
     impactMultiplier: 1.25,
-    durationMin: 1850,
-    durationMax: 3000,
+    durationMin: 7000,
+    durationMax: 11200,
+    launchCadenceMs: 920,
   },
 ];
 
@@ -167,7 +173,7 @@ export class BootScene extends Phaser.Scene {
     this.mapImage = null;
     this.mapContainer = null;
     this.baseMapScale = 1;
-    this.zoomLevel = 1;
+    this.zoomLevel = INITIAL_ZOOM_LEVEL;
     this.minZoomLevel = 1;
     this.maxZoomLevel = 4;
     this.pinchStartDistance = 0;
@@ -222,7 +228,7 @@ export class BootScene extends Phaser.Scene {
 
     this.baseMapScale = this.getMapCoverScale(width, height, mapImage);
     mapContainer.setScale(this.baseMapScale * this.zoomLevel);
-    this.clampMapPosition(mapContainer, mapImage, width, height);
+    this.focusMapOnGeoPoint(mapContainer, mapImage, width, height, INITIAL_ISRAEL_FOCUS.lat, INITIAL_ISRAEL_FOCUS.lon);
 
     this.input.addPointer(1);
     let isDragging = false;
@@ -377,6 +383,13 @@ export class BootScene extends Phaser.Scene {
       const maxY = 0;
       mapContainer.y = Phaser.Math.Clamp(mapContainer.y, minY, maxY);
     }
+  }
+
+  focusMapOnGeoPoint(mapContainer, mapImage, viewportWidth, viewportHeight, lat, lon) {
+    const focusPoint = this.geoToImagePoint(lat, lon, mapImage.width, mapImage.height);
+    mapContainer.x = viewportWidth / 2 - focusPoint.x * mapContainer.scaleX;
+    mapContainer.y = viewportHeight / 2 - focusPoint.y * mapContainer.scaleY;
+    this.clampMapPosition(mapContainer, mapImage, viewportWidth, viewportHeight);
   }
 
   applyZoomAtScreenPoint(nextZoomLevel, screenX, screenY, viewportWidth, viewportHeight) {
@@ -661,9 +674,10 @@ export class BootScene extends Phaser.Scene {
 
   spawnRocketWave(faction) {
     const rocketCount = Phaser.Math.Clamp(faction.baseVolley + this.waveNumber, faction.baseVolley, faction.maxVolley);
+    const launchCadenceMs = faction.launchCadenceMs ?? 700;
 
     for (let i = 0; i < rocketCount; i += 1) {
-      this.time.delayedCall(i * 170, () => this.spawnRocket(faction));
+      this.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction));
     }
   }
 
