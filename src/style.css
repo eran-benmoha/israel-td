@@ -143,6 +143,11 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+#wave-origin {
+  font-size: 0.74rem;
+  color: #9fc4e5;
+}
+
 #game-root {
   position: relative;
   width: 100%;

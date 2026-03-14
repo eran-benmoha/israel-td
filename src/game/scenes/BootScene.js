@@ -12,12 +12,60 @@ const MIDDLE_EAST_PROJECTION = {
 
 const WAVE_INTERVAL_MS = 60_000;
 
-const GAZA_STRIP_BOUNDS = {
-  north: 31.60,
-  south: 31.22,
-  west: 34.20,
-  east: 34.58,
-};
+const HOSTILE_FACTIONS = [
+  {
+    id: "hamas-gaza",
+    name: "Hamas",
+    territory: "Gaza Strip",
+    bounds: { north: 31.6, south: 31.22, west: 34.2, east: 34.58 },
+    trailColor: 0xff7a45,
+    rocketColor: 0xff9a5e,
+    baseVolley: 8,
+    maxVolley: 28,
+    impactMultiplier: 1.0,
+    durationMin: 1250,
+    durationMax: 2100,
+  },
+  {
+    id: "hezbollah-lebanon",
+    name: "Hezbollah",
+    territory: "South Lebanon",
+    bounds: { north: 34.55, south: 33.05, west: 35.05, east: 36.65 },
+    trailColor: 0xffad4d,
+    rocketColor: 0xffcb73,
+    baseVolley: 7,
+    maxVolley: 24,
+    impactMultiplier: 1.05,
+    durationMin: 1300,
+    durationMax: 2350,
+  },
+  {
+    id: "houthis-yemen",
+    name: "Houthis",
+    territory: "Western Yemen",
+    bounds: { north: 17.2, south: 12.3, west: 42.1, east: 46.2 },
+    trailColor: 0xff5c5c,
+    rocketColor: 0xff8787,
+    baseVolley: 5,
+    maxVolley: 18,
+    impactMultiplier: 1.2,
+    durationMin: 1700,
+    durationMax: 2800,
+  },
+  {
+    id: "iran-regime",
+    name: "Iran regime",
+    territory: "Iran",
+    bounds: { north: 38.6, south: 28.0, west: 46.0, east: 60.6 },
+    trailColor: 0xd676ff,
+    rocketColor: 0xe5a0ff,
+    baseVolley: 6,
+    maxVolley: 22,
+    impactMultiplier: 1.25,
+    durationMin: 1850,
+    durationMax: 3000,
+  },
+];
 
 const ISRAEL_TARGETS = [
   { lat: 32.0853, lon: 34.7818 }, // Tel Aviv
@@ -125,11 +173,14 @@ export class BootScene extends Phaser.Scene {
     this.pinchStartDistance = 0;
     this.pinchStartZoomLevel = 1;
     this.waveNumber = 0;
+    this.activeFaction = null;
+    this.upcomingFaction = HOSTILE_FACTIONS[0];
     this.nextWaveAt = 0;
     this.nextWaveEvent = null;
     this.waveCountdownEvent = null;
     this.waveIndicatorEl = null;
     this.waveTimerEl = null;
+    this.waveOriginEl = null;
     this.lastTimerSecond = -1;
     this.debugInstantWaveListener = null;
     this.resources = {
@@ -351,6 +402,7 @@ export class BootScene extends Phaser.Scene {
   initializeWaveHud() {
     this.waveIndicatorEl = document.getElementById("wave-indicator");
     this.waveTimerEl = document.getElementById("wave-timer");
+    this.waveOriginEl = document.getElementById("wave-origin");
     this.initializeResourceHud();
     this.syncWaveHud(60);
   }
@@ -379,13 +431,19 @@ export class BootScene extends Phaser.Scene {
 
   launchWave({ source = "timer" } = {}) {
     this.waveNumber += 1;
-    this.spawnRocketWave();
+    this.activeFaction = this.getFactionForWave(this.waveNumber);
+    this.upcomingFaction = this.getFactionForWave(this.waveNumber + 1);
+    this.spawnRocketWave(this.activeFaction);
     this.scheduleNextWave();
     this.syncWaveHud(60);
     this.adjustResource("money", 28 + this.waveNumber * 3);
     this.adjustResource("army", 0.75);
     this.updateResourceHud();
-    this.emitDebugStatus(source === "debug" ? `Instant wave ${this.waveNumber} launched.` : `Wave ${this.waveNumber} launched.`);
+    this.emitDebugStatus(
+      source === "debug"
+        ? `Instant wave ${this.waveNumber} launched from ${this.describeFaction(this.activeFaction)}.`
+        : `Wave ${this.waveNumber} launched from ${this.describeFaction(this.activeFaction)}.`,
+    );
   }
 
   updateWaveCountdown() {
@@ -405,6 +463,14 @@ export class BootScene extends Phaser.Scene {
 
     if (this.waveTimerEl) {
       this.waveTimerEl.textContent = `Next wave: ${remainingSeconds}s`;
+    }
+
+    if (this.waveOriginEl) {
+      const sourceText =
+        this.waveNumber === 0
+          ? `Next source: ${this.describeFaction(this.upcomingFaction)}`
+          : `Active source: ${this.describeFaction(this.activeFaction)}`;
+      this.waveOriginEl.textContent = sourceText;
     }
   }
 
@@ -579,28 +645,40 @@ export class BootScene extends Phaser.Scene {
     );
   }
 
-  spawnRocketWave() {
-    const rocketCount = Phaser.Math.Clamp(6 + this.waveNumber * 2, 6, 24);
+  getFactionForWave(waveNumber) {
+    const index = (waveNumber - 1) % HOSTILE_FACTIONS.length;
+    return HOSTILE_FACTIONS[Math.max(0, index)];
+  }
+
+  describeFaction(faction) {
+    if (!faction) {
+      return "Unknown";
+    }
+    return `${faction.name} • ${faction.territory}`;
+  }
+
+  spawnRocketWave(faction) {
+    const rocketCount = Phaser.Math.Clamp(faction.baseVolley + this.waveNumber, faction.baseVolley, faction.maxVolley);
 
     for (let i = 0; i < rocketCount; i += 1) {
-      this.time.delayedCall(i * 170, () => this.spawnRocket());
+      this.time.delayedCall(i * 170, () => this.spawnRocket(faction));
     }
   }
 
-  spawnRocket() {
+  spawnRocket(faction) {
     if (!this.mapImage || !this.mapContainer) {
       return;
     }
 
-    const launchPoint = this.randomPointFromGeoRect(GAZA_STRIP_BOUNDS);
+    const launchPoint = this.randomPointFromGeoRect(faction.bounds);
     const targetPoint = this.getRandomIsraelTargetPoint();
     const trail = this.add.graphics();
-    const rocket = this.add.circle(launchPoint.x, launchPoint.y, 3.2, 0xff9a5e, 1);
+    const rocket = this.add.circle(launchPoint.x, launchPoint.y, 3.2, faction.rocketColor, 1);
     rocket.setStrokeStyle(1, 0x3d1200, 0.9);
     this.mapContainer.add([trail, rocket]);
 
     const rocketState = { t: 0 };
-    const duration = Phaser.Math.Between(1300, 2400);
+    const duration = Phaser.Math.Between(faction.durationMin, faction.durationMax);
 
     this.tweens.add({
       targets: rocketState,
@@ -613,7 +691,7 @@ export class BootScene extends Phaser.Scene {
         rocket.setPosition(x, y);
 
         trail.clear();
-        trail.lineStyle(2, 0xff7a45, 0.85);
+        trail.lineStyle(2, faction.trailColor, 0.85);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);
@@ -622,23 +700,25 @@ export class BootScene extends Phaser.Scene {
       onComplete: () => {
         trail.destroy();
         rocket.destroy();
-        this.createImpactFlash(targetPoint.x, targetPoint.y);
+        this.createImpactFlash(targetPoint.x, targetPoint.y, faction);
       },
     });
   }
 
-  createImpactFlash(x, y) {
+  createImpactFlash(x, y, faction) {
     if (!this.mapContainer) {
       return;
     }
 
-    this.adjustResource("morale", -Phaser.Math.FloatBetween(0.45, 1.2));
-    this.adjustResource("population", -Phaser.Math.FloatBetween(0.35, 0.95));
-    this.adjustResource("army", -Phaser.Math.FloatBetween(0.28, 0.78));
-    this.adjustResource("money", -Phaser.Math.FloatBetween(1, 4));
+    const impactScale = faction?.impactMultiplier ?? 1;
+    this.adjustResource("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale);
+    this.adjustResource("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale);
+    this.adjustResource("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale);
+    this.adjustResource("money", -Phaser.Math.FloatBetween(1, 4) * impactScale);
     this.updateResourceHud();
 
-    const impact = this.add.circle(x, y, 3, 0xfff4b8, 0.95);
+    const impactColor = faction?.rocketColor ?? 0xfff4b8;
+    const impact = this.add.circle(x, y, 3, impactColor, 0.95);
     this.mapContainer.add(impact);
 
     this.tweens.add({
