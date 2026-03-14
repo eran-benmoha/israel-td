@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 
-const MAP_GEO_BOUNDS = {
-  // Approximate geographic coverage of the Middle East base map frame.
-  north: 43.5,
-  south: 10.0,
-  west: 23.0,
-  east: 66.0,
+const MIDDLE_EAST_PROJECTION = {
+  // Wikimedia Middle East location-map projection constants.
+  centralMeridian: 50.0,
+  xScale: 143.2394488,
+  rOffset: 2.238026669,
+  thetaScale: 0.497465385,
+  xCompression: 0.654,
+  yAnchor: 1.714427893,
 };
 
 const WAVE_INTERVAL_MS = 60_000;
@@ -97,7 +99,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    const mapUrl = new URL("../../assets/maps/middle-east-geographic.jpg", import.meta.url).href;
+    const mapUrl = new URL("../../assets/maps/middle-east-relief.jpg", import.meta.url).href;
     this.load.image("middle-east-map", mapUrl);
   }
 
@@ -540,15 +542,40 @@ export class BootScene extends Phaser.Scene {
     );
 
     outline.clear();
-    outline.lineStyle(11, 0x00131f, 0.62);
+    outline.lineStyle(4, 0x00131f, 0.45);
     outline.strokePoints(points, true);
-    outline.lineStyle(6, 0x53d8ff, 0.94);
+    outline.lineStyle(2, 0x53d8ff, 0.94);
     outline.strokePoints(points, true);
   }
 
   geoToImagePoint(lat, lon, imageWidth, imageHeight) {
-    const x = ((lon - MAP_GEO_BOUNDS.west) / (MAP_GEO_BOUNDS.east - MAP_GEO_BOUNDS.west)) * imageWidth;
-    const y = ((MAP_GEO_BOUNDS.north - lat) / (MAP_GEO_BOUNDS.north - MAP_GEO_BOUNDS.south)) * imageHeight;
+    const xPercent = this.projectGeoToMapXPercent(lat, lon);
+    const yPercent = this.projectGeoToMapYPercent(lat, lon);
+    const x = (xPercent / 100) * imageWidth;
+    const y = (yPercent / 100) * imageHeight;
     return new Phaser.Geom.Point(x, y);
+  }
+
+  projectGeoToMapXPercent(lat, lon) {
+    const latRad = Phaser.Math.DegToRad(lat);
+    const lonDeltaRad = Phaser.Math.DegToRad(lon - MIDDLE_EAST_PROJECTION.centralMeridian);
+    return (
+      50 +
+      MIDDLE_EAST_PROJECTION.xScale *
+        (MIDDLE_EAST_PROJECTION.rOffset - latRad) *
+        Math.sin(MIDDLE_EAST_PROJECTION.thetaScale * lonDeltaRad) *
+        MIDDLE_EAST_PROJECTION.xCompression
+    );
+  }
+
+  projectGeoToMapYPercent(lat, lon) {
+    const latRad = Phaser.Math.DegToRad(lat);
+    const lonDeltaRad = Phaser.Math.DegToRad(lon - MIDDLE_EAST_PROJECTION.centralMeridian);
+    return (
+      50 -
+      MIDDLE_EAST_PROJECTION.xScale *
+        (MIDDLE_EAST_PROJECTION.yAnchor -
+          (MIDDLE_EAST_PROJECTION.rOffset - latRad) * Math.cos(MIDDLE_EAST_PROJECTION.thetaScale * lonDeltaRad))
+    );
   }
 }
