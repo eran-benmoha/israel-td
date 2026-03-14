@@ -521,6 +521,7 @@ export class BootScene extends Phaser.Scene {
     this.mapContainer.x = screenX - worldX * nextScale;
     this.mapContainer.y = screenY - worldY * nextScale;
     this.clampMapPosition(this.mapContainer, this.mapImage, viewportWidth, viewportHeight);
+    this.emitDebugZoom();
   }
 
   initializeWaveHud() {
@@ -687,6 +688,7 @@ export class BootScene extends Phaser.Scene {
     };
     window.addEventListener("debug:launchWaveInstant", this.debugInstantWaveListener);
     this.emitDebugStatus("Debug ready.");
+    this.emitDebugZoom();
   }
 
   registerShopHooks() {
@@ -780,6 +782,14 @@ export class BootScene extends Phaser.Scene {
     window.dispatchEvent(
       new CustomEvent("debug:status", {
         detail: { message },
+      }),
+    );
+  }
+
+  emitDebugZoom() {
+    window.dispatchEvent(
+      new CustomEvent("debug:zoom", {
+        detail: { zoom: this.zoomLevel },
       }),
     );
   }

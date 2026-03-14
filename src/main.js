@@ -6,6 +6,7 @@ const debugToggleButton = document.getElementById("debug-toggle");
 const debugPanel = document.getElementById("debug-panel");
 const debugLaunchWaveButton = document.getElementById("debug-launch-wave");
 const debugStatus = document.getElementById("debug-status");
+const debugZoom = document.getElementById("debug-zoom");
 const shopPanel = document.querySelector(".shop");
 const shopTabs = document.getElementById("shop-tabs");
 const shopItems = document.getElementById("shop-items");
@@ -213,6 +214,17 @@ window.addEventListener("debug:status", (event) => {
   const message = event.detail?.message;
   if (typeof message === "string" && message.length > 0) {
     debugStatus.textContent = message;
+  }
+});
+
+window.addEventListener("debug:zoom", (event) => {
+  if (!debugZoom) {
+    return;
+  }
+
+  const zoom = event.detail?.zoom;
+  if (typeof zoom === "number" && Number.isFinite(zoom)) {
+    debugZoom.textContent = `Zoom: ${zoom.toFixed(2)}x`;
   }
 });
 
