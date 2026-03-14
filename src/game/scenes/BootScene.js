@@ -67,9 +67,12 @@ export class BootScene extends Phaser.Scene {
     this.mapContainer = null;
     this.waveNumber = 0;
     this.nextWaveAt = 0;
+    this.nextWaveEvent = null;
+    this.waveCountdownEvent = null;
     this.waveIndicatorEl = null;
     this.waveTimerEl = null;
     this.lastTimerSecond = -1;
+    this.debugInstantWaveListener = null;
   }
 
   preload() {
@@ -141,7 +144,9 @@ export class BootScene extends Phaser.Scene {
     });
 
     this.initializeWaveHud();
+    this.registerDebugMenuHooks();
     this.startWaveLoop();
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanupSceneHooks, this);
   }
 
   getMapCoverScale(viewportWidth, viewportHeight, mapImage) {
@@ -177,30 +182,32 @@ export class BootScene extends Phaser.Scene {
 
   startWaveLoop() {
     this.waveNumber = 0;
-    this.nextWaveAt = this.time.now + WAVE_INTERVAL_MS;
     this.lastTimerSecond = -1;
-    this.updateWaveCountdown();
-
-    this.time.addEvent({
+    this.scheduleNextWave();
+    this.waveCountdownEvent = this.time.addEvent({
       delay: 250,
       loop: true,
       callback: this.updateWaveCountdown,
       callbackScope: this,
     });
-
-    this.time.addEvent({
-      delay: WAVE_INTERVAL_MS,
-      loop: true,
-      callback: this.launchWave,
-      callbackScope: this,
-    });
+    this.updateWaveCountdown();
   }
 
-  launchWave() {
+  scheduleNextWave(delayMs = WAVE_INTERVAL_MS) {
+    if (this.nextWaveEvent) {
+      this.nextWaveEvent.remove(false);
+    }
+
+    this.nextWaveAt = this.time.now + delayMs;
+    this.nextWaveEvent = this.time.delayedCall(delayMs, () => this.launchWave({ source: "timer" }));
+  }
+
+  launchWave({ source = "timer" } = {}) {
     this.waveNumber += 1;
-    this.nextWaveAt = this.time.now + WAVE_INTERVAL_MS;
     this.spawnRocketWave();
+    this.scheduleNextWave();
     this.syncWaveHud(60);
+    this.emitDebugStatus(source === "debug" ? `Instant wave ${this.waveNumber} launched.` : `Wave ${this.waveNumber} launched.`);
   }
 
   updateWaveCountdown() {
@@ -221,6 +228,39 @@ export class BootScene extends Phaser.Scene {
     if (this.waveTimerEl) {
       this.waveTimerEl.textContent = `Next wave: ${remainingSeconds}s`;
     }
+  }
+
+  registerDebugMenuHooks() {
+    this.debugInstantWaveListener = () => {
+      this.launchWave({ source: "debug" });
+    };
+    window.addEventListener("debug:launchWaveInstant", this.debugInstantWaveListener);
+    this.emitDebugStatus("Debug ready.");
+  }
+
+  cleanupSceneHooks() {
+    if (this.waveCountdownEvent) {
+      this.waveCountdownEvent.remove(false);
+      this.waveCountdownEvent = null;
+    }
+
+    if (this.nextWaveEvent) {
+      this.nextWaveEvent.remove(false);
+      this.nextWaveEvent = null;
+    }
+
+    if (this.debugInstantWaveListener) {
+      window.removeEventListener("debug:launchWaveInstant", this.debugInstantWaveListener);
+      this.debugInstantWaveListener = null;
+    }
+  }
+
+  emitDebugStatus(message) {
+    window.dispatchEvent(
+      new CustomEvent("debug:status", {
+        detail: { message },
+      }),
+    );
   }
 
   spawnRocketWave() {

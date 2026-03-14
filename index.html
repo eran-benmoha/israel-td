@@ -29,6 +29,12 @@
         </div>
       </header>
       <main id="game-root" aria-label="Game canvas"></main>
+      <button id="debug-toggle" class="debug-toggle" type="button" aria-expanded="false">Debug</button>
+      <section id="debug-panel" class="debug-panel" hidden>
+        <div class="debug-panel__title">Debug Menu</div>
+        <button id="debug-launch-wave" class="debug-panel__action" type="button">Launch wave now</button>
+        <div id="debug-status" class="debug-panel__status">Ready.</div>
+      </section>
       <footer class="hud hud--bottom">
         <button class="hud__button" type="button" disabled>Tower A</button>
         <button class="hud__button" type="button" disabled>Tower B</button>
