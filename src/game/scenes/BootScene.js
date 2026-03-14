@@ -214,7 +214,9 @@ export class BootScene extends Phaser.Scene {
     const mapImage = this.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
     const outline = this.add.graphics();
     this.drawIsraelOutline(outline, mapImage.width, mapImage.height);
-    const mapContainer = this.add.container(0, 0, [mapImage, outline]);
+    const hostileMarkers = this.add.container(0, 0);
+    this.drawHostileFactionMarkers(hostileMarkers, mapImage.width, mapImage.height);
+    const mapContainer = this.add.container(0, 0, [mapImage, outline, hostileMarkers]);
     this.mapImage = mapImage;
     this.mapContainer = mapContainer;
 
@@ -322,7 +324,7 @@ export class BootScene extends Phaser.Scene {
     });
 
     const title = this.add
-      .text(width / 2, 34, "Drag + pinch/scroll zoom • Gaza waves every 60s", {
+      .text(width / 2, 34, "Drag + pinch/scroll zoom • Hostile waves every 60s", {
         fontFamily: "Arial",
         fontSize: "18px",
         color: "#dbe9ff",
@@ -752,6 +754,43 @@ export class BootScene extends Phaser.Scene {
     outline.strokePoints(points, true);
     outline.lineStyle(2, 0x53d8ff, 0.94);
     outline.strokePoints(points, true);
+  }
+
+  drawHostileFactionMarkers(layerContainer, imageWidth, imageHeight) {
+    HOSTILE_FACTIONS.forEach((faction) => {
+      const markerGraphics = this.add.graphics();
+      const territoryCorners = [
+        this.geoToImagePoint(faction.bounds.north, faction.bounds.west, imageWidth, imageHeight),
+        this.geoToImagePoint(faction.bounds.north, faction.bounds.east, imageWidth, imageHeight),
+        this.geoToImagePoint(faction.bounds.south, faction.bounds.east, imageWidth, imageHeight),
+        this.geoToImagePoint(faction.bounds.south, faction.bounds.west, imageWidth, imageHeight),
+      ];
+
+      markerGraphics.fillStyle(faction.rocketColor, 0.09);
+      markerGraphics.fillPoints(territoryCorners, true);
+      markerGraphics.lineStyle(2, faction.trailColor, 0.62);
+      markerGraphics.strokePoints(territoryCorners, true);
+
+      const centerLat = (faction.bounds.north + faction.bounds.south) / 2;
+      const centerLon = (faction.bounds.east + faction.bounds.west) / 2;
+      const centerPoint = this.geoToImagePoint(centerLat, centerLon, imageWidth, imageHeight);
+
+      const markerDot = this.add.circle(centerPoint.x, centerPoint.y, 5, faction.rocketColor, 0.95);
+      markerDot.setStrokeStyle(2, 0x1f0d06, 0.85);
+
+      const markerLabel = this.add
+        .text(centerPoint.x, centerPoint.y - 10, `${faction.name}\n${faction.territory}`, {
+          fontFamily: "Arial",
+          fontSize: "11px",
+          color: "#f2f8ff",
+          align: "center",
+          backgroundColor: "rgba(2, 8, 14, 0.62)",
+          padding: { x: 5, y: 3 },
+        })
+        .setOrigin(0.5, 1);
+
+      layerContainer.add([markerGraphics, markerDot, markerLabel]);
+    });
   }
 
   geoToImagePoint(lat, lon, imageWidth, imageHeight) {
