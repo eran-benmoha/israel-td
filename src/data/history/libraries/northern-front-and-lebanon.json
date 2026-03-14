@@ -25,6 +25,16 @@
         "buffer depth was treated as a security objective",
         "short campaigns could still create long-term border commitments"
       ],
+      "quotes": [
+        {
+          "speaker": "Jimmy Carter",
+          "speakerRole": "President of the United States",
+          "date": "1978-03-21",
+          "quote": "The purpose of that attack was to destroy the progress toward peace, and we must be determined to do everything possible to keep the momentum going forward in the peace initiative.",
+          "sourceNote": "Carter remarks to Begin after the Coastal Road massacre that triggered Operation Litani.",
+          "relation": "International-response framing for the trigger event and diplomatic backdrop surrounding Operation Litani."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Buffer Zone",
         "defenseRegionIds": [
@@ -78,6 +88,16 @@
         "mission expansion changed the scale and cost of the conflict",
         "urban fighting created a slower and more punishing tempo",
         "initial border-security logic did not capture the full campaign burden"
+      ],
+      "quotes": [
+        {
+          "speaker": "Menachem Begin",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1982-08-06",
+          "quote": "With Lebanon we shall sign a peace treaty.",
+          "sourceNote": "Begin statement during the Lebanon War while describing the hoped-for political end state.",
+          "relation": "Captures the ambitious political horizon Begin publicly associated with Operation Peace for Galilee."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Mission Creep",
@@ -135,6 +155,16 @@
         "political goals centered on deterrence more than occupation",
         "civilian displacement shaped both sides of the campaign"
       ],
+      "quotes": [
+        {
+          "speaker": "Yitzhak Rabin",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1993-07-31",
+          "quote": "I am not looking for victory. I am looking for solutions to problems.",
+          "sourceNote": "Reported Rabin remarks during the ceasefire endgame of Operation Accountability.",
+          "relation": "Strong fit for a deterrence-oriented campaign whose goals were limited and political as much as military."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Northern Warning Sirens",
         "defenseRegionIds": [
@@ -189,6 +219,16 @@
         "the campaign mixed military pressure with political signaling",
         "rapid tactical actions had outsized strategic consequences"
       ],
+      "quotes": [
+        {
+          "speaker": "Shimon Peres",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1996-04-26",
+          "quote": "Warren, you did it.",
+          "sourceNote": "Reported Peres remark to U.S. Secretary of State Warren Christopher when the Grapes of Wrath ceasefire was reached.",
+          "relation": "Memorable diplomatic coda for an operation whose military pressure and ceasefire politics were tightly linked."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Escalation Ladder",
         "defenseRegionIds": [
@@ -242,6 +282,16 @@
         "large rocket salvos stressed civilian resilience and interception capacity",
         "air power alone could not fully remove dispersed launch threats",
         "northern daily life became part of the strategic battlespace"
+      ],
+      "quotes": [
+        {
+          "speaker": "Ehud Olmert",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2006-07-31",
+          "quote": "There is no cease-fire and there will not be any cease-fire in the coming days.",
+          "sourceNote": "Olmert remarks during the 2006 Lebanon war as Israel signaled continued operations.",
+          "relation": "Fits the prolonged, high-pressure logic of the Second Lebanon War and its northern barrage cycle."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Northern Barrage",

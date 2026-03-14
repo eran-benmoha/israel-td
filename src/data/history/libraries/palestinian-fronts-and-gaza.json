@@ -25,6 +25,16 @@
         "multiple cities had to be addressed in sequence without losing the initiative",
         "security pressure and civilian disruption were tightly linked"
       ],
+      "quotes": [
+        {
+          "speaker": "George W. Bush",
+          "speakerRole": "President of the United States",
+          "date": "2002-04-04",
+          "quote": "The storms of violence cannot go on. Enough is enough.",
+          "sourceNote": "Bush Rose Garden statement during the Operation Defensive Shield period.",
+          "relation": "International-response framing for the escalation context around Operation Defensive Shield."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "City by City",
         "defenseRegionIds": [
@@ -79,6 +89,16 @@
         "southern towns faced repeated short-warning attacks",
         "airpower opened the campaign but did not remove all launch capability",
         "urban density complicated sustained operations"
+      ],
+      "quotes": [
+        {
+          "speaker": "Ehud Olmert",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2009-01-09",
+          "quote": "Israel has never allowed any outside source to determine its right to defend its citizens. The IDF will continue to act to defend the citizens of Israel and carry out the missions laid before it in the operation.",
+          "sourceNote": "Olmert statement during Operation Cast Lead after a U.N. ceasefire resolution.",
+          "relation": "Directly tied to the continuation logic and defensive framing of Operation Cast Lead."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Southern Barrage",
@@ -137,6 +157,16 @@
         "salvos into central Israel changed the sense of national reach",
         "brief escalation windows rewarded rapid readiness"
       ],
+      "quotes": [
+        {
+          "speaker": "Benjamin Netanyahu",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2012-11-21",
+          "quote": "I announced that we would respond forcibly to these attacks when we see fit. I said that we would exact a heavy price from the terror organizations.",
+          "sourceNote": "Netanyahu press conference after Operation Pillar of Defense.",
+          "relation": "Directly matches the short, rapid-response logic associated with Pillar of Defense."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Extended Range",
         "defenseRegionIds": [
@@ -192,6 +222,16 @@
         "tunnel threats created a different kind of border pressure than rockets alone",
         "duration increased the importance of morale and economy management",
         "the battle rhythm alternated between barrages and localized ground objectives"
+      ],
+      "quotes": [
+        {
+          "speaker": "Benjamin Netanyahu",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2014-07-13",
+          "quote": "Hamas chose to escalate the situation and it will pay a heavy price for doing so.",
+          "sourceNote": "Netanyahu remarks as Operation Protective Edge expanded.",
+          "relation": "Directly fits the escalation-and-counterpressure framing of Operation Protective Edge."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Below the Border",
@@ -251,6 +291,16 @@
         "large salvo size stressed interception capacity",
         "pressure extended across several population centers in quick succession",
         "home-front disruption became a core gameplay analogue"
+      ],
+      "quotes": [
+        {
+          "speaker": "Benjamin Netanyahu",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2021-05-21",
+          "quote": "We changed the equation not only as regards to the operation but also as regards the future. If Hamas thinks we will tolerate a 'drizzle' of rockets, it is mistaken. What has been, we will not tolerate in the future.",
+          "sourceNote": "Netanyahu remarks after the ceasefire ending Operation Guardian of the Walls.",
+          "relation": "Directly captures the deterrence claim and saturation-response framing attached to Guardian of the Walls."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Salvo Saturation",

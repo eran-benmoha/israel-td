@@ -26,6 +26,16 @@
         "convoys needed protection across choke points",
         "limited reserves had to be shifted quickly"
       ],
+      "quotes": [
+        {
+          "speaker": "David Ben-Gurion",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1949-12-05",
+          "quote": "Jerusalem is the very heart of the State of Israel.",
+          "sourceNote": "Ben-Gurion statement to the Knesset on Jerusalem.",
+          "relation": "Campaign-adjacent framing for the Jerusalem corridor fighting that Operation Nachshon was meant to sustain."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Road to Jerusalem",
         "defenseRegionIds": [
@@ -79,6 +89,16 @@
         "central plains and inland routes were tightly linked",
         "rapid territorial shifts affected civilian movement and morale",
         "command had to decide between momentum and consolidation"
+      ],
+      "quotes": [
+        {
+          "speaker": "David Ben-Gurion",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1949-12-05",
+          "quote": "Jewish Jerusalem is an organic and inseparable part of the State of Israel.",
+          "sourceNote": "Ben-Gurion statement to the Knesset on Jerusalem.",
+          "relation": "Campaign-adjacent political framing for the central-front and Jerusalem-corridor logic behind Operation Dani."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Central Corridor Expansion",
@@ -134,6 +154,16 @@
         "southern isolation created pressure on logistics and morale",
         "frontline breakthroughs changed strategic depth quickly"
       ],
+      "quotes": [
+        {
+          "speaker": "David Ben-Gurion",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1948",
+          "quote": "If we do not take a stand in the Negev - Tel Aviv will not stand.",
+          "sourceNote": "Ben-Gurion statement on the strategic importance of the Negev.",
+          "relation": "Strong thematic fit for southern breakout and desert-corridor scenarios like Operation Yoav."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Negev Breakthrough",
         "defenseRegionIds": [
@@ -188,6 +218,16 @@
         "weather, distance, and logistics amplified attrition",
         "operational success had immediate political effects"
       ],
+      "quotes": [
+        {
+          "speaker": "David Ben-Gurion",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1955",
+          "quote": "It is in the Negev that the creativity and pioneer vigor of Israel shall be tested.",
+          "sourceNote": "Ben-Gurion statement on the Negev's strategic and national importance.",
+          "relation": "Useful long-view framing for southern endurance scenarios like Operation Horev."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Winter in the Negev",
         "defenseRegionIds": [
@@ -239,6 +279,16 @@
         "tempo and surprise created operational openings",
         "desert maneuver rewarded mobility over static defense",
         "international timing pressure limited campaign length"
+      ],
+      "quotes": [
+        {
+          "speaker": "David Ben-Gurion",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1956-11",
+          "quote": "the glorious military operation that lasted seven days",
+          "sourceNote": "Reported phrasing from Ben-Gurion's Knesset review of the Sinai Campaign.",
+          "relation": "Fits the speed, reach, and confidence associated with Operation Kadesh."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Dash Across Sinai",
@@ -295,6 +345,16 @@
         "success dramatically changed all following fronts",
         "the opening strike determined campaign tempo"
       ],
+      "quotes": [
+        {
+          "speaker": "Levi Eshkol",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1967-06-07",
+          "quote": "Our forces were compelled to take the necessary military steps in order to put an end to this aggression and to protect human lives.",
+          "sourceNote": "Eshkol address in Jerusalem during the Six-Day War.",
+          "relation": "Directly matches the logic of a fast-opening air and military response such as Operation Focus."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "First Strike Window",
         "defenseRegionIds": [
@@ -350,6 +410,16 @@
         "opening setbacks forced rapid adaptation",
         "bridging and crossing points became strategic bottlenecks",
         "counterattack timing mattered as much as force size"
+      ],
+      "quotes": [
+        {
+          "speaker": "Moshe Dayan",
+          "speakerRole": "Defense Minister of Israel",
+          "date": "1973-10-07",
+          "quote": "This is the end of the Third Temple.",
+          "sourceNote": "Reported crisis remark from the opening phase of the Yom Kippur War.",
+          "relation": "Captures the existential mood that the Suez counteroffensive and Operation Abiray-Lev were meant to reverse."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Crossing the Canal",

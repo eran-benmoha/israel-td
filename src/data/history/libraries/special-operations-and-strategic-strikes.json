@@ -30,6 +30,16 @@
         "timing failures could collapse the entire raid",
         "distance and isolation limited reinforcements"
       ],
+      "quotes": [
+        {
+          "speaker": "Yitzhak Rabin",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1976-07-04",
+          "quote": "The Israeli Defense Forces have achieved one of their most exemplary victories from both the human and the moral and the military-operational points of view, a remarkable manifestation of Jewish fraternity and Israeli valor.",
+          "sourceNote": "Rabin statement to the Israeli parliament after the Entebbe rescue.",
+          "relation": "Directly tied to Operation Entebbe and its reputation as a precision hostage-rescue mission."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Night Rescue at Entebbe",
         "defenseRegionIds": [
@@ -83,6 +93,16 @@
         "route planning and fuel constraints shaped the operation",
         "surprise had to hold until weapons release"
       ],
+      "quotes": [
+        {
+          "speaker": "Menachem Begin",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "1981-06-15",
+          "quote": "This attack will be a precedent for every future government in Israel. Every future Israeli prime minister will act, in similar circumstances, in the same way.",
+          "sourceNote": "Begin interview after the Osirak strike; commonly cited as the basis of the Begin Doctrine.",
+          "relation": "Directly tied to Operation Opera and its long afterlife as a model for preventive strike doctrine."
+        }
+      ],
       "gameHooks": {
         "candidateLevelName": "Long Reach",
         "defenseRegionIds": [
@@ -135,6 +155,16 @@
         "limited visibility and political ambiguity framed the mission",
         "covert success depended on remaining below escalation thresholds",
         "the strike was strategically significant despite short duration"
+      ],
+      "quotes": [
+        {
+          "speaker": "Ehud Olmert",
+          "speakerRole": "Prime Minister of Israel",
+          "date": "2007-09-06",
+          "quote": "If you're not going to act against the reactor then we are. You don't want to know where or when.",
+          "sourceNote": "Reported Olmert message to President George W. Bush before the strike on Syria's reactor.",
+          "relation": "Directly captures the decision window and unilateral logic behind Operation Orchard."
+        }
       ],
       "gameHooks": {
         "candidateLevelName": "Silent Window",

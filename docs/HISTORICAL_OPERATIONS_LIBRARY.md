@@ -35,7 +35,17 @@ Each operation entry includes:
 - `adversaries`
 - `summary`
 - `historicalDynamics`
+- `quotes`
 - `gameHooks`
+
+Each `quotes` entry records:
+
+- `speaker`
+- `speakerRole`
+- `date`
+- `quote`
+- `sourceNote`
+- `relation`
 
 `gameHooks` is the part intended for future level design. It tracks:
 
@@ -120,3 +130,5 @@ For the practical conversion workflow and current playable level IDs, see [Histo
 ## Content note
 
 These files are intended for broad historical framing and level design research. Before turning any entry into player-facing text, verify dates, names, and wording again so scenario copy remains careful and consistent.
+
+That caution applies especially to the new `quotes` arrays: they are curated for design/reference use, and every quote should be rechecked against a primary or high-confidence source before being surfaced directly in the game UI.
