@@ -6,7 +6,8 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("israel-map", "/assets/maps/israel-satellite.jpg");
+    const mapUrl = new URL("../../assets/maps/israel-satellite.jpg", import.meta.url).href;
+    this.load.image("israel-map", mapUrl);
   }
 
   create() {

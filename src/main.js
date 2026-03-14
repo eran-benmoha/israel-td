@@ -1,6 +1,5 @@
 import Phaser from "phaser";
-import "./style.css";
-import { BootScene } from "./game/scenes/BootScene";
+import { BootScene } from "./game/scenes/BootScene.js";
 
 const gameRoot = document.getElementById("game-root");
 
