@@ -18,9 +18,41 @@
       <header class="hud">
         <div class="hud__left">
           <div class="hud__title">Israel TD</div>
-          <div class="hud__stats">
-            <span>HP: 20</span>
-            <span>Credits: 120</span>
+          <div class="resource-bars" aria-label="Resource status">
+            <div class="resource-row">
+              <div class="resource">
+                <div class="resource__meta">
+                  <span class="resource__name">Money</span>
+                  <span id="resource-money-value" class="resource__value">120 / 1000</span>
+                </div>
+                <div class="resource__bar"><div id="resource-money-fill" class="resource__fill resource__fill--money"></div></div>
+              </div>
+              <div class="resource">
+                <div class="resource__meta">
+                  <span class="resource__name">Morale</span>
+                  <span id="resource-morale-value" class="resource__value">100%</span>
+                </div>
+                <div class="resource__bar"><div id="resource-morale-fill" class="resource__fill resource__fill--morale"></div></div>
+              </div>
+            </div>
+            <div class="resource-row">
+              <div class="resource">
+                <div class="resource__meta">
+                  <span class="resource__name">Population</span>
+                  <span id="resource-population-value" class="resource__value">100%</span>
+                </div>
+                <div class="resource__bar">
+                  <div id="resource-population-fill" class="resource__fill resource__fill--population"></div>
+                </div>
+              </div>
+              <div class="resource">
+                <div class="resource__meta">
+                  <span class="resource__name">Army</span>
+                  <span id="resource-army-value" class="resource__value">100%</span>
+                </div>
+                <div class="resource__bar"><div id="resource-army-fill" class="resource__fill resource__fill--army"></div></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="hud__wave" aria-live="polite">

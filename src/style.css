@@ -24,7 +24,7 @@ body {
 .hud {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   padding: max(env(safe-area-inset-top), 0.75rem) 0.9rem 0.75rem;
   background: rgba(0, 0, 0, 0.48);
@@ -45,14 +45,72 @@ body {
 .hud__left {
   display: flex;
   flex-direction: column;
-  gap: 0.28rem;
+  gap: 0.42rem;
+  flex: 1;
 }
 
-.hud__stats {
+.resource-bars {
   display: flex;
-  gap: 0.65rem;
-  font-size: 0.8rem;
-  color: #b9d4ff;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.resource-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.48rem;
+}
+
+.resource {
+  min-width: 0;
+}
+
+.resource__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 0.18rem;
+  font-size: 0.68rem;
+}
+
+.resource__name {
+  color: #afd2f6;
+  letter-spacing: 0.01em;
+}
+
+.resource__value {
+  color: #dff2ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: #1b2a3d;
+  border: 1px solid #34516e;
+  overflow: hidden;
+}
+
+.resource__fill {
+  height: 100%;
+  width: 0%;
+  transition: width 180ms linear;
+}
+
+.resource__fill--money {
+  background: linear-gradient(90deg, #f0c24a, #ffe48c);
+}
+
+.resource__fill--morale {
+  background: linear-gradient(90deg, #37d3ff, #9befff);
+}
+
+.resource__fill--population {
+  background: linear-gradient(90deg, #57d877, #adf1b1);
+}
+
+.resource__fill--army {
+  background: linear-gradient(90deg, #cb82ff, #e0c3ff);
 }
 
 .hud__wave {
@@ -63,6 +121,7 @@ body {
   gap: 0.2rem;
   color: #d6ecff;
   line-height: 1.15;
+  min-width: 100px;
 }
 
 #wave-indicator {

@@ -73,6 +73,19 @@ export class BootScene extends Phaser.Scene {
     this.waveTimerEl = null;
     this.lastTimerSecond = -1;
     this.debugInstantWaveListener = null;
+    this.resources = {
+      money: 120,
+      morale: 100,
+      population: 100,
+      army: 100,
+    };
+    this.maxResources = {
+      money: 1000,
+      morale: 100,
+      population: 100,
+      army: 100,
+    };
+    this.resourceElements = {};
   }
 
   preload() {
@@ -177,6 +190,7 @@ export class BootScene extends Phaser.Scene {
   initializeWaveHud() {
     this.waveIndicatorEl = document.getElementById("wave-indicator");
     this.waveTimerEl = document.getElementById("wave-timer");
+    this.initializeResourceHud();
     this.syncWaveHud(60);
   }
 
@@ -207,6 +221,9 @@ export class BootScene extends Phaser.Scene {
     this.spawnRocketWave();
     this.scheduleNextWave();
     this.syncWaveHud(60);
+    this.adjustResource("money", 28 + this.waveNumber * 3);
+    this.adjustResource("army", 0.75);
+    this.updateResourceHud();
     this.emitDebugStatus(source === "debug" ? `Instant wave ${this.waveNumber} launched.` : `Wave ${this.waveNumber} launched.`);
   }
 
@@ -228,6 +245,60 @@ export class BootScene extends Phaser.Scene {
     if (this.waveTimerEl) {
       this.waveTimerEl.textContent = `Next wave: ${remainingSeconds}s`;
     }
+  }
+
+  initializeResourceHud() {
+    this.resourceElements = {
+      money: {
+        value: document.getElementById("resource-money-value"),
+        fill: document.getElementById("resource-money-fill"),
+      },
+      morale: {
+        value: document.getElementById("resource-morale-value"),
+        fill: document.getElementById("resource-morale-fill"),
+      },
+      population: {
+        value: document.getElementById("resource-population-value"),
+        fill: document.getElementById("resource-population-fill"),
+      },
+      army: {
+        value: document.getElementById("resource-army-value"),
+        fill: document.getElementById("resource-army-fill"),
+      },
+    };
+    this.updateResourceHud();
+  }
+
+  adjustResource(resourceName, delta) {
+    const max = this.maxResources[resourceName];
+    const nextValue = Phaser.Math.Clamp(this.resources[resourceName] + delta, 0, max);
+    this.resources[resourceName] = nextValue;
+  }
+
+  updateResourceHud() {
+    const resources = ["money", "morale", "population", "army"];
+    resources.forEach((key) => {
+      const elements = this.resourceElements[key];
+      if (!elements) {
+        return;
+      }
+
+      const value = this.resources[key];
+      const max = this.maxResources[key];
+      const percent = (value / max) * 100;
+
+      if (elements.fill) {
+        elements.fill.style.width = `${percent}%`;
+      }
+
+      if (elements.value) {
+        if (key === "money") {
+          elements.value.textContent = `${Math.round(value)} / ${max}`;
+        } else {
+          elements.value.textContent = `${Math.round(percent)}%`;
+        }
+      }
+    });
   }
 
   registerDebugMenuHooks() {
@@ -315,6 +386,12 @@ export class BootScene extends Phaser.Scene {
     if (!this.mapContainer) {
       return;
     }
+
+    this.adjustResource("morale", -Phaser.Math.FloatBetween(0.45, 1.2));
+    this.adjustResource("population", -Phaser.Math.FloatBetween(0.35, 0.95));
+    this.adjustResource("army", -Phaser.Math.FloatBetween(0.28, 0.78));
+    this.adjustResource("money", -Phaser.Math.FloatBetween(1, 4));
+    this.updateResourceHud();
 
     const impact = this.add.circle(x, y, 3, 0xfff4b8, 0.95);
     this.mapContainer.add(impact);
