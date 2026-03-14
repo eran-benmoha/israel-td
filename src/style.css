@@ -243,53 +243,63 @@ body {
 .debug-toggle {
   position: fixed;
   right: 0.9rem;
-  bottom: calc(5.3rem + env(safe-area-inset-bottom));
-  min-width: 44px;
-  min-height: 44px;
-  border: 1px solid #4d6f8f;
-  border-radius: 12px;
-  background: rgba(10, 22, 38, 0.92);
-  color: #d5ebff;
+  top: calc(max(env(safe-area-inset-top), 0.75rem) + 3.35rem);
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid rgba(157, 199, 230, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: #d8eeff;
+  font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1;
   z-index: 40;
 }
 
 .debug-panel {
   position: fixed;
   right: 0.9rem;
-  bottom: calc(10.2rem + env(safe-area-inset-bottom));
-  width: min(260px, calc(100vw - 1.8rem));
-  max-height: min(46dvh, 380px);
-  border: 1px solid #44627f;
-  border-radius: 12px;
-  background: rgba(5, 13, 23, 0.95);
+  top: calc(max(env(safe-area-inset-top), 0.75rem) + 5.8rem);
+  width: auto;
+  max-width: min(68vw, 240px);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   color: #d8edff;
-  padding: 0.72rem;
+  padding: 0;
   z-index: 40;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  overflow-y: auto;
+  align-items: flex-end;
+  gap: 0.22rem;
+  overflow: visible;
 }
 
 .debug-panel__title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #9fd9ff;
+  display: none;
 }
 
 .debug-panel__action {
-  min-height: 44px;
-  border: 1px solid #5f83a5;
-  border-radius: 10px;
-  background: #16314e;
+  min-height: 28px;
+  border: 1px solid rgba(141, 198, 239, 0.7);
+  border-radius: 999px;
+  background: transparent;
   color: #e3f3ff;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.72rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .debug-panel__status {
-  font-size: 0.8rem;
-  color: #b4cde4;
+  font-size: 0.7rem;
+  color: #d0e8ff;
+  max-width: min(68vw, 240px);
+  text-align: right;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 768px) {
@@ -312,12 +322,10 @@ body {
   }
 
   .debug-panel {
-    top: max(env(safe-area-inset-top), 0.65rem);
-    bottom: auto;
-    max-height: min(52dvh, 320px);
+    top: calc(max(env(safe-area-inset-top), 0.65rem) + 5.4rem);
   }
 
   .debug-toggle {
-    bottom: calc(4.3rem + env(safe-area-inset-bottom));
+    top: calc(max(env(safe-area-inset-top), 0.65rem) + 3.2rem);
   }
 }
