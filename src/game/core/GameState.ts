@@ -1,4 +1,18 @@
+import type { Resources } from "../../types";
+
+export interface WaveState {
+  number: number;
+  activeFactionId: string | null;
+  upcomingFactionId: string | null;
+  simulationClockMs: number;
+}
+
 export class GameState {
+  wave: WaveState;
+  resources: Resources;
+  maxResources: Resources;
+  purchasedUnits: Record<string, number>;
+
   constructor() {
     this.wave = {
       number: 0,

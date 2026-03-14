@@ -1,11 +1,47 @@
 import Phaser from "phaser";
+import type { EventBus } from "../../core/EventBus";
 import { Events } from "../../core/events";
 import { getPurchasedUnitCount } from "../../core/selectors";
+import type { GameState } from "../../core/GameState";
+import type { FactionSystem } from "../FactionSystem";
+import type { MapSystem } from "../MapSystem";
+import type { MissileVisual } from "../MapRenderer";
+import type { MissileProfile, Target } from "../../../types";
 
 const IRON_DOME_UNIT_ID = "iron-dome-battery";
 
+export interface InterceptionParams {
+  launch: { lat: number; lon: number; point: Phaser.Geom.Point };
+  target: Target & { point: Phaser.Geom.Point };
+  launchPoint: Phaser.Geom.Point;
+  targetPoint: Phaser.Geom.Point;
+  missileProfile: MissileProfile;
+  trail: Phaser.GameObjects.Graphics;
+  rocket: MissileVisual;
+  rocketTween: Phaser.Tweens.Tween;
+  rocketState: { t: number };
+  setIntercepted: () => void;
+  flightDurationMs: number;
+}
+
+interface InterceptionSystemDeps {
+  scene: Phaser.Scene;
+  eventBus: EventBus;
+  gameState: GameState;
+  factionSystem: FactionSystem;
+  mapSystem: MapSystem;
+  targets: Target[];
+}
+
 export class InterceptionSystem {
-  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets }) {
+  private scene: Phaser.Scene;
+  private eventBus: EventBus;
+  private state: GameState;
+  private factionSystem: FactionSystem;
+  private mapSystem: MapSystem;
+  private targets: Target[];
+
+  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets }: InterceptionSystemDeps) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
@@ -26,7 +62,7 @@ export class InterceptionSystem {
     rocketState,
     setIntercepted,
     flightDurationMs,
-  }) {
+  }: InterceptionParams): void {
     const batteryCount = getPurchasedUnitCount(this.state, IRON_DOME_UNIT_ID);
     if (batteryCount <= 0) {
       return;
@@ -62,21 +98,21 @@ export class InterceptionSystem {
         this.createInterceptionFlash(interceptPoint.x, interceptPoint.y);
         const activeFactionId = this.state.wave.activeFactionId;
         this.eventBus.emit(Events.UI_DEBUG_STATUS, {
-          message: `🛡️ Iron Dome intercepted ${this.factionSystem.describe(activeFactionId)} missile.`,
+          message: `🛡️ Iron Dome intercepted ${this.factionSystem.describe(activeFactionId ?? "")} missile.`,
         });
       });
     });
   }
 
-  getIronDomeInterceptionChance(missileProfile, batteryCount) {
+  getIronDomeInterceptionChance(missileProfile: MissileProfile, batteryCount: number): number {
     const maxRangeKm = missileProfile.maxRangeKm ?? 250;
     const rangeModifier = maxRangeKm <= 70 ? 1 : maxRangeKm <= 250 ? 0.78 : 0.48;
     const baseChance = 0.22 + batteryCount * 0.16;
     return Phaser.Math.Clamp(baseChance * rangeModifier, 0.08, 0.9);
   }
 
-  getClosestDefensePoint(target) {
-    const closestTarget = this.targets.reduce(
+  private getClosestDefensePoint(target: Target & { point: Phaser.Geom.Point }): Phaser.Geom.Point {
+    const closestTarget = this.targets.reduce<{ candidate: Target; distance: number } | null>(
       (closest, candidate) => {
         const distance = this.distanceKm(target.lat, target.lon, candidate.lat, candidate.lon);
         if (!closest || distance < closest.distance) {
@@ -91,7 +127,11 @@ export class InterceptionSystem {
     return this.mapSystem.geoToImagePoint(launchGeo.lat, launchGeo.lon);
   }
 
-  launchInterceptorMissile(startPoint, interceptPoint, onHit) {
+  private launchInterceptorMissile(
+    startPoint: Phaser.Geom.Point,
+    interceptPoint: Phaser.Geom.Point,
+    onHit: () => void,
+  ): void {
     const interceptorTrail = this.scene.add.graphics();
     const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
     const interceptor = this.scene.add.circle(startPoint.x, startPoint.y, 2.8 * sf, 0x9fe7ff, 0.95);
@@ -126,7 +166,7 @@ export class InterceptionSystem {
     });
   }
 
-  createInterceptionFlash(x, y) {
+  private createInterceptionFlash(x: number, y: number): void {
     const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
     const burst = this.scene.add.circle(x, y, 3 * sf, 0xbef4ff, 0.95);
     this.mapSystem.mapContainer.add(burst);
@@ -140,7 +180,7 @@ export class InterceptionSystem {
     });
   }
 
-  distanceKm(latA, lonA, latB, lonB) {
+  private distanceKm(latA: number, lonA: number, latB: number, lonB: number): number {
     const dLat = Phaser.Math.DegToRad(latB - latA);
     const dLon = Phaser.Math.DegToRad(lonB - lonA);
     const lat1 = Phaser.Math.DegToRad(latA);

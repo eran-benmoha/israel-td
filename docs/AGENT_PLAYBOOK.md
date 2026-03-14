@@ -46,7 +46,7 @@ This file defines mandatory rules for any future agent/contributor working on th
 
 ## 5) Technical constraints
 
-1. Stack remains Phaser + Vite + JavaScript ES modules unless superseded by ADR.
+1. Stack remains Phaser + Vite + TypeScript ES modules (see ADR 0015).
 2. Browser `localStorage` is the only persistence approach unless superseded by ADR.
 3. Map assets must remain legally redistributable with attribution file updates.
 4. Keep data-driven configs in `src/data/` as source of truth for levels/factions/units/map metadata.
@@ -56,7 +56,8 @@ This file defines mandatory rules for any future agent/contributor working on th
 
 Before shipping major changes, verify:
 
-- `npm run build` succeeds
+- `npm run build` succeeds (includes `tsc --noEmit`)
+- `npm test` passes
 - key UI panels still open/close correctly
 - map navigation/zoom still works
 - docs reflect new behavior

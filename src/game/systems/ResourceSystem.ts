@@ -1,40 +1,55 @@
 import Phaser from "phaser";
+import type { EventBus } from "../core/EventBus";
 import { Events } from "../core/events";
+import type { GameState } from "../core/GameState";
+import type { ResourceKey, UnitDefinition } from "../../types";
+
+interface ResourceSystemDeps {
+  eventBus: EventBus;
+  gameState: GameState;
+  unitsConfig: { units: UnitDefinition[] };
+}
 
 export class ResourceSystem {
-  constructor({ eventBus, gameState, unitsConfig }) {
+  private eventBus: EventBus;
+  private state: GameState;
+  private units: UnitDefinition[];
+  private unsubscribePurchase: (() => void) | null = null;
+
+  constructor({ eventBus, gameState, unitsConfig }: ResourceSystemDeps) {
     this.eventBus = eventBus;
     this.state = gameState;
     this.units = unitsConfig.units ?? [];
-    this.unsubscribePurchase = null;
   }
 
-  start() {
-    this.unsubscribePurchase = this.eventBus.on(Events.SHOP_PURCHASE_UNIT, ({ unitId }) => this.purchaseUnit(unitId));
+  start(): void {
+    this.unsubscribePurchase = this.eventBus.on(Events.SHOP_PURCHASE_UNIT, ({ unitId }: { unitId: string }) =>
+      this.purchaseUnit(unitId),
+    );
     this.eventBus.emit(Events.UI_SHOP_CATALOG, { units: this.units });
     this.publishResourceState();
   }
 
-  destroy() {
+  destroy(): void {
     if (this.unsubscribePurchase) {
       this.unsubscribePurchase();
       this.unsubscribePurchase = null;
     }
   }
 
-  adjust(resourceName, delta) {
+  adjust(resourceName: ResourceKey, delta: number): void {
     const max = this.state.maxResources[resourceName];
     const current = this.state.resources[resourceName];
     this.state.resources[resourceName] = Phaser.Math.Clamp(current + delta, 0, max);
   }
 
-  onWaveLaunched(waveNumber) {
+  onWaveLaunched(waveNumber: number): void {
     this.adjust("money", 28 + waveNumber * 3);
     this.adjust("army", 0.75);
     this.publishResourceState();
   }
 
-  onImpact(impactScale) {
+  onImpact(impactScale: number): void {
     this.adjust("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale);
     this.adjust("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale);
     this.adjust("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale);
@@ -42,7 +57,7 @@ export class ResourceSystem {
     this.publishResourceState();
   }
 
-  purchaseUnit(unitId) {
+  purchaseUnit(unitId: string): void {
     const unit = this.units.find((candidate) => candidate.id === unitId);
     if (!unit) {
       this.eventBus.emit(Events.UI_SHOP_RESULT, { success: false, message: "Unit not found." });
@@ -63,7 +78,7 @@ export class ResourceSystem {
     this.eventBus.emit(Events.UI_SHOP_RESULT, { success: true, message: `Purchased ${unit.name} for ${unit.cost}.` });
   }
 
-  publishResourceState() {
+  publishResourceState(): void {
     this.recalculateEconomy();
     this.eventBus.emit(Events.UI_RESOURCES, {
       resources: { ...this.state.resources },
@@ -75,7 +90,7 @@ export class ResourceSystem {
     });
   }
 
-  recalculateEconomy() {
+  recalculateEconomy(): void {
     const moneyPercent = (this.state.resources.money / this.state.maxResources.money) * 100;
     const weightedEconomy =
       moneyPercent * 0.45 +

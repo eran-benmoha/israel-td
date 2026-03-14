@@ -1,9 +1,31 @@
+import type { Resources, ResourceKey } from "../../types";
+
+export interface HudElements {
+  waveIndicator: HTMLElement | null;
+  waveTimer: HTMLElement | null;
+  waveOrigin: HTMLElement | null;
+  resourceValues: Partial<Record<ResourceKey, HTMLElement | null>>;
+}
+
+export interface WaveHudPayload {
+  waveNumber: number;
+  clockLabel: string;
+  originLabel: string;
+}
+
+export interface ResourceHudPayload {
+  resources: Resources;
+  maxResources: Resources;
+}
+
 export class HudView {
-  constructor({ elements }) {
+  private elements: HudElements;
+
+  constructor({ elements }: { elements: HudElements }) {
     this.elements = elements;
   }
 
-  updateWaveHud({ waveNumber, clockLabel, originLabel }) {
+  updateWaveHud({ waveNumber, clockLabel, originLabel }: WaveHudPayload): void {
     if (this.elements.waveIndicator) {
       this.elements.waveIndicator.textContent = `Wave ${waveNumber}`;
     }
@@ -15,8 +37,8 @@ export class HudView {
     }
   }
 
-  updateResourceHud({ resources, maxResources }) {
-    Object.keys(resources).forEach((key) => {
+  updateResourceHud({ resources, maxResources }: ResourceHudPayload): void {
+    (Object.keys(resources) as ResourceKey[]).forEach((key) => {
       const valueEl = this.elements.resourceValues[key];
       if (!valueEl) {
         return;
@@ -29,7 +51,7 @@ export class HudView {
     });
   }
 
-  formatResourceChip(resourceKey, value, max, percent) {
+  formatResourceChip(resourceKey: ResourceKey, value: number, max: number, percent: number): string {
     const roundedPercent = `${Math.round(percent)}%`;
     switch (resourceKey) {
       case "money":

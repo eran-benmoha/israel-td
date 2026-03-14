@@ -8,4 +8,6 @@ export const Events = {
   UI_SHOP_RESULT: "ui/shop-result",
   UI_DEBUG_STATUS: "ui/debug-status",
   UI_DEBUG_ZOOM: "ui/debug-zoom",
-};
+} as const;
+
+export type EventName = (typeof Events)[keyof typeof Events];

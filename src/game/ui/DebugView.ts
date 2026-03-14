@@ -1,17 +1,29 @@
+import type { EventBus } from "../core/EventBus";
 import { Events } from "../core/events";
 
+export interface DebugElements {
+  debugToggleButton: HTMLElement | null;
+  debugPanel: HTMLElement | null;
+  debugLaunchWaveButton: HTMLElement | null;
+  debugStatus: HTMLElement | null;
+  debugZoom: HTMLElement | null;
+}
+
 export class DebugView {
-  constructor({ eventBus, elements }) {
+  private eventBus: EventBus;
+  private elements: DebugElements;
+  private cleanupHandlers: Array<() => void> = [];
+
+  constructor({ eventBus, elements }: { eventBus: EventBus; elements: DebugElements }) {
     this.eventBus = eventBus;
     this.elements = elements;
-    this.cleanupHandlers = [];
   }
 
-  bindDomEvents() {
+  bindDomEvents(): void {
     const { debugToggleButton, debugPanel, debugLaunchWaveButton } = this.elements;
 
     if (debugToggleButton && debugPanel) {
-      const onToggle = () => {
+      const onToggle = (): void => {
         const hidden = debugPanel.hasAttribute("hidden");
         if (hidden) {
           debugPanel.removeAttribute("hidden");
@@ -26,25 +38,27 @@ export class DebugView {
     }
 
     if (debugLaunchWaveButton) {
-      const onLaunch = () => this.eventBus.emit(Events.DEBUG_LAUNCH_WAVE);
+      const onLaunch = (): void => {
+        this.eventBus.emit(Events.DEBUG_LAUNCH_WAVE);
+      };
       debugLaunchWaveButton.addEventListener("click", onLaunch);
       this.cleanupHandlers.push(() => debugLaunchWaveButton.removeEventListener("click", onLaunch));
     }
   }
 
-  onDebugStatus(message) {
+  onDebugStatus(message: string): void {
     if (this.elements.debugStatus && typeof message === "string") {
       this.elements.debugStatus.textContent = message;
     }
   }
 
-  onDebugZoom(zoom) {
+  onDebugZoom(zoom: number): void {
     if (this.elements.debugZoom && typeof zoom === "number" && Number.isFinite(zoom)) {
       this.elements.debugZoom.textContent = `🔎 ${zoom.toFixed(2)}x`;
     }
   }
 
-  destroy() {
+  destroy(): void {
     this.cleanupHandlers.forEach((off) => off());
     this.cleanupHandlers = [];
   }

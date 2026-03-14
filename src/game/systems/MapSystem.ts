@@ -1,10 +1,42 @@
 import Phaser from "phaser";
 import middleEastSatelliteUrl from "../../assets/maps/middle-east-satellite.jpg";
 import { MapRenderer } from "./MapRenderer";
+import type { MissileVisual } from "./MapRenderer";
 import { Events } from "../core/events";
+import type { EventBus } from "../core/EventBus";
+import type { FactionsConfig, GeoBounds, IsraelData, MapViewConfig, MissileProfile } from "../../types";
+
+interface InputHandlerEntry {
+  eventName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handler: (...args: any[]) => void;
+}
+
+interface MapSystemDeps {
+  scene: Phaser.Scene;
+  eventBus: EventBus;
+  mapViewConfig: MapViewConfig;
+  israelData: IsraelData;
+  factionsConfig: FactionsConfig;
+}
 
 export class MapSystem {
-  constructor({ scene, eventBus, mapViewConfig, israelData, factionsConfig }) {
+  private scene: Phaser.Scene;
+  private eventBus: EventBus;
+  private mapViewConfig: MapViewConfig;
+  mapRenderer: MapRenderer;
+  private mapImage!: Phaser.GameObjects.Image;
+  mapContainer!: Phaser.GameObjects.Container;
+  private baseMapScale = 1;
+  private zoomLevel: number;
+  private minZoomLevel: number;
+  private maxZoomLevel: number;
+  private pinchStartDistance = 0;
+  private pinchStartZoomLevel: number;
+  private inputHandlers: InputHandlerEntry[] = [];
+  private resizeHandler: ((gameSize: Phaser.Structs.Size) => void) | null = null;
+
+  constructor({ scene, eventBus, mapViewConfig, israelData, factionsConfig }: MapSystemDeps) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.mapViewConfig = mapViewConfig;
@@ -14,25 +46,19 @@ export class MapSystem {
       israelData,
       factions: factionsConfig.factions ?? [],
     });
-    this.mapImage = null;
-    this.mapContainer = null;
-    this.baseMapScale = 1;
     this.zoomLevel = mapViewConfig.initial.zoomLevel;
     this.minZoomLevel = mapViewConfig.zoom.min;
     this.maxZoomLevel = mapViewConfig.zoom.max;
-    this.pinchStartDistance = 0;
     this.pinchStartZoomLevel = this.zoomLevel;
-    this.inputHandlers = [];
-    this.resizeHandler = null;
   }
 
-  preload() {
+  preload(): void {
     const configuredPath = this.mapViewConfig.mapImagePath ?? "";
     const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastSatelliteUrl;
     this.scene.load.image("middle-east-map", mapUrl);
   }
 
-  create() {
+  create(): void {
     const camera = this.scene.cameras.main;
     camera.setBackgroundColor("#05070e");
     camera.setRotation(Phaser.Math.DegToRad(this.mapViewConfig.initial.rotationDeg));
@@ -59,7 +85,7 @@ export class MapSystem {
     this.scene.input.addPointer(1);
     this.registerInputHandlers({ width, height });
 
-    this.resizeHandler = (gameSize) => {
+    this.resizeHandler = (gameSize: Phaser.Structs.Size) => {
       const oldScale = this.mapContainer.scaleX;
       const centerWorld = camera.getWorldPoint(width / 2, height / 2);
       const centerWorldX = (centerWorld.x - this.mapContainer.x) / oldScale;
@@ -81,7 +107,7 @@ export class MapSystem {
     this.scene.scale.on("resize", this.resizeHandler);
   }
 
-  destroy() {
+  destroy(): void {
     this.inputHandlers.forEach(({ eventName, handler }) => {
       this.scene.input.off(eventName, handler);
     });
@@ -93,26 +119,29 @@ export class MapSystem {
     }
   }
 
-  _applyTextureFiltering() {
+  private _applyTextureFiltering(): void {
     const tex = this.scene.textures.get("middle-east-map");
     if (tex && tex.source && tex.source[0]) {
       tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
   }
 
-  registerInputHandlers({ width, height }) {
+  private registerInputHandlers({ width, height }: { width: number; height: number }): void {
     const camera = this.scene.cameras.main;
     let isDragging = false;
-    let dragPointerId = null;
+    let dragPointerId: number | null = null;
     let dragStartWorldX = 0;
     let dragStartWorldY = 0;
     let mapStartX = this.mapContainer.x;
     let mapStartY = this.mapContainer.y;
 
-    const getActiveTouchPointers = () => [this.scene.input.pointer1, this.scene.input.pointer2].filter((pointer) => pointer?.isDown);
-    const isPinching = () => getActiveTouchPointers().length >= 2;
+    const getActiveTouchPointers = (): Phaser.Input.Pointer[] =>
+      [this.scene.input.pointer1, this.scene.input.pointer2].filter(
+        (pointer): pointer is Phaser.Input.Pointer => !!pointer?.isDown,
+      );
+    const isPinching = (): boolean => getActiveTouchPointers().length >= 2;
 
-    const beginPinch = () => {
+    const beginPinch = (): void => {
       const [a, b] = getActiveTouchPointers();
       if (!a || !b) {
         return;
@@ -123,7 +152,7 @@ export class MapSystem {
       dragPointerId = null;
     };
 
-    const applyPinch = () => {
+    const applyPinch = (): void => {
       const [a, b] = getActiveTouchPointers();
       if (!a || !b) {
         return;
@@ -139,7 +168,7 @@ export class MapSystem {
       this.applyZoomAtScreenPoint(nextZoom, midpointX, midpointY, width, height);
     };
 
-    const pointerDown = (pointer) => {
+    const pointerDown = (pointer: Phaser.Input.Pointer): void => {
       if (isPinching()) {
         beginPinch();
         return;
@@ -153,7 +182,7 @@ export class MapSystem {
       mapStartY = this.mapContainer.y;
     };
 
-    const pointerMove = (pointer) => {
+    const pointerMove = (pointer: Phaser.Input.Pointer): void => {
       if (isPinching()) {
         applyPinch();
         return;
@@ -169,7 +198,7 @@ export class MapSystem {
       this.clampMapPosition(width, height);
     };
 
-    const stopDrag = () => {
+    const stopDrag = (): void => {
       if (isPinching()) {
         beginPinch();
         return;
@@ -190,7 +219,7 @@ export class MapSystem {
       }
     };
 
-    const wheel = (pointer, _gameObjects, _deltaX, deltaY) => {
+    const wheel = (pointer: Phaser.Input.Pointer, _gameObjects: unknown[], _deltaX: number, deltaY: number): void => {
       const zoomFactor = Math.exp(-deltaY * 0.0012);
       const nextZoom = Phaser.Math.Clamp(this.zoomLevel * zoomFactor, this.minZoomLevel, this.maxZoomLevel);
       this.applyZoomAtScreenPoint(nextZoom, pointer.x, pointer.y, width, height);
@@ -211,12 +240,12 @@ export class MapSystem {
     );
   }
 
-  getMapCoverScale(viewportWidth, viewportHeight) {
+  private getMapCoverScale(viewportWidth: number, viewportHeight: number): number {
     const { width, height } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
     return Math.min(width / this.mapImage.width, height / this.mapImage.height);
   }
 
-  clampMapPosition(viewportWidth, viewportHeight) {
+  private clampMapPosition(viewportWidth: number, viewportHeight: number): void {
     const camera = this.scene.cameras.main;
     const viewCenter = camera.getWorldPoint(viewportWidth / 2, viewportHeight / 2);
     const { width: viewWidth, height: viewHeight } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);
@@ -240,14 +269,20 @@ export class MapSystem {
     }
   }
 
-  focusMapOnGeoPoint(viewportWidth, viewportHeight, lat, lon) {
+  private focusMapOnGeoPoint(viewportWidth: number, viewportHeight: number, lat: number, lon: number): void {
     const focusPoint = this.geoToImagePoint(lat, lon);
     this.mapContainer.x = viewportWidth / 2 - focusPoint.x * this.mapContainer.scaleX;
     this.mapContainer.y = viewportHeight / 2 - focusPoint.y * this.mapContainer.scaleY;
     this.clampMapPosition(viewportWidth, viewportHeight);
   }
 
-  applyZoomAtScreenPoint(nextZoomLevel, screenX, screenY, viewportWidth, viewportHeight) {
+  private applyZoomAtScreenPoint(
+    nextZoomLevel: number,
+    screenX: number,
+    screenY: number,
+    viewportWidth: number,
+    viewportHeight: number,
+  ): void {
     const camera = this.scene.cameras.main;
     const clampedZoom = Phaser.Math.Clamp(nextZoomLevel, this.minZoomLevel, this.maxZoomLevel);
     if (Math.abs(clampedZoom - this.zoomLevel) < 0.0001) {
@@ -268,8 +303,8 @@ export class MapSystem {
     this.emitZoom();
   }
 
-  getEffectiveViewportAabb(viewportWidth, viewportHeight) {
-    const rotationAbs = Math.abs(this.scene.cameras.main.rotation);
+  private getEffectiveViewportAabb(viewportWidth: number, viewportHeight: number): { width: number; height: number } {
+    const rotationAbs = Math.abs((this.scene.cameras.main as unknown as { rotation: number }).rotation);
     const cos = Math.abs(Math.cos(rotationAbs));
     const sin = Math.abs(Math.sin(rotationAbs));
     return {
@@ -278,26 +313,26 @@ export class MapSystem {
     };
   }
 
-  getOverlayScaleFactor() {
+  getOverlayScaleFactor(): number {
     if (!this.mapContainer || !this.mapRenderer._referenceScale) return 1;
     return Math.pow(this.mapRenderer._referenceScale / this.mapContainer.scaleX, 0.8);
   }
 
-  emitZoom() {
+  private emitZoom(): void {
     this.eventBus.emit(Events.UI_DEBUG_ZOOM, { zoom: this.zoomLevel });
   }
 
-  randomGeoPointFromRect(bounds) {
+  randomGeoPointFromRect(bounds: GeoBounds): { lat: number; lon: number; point: Phaser.Geom.Point } {
     const lat = Phaser.Math.FloatBetween(bounds.south, bounds.north);
     const lon = Phaser.Math.FloatBetween(bounds.west, bounds.east);
     return { lat, lon, point: this.geoToImagePoint(lat, lon) };
   }
 
-  geoToImagePoint(lat, lon) {
+  geoToImagePoint(lat: number, lon: number): Phaser.Geom.Point {
     return this.mapRenderer.geoToImagePoint(lat, lon);
   }
 
-  createMissileVisual(x, y, missileProfile) {
+  createMissileVisual(x: number, y: number, missileProfile: MissileProfile): MissileVisual {
     return this.mapRenderer.createMissileVisual(x, y, missileProfile);
   }
 }

@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import { BootScene } from "./game/scenes/BootScene.js";
+import { BootScene } from "./game/scenes/BootScene";
 import { UiSystem } from "./game/systems/UiSystem";
 import { eventBus } from "./game/core/EventBus";
 
-const gameRoot = document.getElementById("game-root");
+const gameRoot = document.getElementById("game-root")!;
 const uiSystem = new UiSystem({ eventBus });
 uiSystem.start();
 

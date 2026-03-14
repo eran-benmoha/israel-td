@@ -1,24 +1,46 @@
+import type { EventBus } from "../core/EventBus";
 import { Events } from "../core/events";
+import type { UnitDefinition } from "../../types";
+
+export interface ShopElements {
+  shopPanel: HTMLElement | null;
+  shopTabs: HTMLElement | null;
+  shopItems: HTMLElement | null;
+  shopStatus: HTMLElement | null;
+  shopMoney: HTMLElement | null;
+  shopToggleButton: HTMLElement | null;
+}
+
+interface ShopState {
+  catalog: UnitDefinition[];
+  categories: string[];
+  activeCategory: string;
+  money: number;
+  purchased: Record<string, number>;
+}
 
 export class ShopView {
-  constructor({ eventBus, elements }) {
+  private eventBus: EventBus;
+  private elements: ShopElements;
+  private cleanupHandlers: Array<() => void> = [];
+  private state: ShopState = {
+    catalog: [],
+    categories: [],
+    activeCategory: "air-defense",
+    money: 0,
+    purchased: {},
+  };
+
+  constructor({ eventBus, elements }: { eventBus: EventBus; elements: ShopElements }) {
     this.eventBus = eventBus;
     this.elements = elements;
-    this.cleanupHandlers = [];
-    this.state = {
-      catalog: [],
-      categories: [],
-      activeCategory: "air-defense",
-      money: 0,
-      purchased: {},
-    };
   }
 
-  bindDomEvents() {
+  bindDomEvents(): void {
     const { shopTabs, shopItems, shopPanel, shopToggleButton } = this.elements;
 
     if (shopTabs) {
-      const onTabClick = (event) => {
+      const onTabClick = (event: Event): void => {
         const target = event.target;
         if (!(target instanceof HTMLElement)) {
           return;
@@ -35,7 +57,7 @@ export class ShopView {
     }
 
     if (shopItems) {
-      const onItemClick = (event) => {
+      const onItemClick = (event: Event): void => {
         const target = event.target;
         if (!(target instanceof HTMLElement)) {
           return;
@@ -51,7 +73,7 @@ export class ShopView {
     }
 
     if (shopPanel && shopToggleButton) {
-      const onToggle = () => {
+      const onToggle = (): void => {
         const isCollapsed = shopPanel.classList.toggle("is-collapsed");
         shopToggleButton.textContent = isCollapsed ? "👁️" : "🙈";
         shopToggleButton.setAttribute("aria-expanded", isCollapsed ? "false" : "true");
@@ -61,7 +83,7 @@ export class ShopView {
     }
   }
 
-  onShopCatalog(units) {
+  onShopCatalog(units: UnitDefinition[]): void {
     this.state.catalog = units;
     this.state.categories = [...new Set(units.map((unit) => unit.category))];
     if (!this.state.categories.includes(this.state.activeCategory)) {
@@ -70,13 +92,13 @@ export class ShopView {
     this.render();
   }
 
-  onShopState(money, purchased) {
+  onShopState(money: number, purchased: Record<string, number>): void {
     this.state.money = money;
     this.state.purchased = purchased;
     this.render();
   }
 
-  onShopResult(success, message) {
+  onShopResult(success: boolean, message: string): void {
     if (!this.elements.shopStatus || typeof message !== "string") {
       return;
     }
@@ -84,19 +106,19 @@ export class ShopView {
     this.elements.shopStatus.style.color = success ? "#9be3b2" : "#ffb4b4";
   }
 
-  render() {
+  render(): void {
     this.updateMoneyLabel();
     this.renderTabs();
     this.renderItems();
   }
 
-  updateMoneyLabel() {
+  private updateMoneyLabel(): void {
     if (this.elements.shopMoney) {
       this.elements.shopMoney.textContent = `💰 ${Math.round(this.state.money)}`;
     }
   }
 
-  renderTabs() {
+  private renderTabs(): void {
     if (!this.elements.shopTabs) {
       return;
     }
@@ -108,7 +130,7 @@ export class ShopView {
       .join("");
   }
 
-  renderItems() {
+  private renderItems(): void {
     if (!this.elements.shopItems) {
       return;
     }
@@ -128,7 +150,7 @@ export class ShopView {
       .join("");
   }
 
-  categoryLabel(categoryKey) {
+  private categoryLabel(categoryKey: string): string {
     switch (categoryKey) {
       case "air-defense":
         return "🛡️ AD";
@@ -141,7 +163,7 @@ export class ShopView {
     }
   }
 
-  categoryEmoji(categoryKey) {
+  private categoryEmoji(categoryKey: string): string {
     switch (categoryKey) {
       case "air-defense":
         return "🛡️";
@@ -154,7 +176,7 @@ export class ShopView {
     }
   }
 
-  destroy() {
+  destroy(): void {
     this.cleanupHandlers.forEach((off) => off());
     this.cleanupHandlers = [];
   }

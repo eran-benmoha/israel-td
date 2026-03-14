@@ -1,30 +1,30 @@
-export class EventBus {
-  constructor() {
-    this.listeners = new Map();
-  }
+export type EventHandler<T = unknown> = (payload: T) => void;
 
-  on(eventName, handler) {
+export class EventBus {
+  private listeners = new Map<string, Set<EventHandler>>();
+
+  on<T = unknown>(eventName: string, handler: EventHandler<T>): () => void {
     if (!this.listeners.has(eventName)) {
       this.listeners.set(eventName, new Set());
     }
 
-    this.listeners.get(eventName).add(handler);
+    this.listeners.get(eventName)!.add(handler as EventHandler);
     return () => this.off(eventName, handler);
   }
 
-  off(eventName, handler) {
+  off<T = unknown>(eventName: string, handler: EventHandler<T>): void {
     const handlers = this.listeners.get(eventName);
     if (!handlers) {
       return;
     }
 
-    handlers.delete(handler);
+    handlers.delete(handler as EventHandler);
     if (handlers.size === 0) {
       this.listeners.delete(eventName);
     }
   }
 
-  emit(eventName, payload) {
+  emit<T = unknown>(eventName: string, payload?: T): void {
     const handlers = this.listeners.get(eventName);
     if (!handlers) {
       return;

@@ -1,11 +1,26 @@
+import Phaser from "phaser";
+import type { MapSystem } from "../MapSystem";
+import type { ResourceSystem } from "../ResourceSystem";
+import type { Faction, MissileProfile } from "../../../types";
+
+interface ImpactSystemDeps {
+  scene: Phaser.Scene;
+  mapSystem: MapSystem;
+  resourceSystem: ResourceSystem;
+}
+
 export class ImpactSystem {
-  constructor({ scene, mapSystem, resourceSystem }) {
+  private scene: Phaser.Scene;
+  private mapSystem: MapSystem;
+  private resourceSystem: ResourceSystem;
+
+  constructor({ scene, mapSystem, resourceSystem }: ImpactSystemDeps) {
     this.scene = scene;
     this.mapSystem = mapSystem;
     this.resourceSystem = resourceSystem;
   }
 
-  createImpact(x, y, faction, missileProfile) {
+  createImpact(x: number, y: number, faction: Faction, missileProfile: MissileProfile): void {
     const impactScale = (faction.impactMultiplier ?? 1) * (missileProfile.impactScale ?? 1);
     this.resourceSystem.onImpact(impactScale);
 

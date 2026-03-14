@@ -1,35 +1,83 @@
 import Phaser from "phaser";
+import type { Faction, IsraelData, MapViewConfig, MissileProfile } from "../../types";
+
+interface RegionEntry {
+  gfx: Phaser.GameObjects.Graphics;
+  borderPoints: Phaser.Geom.Point[];
+  label: Phaser.GameObjects.Text;
+}
+
+interface CityEntry {
+  dot: Phaser.GameObjects.Arc;
+  label: Phaser.GameObjects.Text;
+  baseRadius: number;
+  baseStroke: number;
+}
+
+interface HostileEntry {
+  gfx: Phaser.GameObjects.Graphics;
+  corners: Phaser.Geom.Point[];
+  dot: Phaser.GameObjects.Arc;
+  label: Phaser.GameObjects.Text;
+  rocketColor: number;
+  trailColor: number;
+}
+
+export interface MissileVisual {
+  container: Phaser.GameObjects.Container;
+  flame: Phaser.GameObjects.Triangle;
+}
 
 export class MapRenderer {
-  constructor({ scene, mapViewConfig, israelData, factions }) {
+  private scene: Phaser.Scene;
+  private mapViewConfig: MapViewConfig;
+  private israelData: IsraelData;
+  private factions: Faction[];
+  private mapImage: Phaser.GameObjects.Image | null = null;
+  private mapContainer: Phaser.GameObjects.Container | null = null;
+
+  private _outlineGfx: Phaser.GameObjects.Graphics | null = null;
+  private _outlinePoints: Phaser.Geom.Point[] = [];
+  private _regionEntries: RegionEntry[] = [];
+  private _cityEntries: CityEntry[] = [];
+  private _hostileEntries: HostileEntry[] = [];
+  _referenceScale: number | null = null;
+
+  constructor({
+    scene,
+    mapViewConfig,
+    israelData,
+    factions,
+  }: {
+    scene: Phaser.Scene;
+    mapViewConfig: MapViewConfig;
+    israelData: IsraelData;
+    factions: Faction[];
+  }) {
     this.scene = scene;
     this.mapViewConfig = mapViewConfig;
     this.israelData = israelData;
     this.factions = factions ?? [];
-    this.mapImage = null;
-    this.mapContainer = null;
-
-    this._outlineGfx = null;
-    this._outlinePoints = [];
-    this._regionEntries = [];
-    this._cityEntries = [];
-    this._hostileEntries = [];
-    this._referenceScale = null;
   }
 
-  setMapImage(mapImage) {
+  setMapImage(mapImage: Phaser.GameObjects.Image): void {
     this.mapImage = mapImage;
   }
 
-  setMapContainer(mapContainer) {
+  setMapContainer(mapContainer: Phaser.GameObjects.Container): void {
     this.mapContainer = mapContainer;
   }
 
-  setReferenceScale(scale) {
+  setReferenceScale(scale: number): void {
     this._referenceScale = scale;
   }
 
-  createOverlayLayers() {
+  createOverlayLayers(): {
+    outline: Phaser.GameObjects.Graphics;
+    regionLayer: Phaser.GameObjects.Container;
+    cityLayer: Phaser.GameObjects.Container;
+    hostileLayer: Phaser.GameObjects.Container;
+  } {
     const outline = this.scene.add.graphics();
     this._outlineGfx = outline;
     this._outlinePoints = this.israelData.outline.map((p) => this.geoToImagePoint(p.lat, p.lon));
@@ -47,7 +95,7 @@ export class MapRenderer {
     return { outline, regionLayer, cityLayer, hostileLayer };
   }
 
-  updateForZoom(containerScale) {
+  updateForZoom(containerScale: number): void {
     if (!this._referenceScale || this._referenceScale === 0) return;
     const ratio = this._referenceScale / containerScale;
 
@@ -57,37 +105,33 @@ export class MapRenderer {
     this._updateHostiles(containerScale, ratio);
   }
 
-  // --------------- geo projection ---------------
-
-  geoToImagePoint(lat, lon) {
+  geoToImagePoint(lat: number, lon: number): Phaser.Geom.Point {
     const xPercent = this.projectGeoToMapXPercent(lat, lon);
     const yPercent = this.projectGeoToMapYPercent(lat, lon);
-    return new Phaser.Geom.Point((xPercent / 100) * this.mapImage.width, (yPercent / 100) * this.mapImage.height);
+    return new Phaser.Geom.Point((xPercent / 100) * this.mapImage!.width, (yPercent / 100) * this.mapImage!.height);
   }
 
-  projectGeoToMapXPercent(lat, lon) {
+  projectGeoToMapXPercent(_lat: number, lon: number): number {
     const p = this.mapViewConfig.projection;
     if (p.type === "equirectangular") {
-      return ((lon - p.lonMin) / (p.lonMax - p.lonMin)) * 100;
+      return ((lon - p.lonMin!) / (p.lonMax! - p.lonMin!)) * 100;
     }
-    const latRad = Phaser.Math.DegToRad(lat);
-    const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
-    return 50 + p.xScale * (p.rOffset - latRad) * Math.sin(p.thetaScale * lonDeltaRad) * p.xCompression;
+    const latRad = Phaser.Math.DegToRad(_lat);
+    const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian!);
+    return 50 + p.xScale! * (p.rOffset! - latRad) * Math.sin(p.thetaScale! * lonDeltaRad) * p.xCompression!;
   }
 
-  projectGeoToMapYPercent(lat, lon) {
+  projectGeoToMapYPercent(lat: number, lon: number): number {
     const p = this.mapViewConfig.projection;
     if (p.type === "equirectangular") {
-      return ((p.latMax - lat) / (p.latMax - p.latMin)) * 100;
+      return ((p.latMax! - lat) / (p.latMax! - p.latMin!)) * 100;
     }
     const latRad = Phaser.Math.DegToRad(lat);
-    const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
-    return 50 - p.xScale * (p.yAnchor - (p.rOffset - latRad) * Math.cos(p.thetaScale * lonDeltaRad));
+    const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian!);
+    return 50 - p.xScale! * (p.yAnchor! - (p.rOffset! - latRad) * Math.cos(p.thetaScale! * lonDeltaRad));
   }
 
-  // --------------- outline ---------------
-
-  _drawOutlineAtScale(gfx, points, scaleCompensation) {
+  private _drawOutlineAtScale(gfx: Phaser.GameObjects.Graphics, points: Phaser.Geom.Point[], scaleCompensation: number): void {
     gfx.clear();
     gfx.lineStyle(4 * scaleCompensation, 0x00131f, 0.45);
     gfx.strokePoints(points, true);
@@ -95,15 +139,13 @@ export class MapRenderer {
     gfx.strokePoints(points, true);
   }
 
-  _redrawOutline(containerScale) {
+  private _redrawOutline(containerScale: number): void {
     if (!this._outlineGfx || !this._outlinePoints.length) return;
-    const sc = Math.pow(this._referenceScale / containerScale, 0.85);
+    const sc = Math.pow(this._referenceScale! / containerScale, 0.85);
     this._drawOutlineAtScale(this._outlineGfx, this._outlinePoints, sc);
   }
 
-  // --------------- regions ---------------
-
-  _drawIsraelRegions(layerContainer) {
+  private _drawIsraelRegions(layerContainer: Phaser.GameObjects.Container): void {
     this.israelData.regions.forEach((region) => {
       const borderPoints = region.border.map((p) => this.geoToImagePoint(p.lat, p.lon));
       const gfx = this.scene.add.graphics();
@@ -130,7 +172,7 @@ export class MapRenderer {
     });
   }
 
-  _updateRegions(containerScale, ratio) {
+  private _updateRegions(_containerScale: number, ratio: number): void {
     const lineSc = Math.pow(ratio, 0.85);
     const labelSc = Math.pow(ratio, 0.75);
 
@@ -142,9 +184,7 @@ export class MapRenderer {
     });
   }
 
-  // --------------- cities ---------------
-
-  _drawRegionCityMarkers(layerContainer) {
+  private _drawRegionCityMarkers(layerContainer: Phaser.GameObjects.Container): void {
     this.israelData.cities.forEach((city) => {
       const pos = this.geoToImagePoint(city.lat, city.lon);
       const dot = this.scene.add.circle(pos.x, pos.y, 2.8, 0xfff1a8, 0.95);
@@ -165,7 +205,7 @@ export class MapRenderer {
     });
   }
 
-  _updateCities(_containerScale, ratio) {
+  private _updateCities(_containerScale: number, ratio: number): void {
     const labelSc = Math.pow(ratio, 0.7);
     const dotSc = Math.pow(ratio, 0.8);
 
@@ -175,9 +215,7 @@ export class MapRenderer {
     });
   }
 
-  // --------------- hostile factions ---------------
-
-  _drawHostileFactionMarkers(layerContainer) {
+  private _drawHostileFactionMarkers(layerContainer: Phaser.GameObjects.Container): void {
     this.factions.forEach((faction) => {
       const corners = [
         this.geoToImagePoint(faction.bounds.north, faction.bounds.west),
@@ -224,7 +262,7 @@ export class MapRenderer {
     });
   }
 
-  _updateHostiles(containerScale, ratio) {
+  private _updateHostiles(_containerScale: number, ratio: number): void {
     const lineSc = Math.pow(ratio, 0.85);
     const labelSc = Math.pow(ratio, 0.65);
     const dotSc = Math.pow(ratio, 0.8);
@@ -240,16 +278,14 @@ export class MapRenderer {
     });
   }
 
-  // --------------- missiles ---------------
-
-  createMissileVisual(x, y, missileProfile) {
+  createMissileVisual(x: number, y: number, missileProfile: MissileProfile): MissileVisual {
     const container = this.scene.add.container(x, y);
     const body = this.scene.add.polygon(0, 0, [-10, -2, 6, -2, 10, 0, 6, 2, -10, 2, -8, 0], missileProfile.rocketColor, 1);
     body.setStrokeStyle(1, 0x2a0f08, 0.92);
     const flame = this.scene.add.triangle(-10.5, 0, 0, 0, -6.5, 2.2, -6.5, -2.2, missileProfile.flameColor, 0.9);
     const highlight = this.scene.add.rectangle(1.5, -0.8, 5, 0.9, 0xfff4e8, 0.72);
     container.add([flame, body, highlight]);
-    this.mapContainer.add(container);
+    this.mapContainer!.add(container);
     return { container, flame };
   }
 }

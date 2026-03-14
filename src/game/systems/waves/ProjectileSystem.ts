@@ -1,9 +1,30 @@
 import Phaser from "phaser";
+import type { MapSystem } from "../MapSystem";
+import type { FactionSystem } from "../FactionSystem";
+import type { InterceptionSystem } from "./InterceptionSystem";
+import type { ImpactSystem } from "./ImpactSystem";
+import type { Faction, MissileProfile, Target, WaveDefinition } from "../../../types";
 
 const EARTH_RADIUS_KM = 6371;
 
+interface ProjectileSystemDeps {
+  scene: Phaser.Scene;
+  mapSystem: MapSystem;
+  factionSystem: FactionSystem;
+  targets: Target[];
+  interceptionSystem: InterceptionSystem;
+  impactSystem: ImpactSystem;
+}
+
 export class ProjectileSystem {
-  constructor({ scene, mapSystem, factionSystem, targets, interceptionSystem, impactSystem }) {
+  private scene: Phaser.Scene;
+  private mapSystem: MapSystem;
+  private factionSystem: FactionSystem;
+  private targets: Target[];
+  private interceptionSystem: InterceptionSystem;
+  private impactSystem: ImpactSystem;
+
+  constructor({ scene, mapSystem, factionSystem, targets, interceptionSystem, impactSystem }: ProjectileSystemDeps) {
     this.scene = scene;
     this.mapSystem = mapSystem;
     this.factionSystem = factionSystem;
@@ -12,7 +33,7 @@ export class ProjectileSystem {
     this.impactSystem = impactSystem;
   }
 
-  spawnRocketWave(faction, wave, waveNumber) {
+  spawnRocketWave(faction: Faction, wave: WaveDefinition, waveNumber: number): void {
     const intensityBonus = wave.intensityBonus ?? 0;
     const rocketCount = Phaser.Math.Clamp(
       faction.baseVolley + waveNumber + intensityBonus,
@@ -23,11 +44,13 @@ export class ProjectileSystem {
 
     for (let i = 0; i < rocketCount; i += 1) {
       const missileProfile = this.factionSystem.pickMissileProfile(faction.id);
-      this.scene.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction, missileProfile));
+      if (missileProfile) {
+        this.scene.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction, missileProfile));
+      }
     }
   }
 
-  spawnRocket(faction, missileProfile) {
+  private spawnRocket(faction: Faction, missileProfile: MissileProfile): void {
     const launch = this.mapSystem.randomGeoPointFromRect(faction.bounds);
     const target = this.pickTargetForMissile(launch, missileProfile);
     const launchPoint = launch.point;
@@ -99,7 +122,10 @@ export class ProjectileSystem {
     });
   }
 
-  pickTargetForMissile(launch, missileProfile) {
+  private pickTargetForMissile(
+    launch: { lat: number; lon: number },
+    missileProfile: MissileProfile,
+  ): Target & { point: Phaser.Geom.Point } {
     const inRange = this.targets.filter((candidate) => {
       const distance = this.distanceKm(launch.lat, launch.lon, candidate.lat, candidate.lon);
       return distance >= missileProfile.minRangeKm && distance <= missileProfile.maxRangeKm;
@@ -109,7 +135,7 @@ export class ProjectileSystem {
     return { ...picked, point: this.mapSystem.geoToImagePoint(picked.lat, picked.lon) };
   }
 
-  distanceKm(latA, lonA, latB, lonB) {
+  distanceKm(latA: number, lonA: number, latB: number, lonB: number): number {
     const dLat = Phaser.Math.DegToRad(latB - latA);
     const dLon = Phaser.Math.DegToRad(lonB - lonA);
     const lat1 = Phaser.Math.DegToRad(latA);

@@ -1,21 +1,49 @@
 import Phaser from "phaser";
+import type { EventBus } from "../../core/EventBus";
 import { Events } from "../../core/events";
+import type { GameState } from "../../core/GameState";
 import { getUpcomingFactionId, getWaveDefinition } from "../../core/selectors";
+import type { FactionSystem } from "../FactionSystem";
+import type { LevelConfig, Faction, WaveDefinition } from "../../../types";
+
+export interface WaveLaunchPayload {
+  source: string;
+}
+
+export interface WaveLaunchResult {
+  wave: WaveDefinition;
+  faction: Faction;
+  source: string;
+}
+
+interface WaveDirectorDeps {
+  scene: Phaser.Scene;
+  eventBus: EventBus;
+  gameState: GameState;
+  levelConfig: LevelConfig;
+  factionSystem: FactionSystem;
+}
 
 export class WaveDirector {
-  constructor({ scene, eventBus, gameState, levelConfig, factionSystem }) {
+  private scene: Phaser.Scene;
+  private eventBus: EventBus;
+  private state: GameState;
+  private level: LevelConfig;
+  private factionSystem: FactionSystem;
+  private nextWaveAt = 0;
+  private nextWaveEvent: Phaser.Time.TimerEvent | null = null;
+  private clockTickEvent: Phaser.Time.TimerEvent | null = null;
+  private lastSimulationUpdateAt = 0;
+
+  constructor({ scene, eventBus, gameState, levelConfig, factionSystem }: WaveDirectorDeps) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
     this.level = levelConfig;
     this.factionSystem = factionSystem;
-    this.nextWaveAt = 0;
-    this.nextWaveEvent = null;
-    this.clockTickEvent = null;
-    this.lastSimulationUpdateAt = 0;
   }
 
-  start(onWaveDue) {
+  start(onWaveDue: (payload: WaveLaunchPayload) => void): void {
     this.state.wave.number = 0;
     this.state.wave.activeFactionId = null;
     this.state.wave.upcomingFactionId = getUpcomingFactionId(this.level, 1);
@@ -31,7 +59,7 @@ export class WaveDirector {
     this.publishWaveHud();
   }
 
-  destroy() {
+  destroy(): void {
     if (this.clockTickEvent) {
       this.clockTickEvent.remove(false);
       this.clockTickEvent = null;
@@ -43,13 +71,19 @@ export class WaveDirector {
     }
   }
 
-  launchNextWave({ source, onWaveDue }) {
+  launchNextWave({
+    source,
+    onWaveDue,
+  }: {
+    source: string;
+    onWaveDue: (payload: WaveLaunchPayload) => void;
+  }): WaveLaunchResult | null {
     this.state.wave.number += 1;
     const wave = getWaveDefinition(this.level, this.state.wave.number);
     const factionId = wave?.factionId;
-    this.state.wave.activeFactionId = factionId;
+    this.state.wave.activeFactionId = factionId ?? null;
     this.state.wave.upcomingFactionId = getUpcomingFactionId(this.level, this.state.wave.number + 1);
-    const faction = this.factionSystem.getById(factionId);
+    const faction = factionId ? this.factionSystem.getById(factionId) : null;
     if (!wave || !faction) {
       return null;
     }
@@ -59,7 +93,7 @@ export class WaveDirector {
     return { wave, faction, source };
   }
 
-  tickClock() {
+  private tickClock(): void {
     const now = this.scene.time.now;
     const elapsedRealMs = Math.max(0, now - this.lastSimulationUpdateAt);
     this.lastSimulationUpdateAt = now;
@@ -68,12 +102,12 @@ export class WaveDirector {
     this.publishWaveHud();
   }
 
-  publishWaveHud() {
+  private publishWaveHud(): void {
     const clockLabel = this.formatClock();
     const originLabel =
       this.state.wave.number === 0
-        ? `Next source: ${this.factionSystem.describe(this.state.wave.upcomingFactionId)}`
-        : `Active source: ${this.factionSystem.describe(this.state.wave.activeFactionId)}`;
+        ? `Next source: ${this.factionSystem.describe(this.state.wave.upcomingFactionId ?? "")}`
+        : `Active source: ${this.factionSystem.describe(this.state.wave.activeFactionId ?? "")}`;
 
     this.eventBus.emit(Events.UI_WAVE, {
       waveNumber: this.state.wave.number,
@@ -82,7 +116,7 @@ export class WaveDirector {
     });
   }
 
-  formatClock() {
+  formatClock(): string {
     const date = new Date(this.state.wave.simulationClockMs);
     const month = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
     const day = String(date.getUTCDate()).padStart(2, "0");
@@ -92,11 +126,11 @@ export class WaveDirector {
     return `${day} ${month} ${year} ${hours}:${minutes} UTC`;
   }
 
-  getRandomWaveDelayMs() {
+  private getRandomWaveDelayMs(): number {
     return Phaser.Math.Between(this.level.waveTiming.minDelayMs, this.level.waveTiming.maxDelayMs);
   }
 
-  scheduleNextWave(delayMs, onWaveDue) {
+  private scheduleNextWave(delayMs: number, onWaveDue: (payload: WaveLaunchPayload) => void): void {
     if (this.nextWaveEvent) {
       this.nextWaveEvent.remove(false);
     }
