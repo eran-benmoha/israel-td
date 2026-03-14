@@ -72,8 +72,10 @@ Why this stack:
 3. **UI layer:**
    - build buttons, wave status, health, currency
    - tower details panel
-4. **Persistence layer (optional phase 2):**
-   - localStorage for unlocks and settings
+4. **Persistence layer (browser-only):**
+   - Browser `localStorage` is the only persistence mechanism.
+   - Store settings, unlocks, and lightweight progression snapshots.
+   - No backend/database dependency for game state storage.
 
 ### Data-driven configuration
 

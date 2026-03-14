@@ -31,3 +31,4 @@ We use ADRs (Architecture Decision Records):
 3. Portrait-first mobile controls and UI scaling.
 4. Deterministic wave loop with data-driven balance files.
 5. GitHub Actions deployment to GitHub Pages.
+6. Browser `localStorage` only for persistence.
