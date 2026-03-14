@@ -1,0 +1,29 @@
+{
+  "name": "israel-td",
+  "version": "1.0.0",
+  "description": "Mobile-first 2D top-down tower defense game planning repository.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eran-benmoha/israel-td.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eran-benmoha/israel-td/issues"
+  },
+  "homepage": "https://github.com/eran-benmoha/israel-td#readme",
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.0"
+  }
+}
