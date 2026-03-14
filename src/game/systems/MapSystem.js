@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import middleEastReliefUrl from "../../assets/maps/middle-east-relief.jpg";
+import middleEastSatelliteUrl from "../../assets/maps/middle-east-satellite.jpg";
 import { MapRenderer } from "./MapRenderer";
 
 export class MapSystem {
@@ -27,7 +27,7 @@ export class MapSystem {
 
   preload() {
     const configuredPath = this.mapViewConfig.mapImagePath ?? "";
-    const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastReliefUrl;
+    const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastSatelliteUrl;
     this.scene.load.image("middle-east-map", mapUrl);
   }
 

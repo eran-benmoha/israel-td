@@ -67,6 +67,9 @@ export class MapRenderer {
 
   projectGeoToMapXPercent(lat, lon) {
     const p = this.mapViewConfig.projection;
+    if (p.type === "equirectangular") {
+      return ((lon - p.lonMin) / (p.lonMax - p.lonMin)) * 100;
+    }
     const latRad = Phaser.Math.DegToRad(lat);
     const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
     return 50 + p.xScale * (p.rOffset - latRad) * Math.sin(p.thetaScale * lonDeltaRad) * p.xCompression;
@@ -74,6 +77,9 @@ export class MapRenderer {
 
   projectGeoToMapYPercent(lat, lon) {
     const p = this.mapViewConfig.projection;
+    if (p.type === "equirectangular") {
+      return ((p.latMax - lat) / (p.latMax - p.latMin)) * 100;
+    }
     const latRad = Phaser.Math.DegToRad(lat);
     const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
     return 50 - p.xScale * (p.yAnchor - (p.rOffset - latRad) * Math.cos(p.thetaScale * lonDeltaRad));
