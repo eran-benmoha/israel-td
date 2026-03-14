@@ -11,6 +11,8 @@ new Phaser.Game({
   type: Phaser.AUTO,
   parent: gameRoot,
   backgroundColor: "#05070e",
+  antialias: true,
+  roundPixels: false,
   scene: [BootScene],
   scale: {
     mode: Phaser.Scale.RESIZE,

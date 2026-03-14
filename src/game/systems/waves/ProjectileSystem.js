@@ -51,20 +51,22 @@ export class ProjectileSystem {
         const x = Phaser.Math.Linear(launchPoint.x, targetPoint.x, state.t);
         const y = Phaser.Math.Linear(launchPoint.y, targetPoint.y, state.t);
         const heading = Phaser.Math.Angle.Between(previousX, previousY, x, y);
+        const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
         rocket.container.setPosition(x, y);
         rocket.container.setRotation(heading);
+        rocket.container.setScale(sf);
         rocket.flame.alpha = Phaser.Math.FloatBetween(0.58, 0.95);
         previousX = x;
         previousY = y;
 
         trail.clear();
-        trail.lineStyle(4, missileProfile.trailOuterColor, 0.24);
+        trail.lineStyle(4 * sf, missileProfile.trailOuterColor, 0.24);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);
         trail.strokePath();
 
-        trail.lineStyle(2, missileProfile.trailInnerColor, 0.78);
+        trail.lineStyle(2 * sf, missileProfile.trailInnerColor, 0.78);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);

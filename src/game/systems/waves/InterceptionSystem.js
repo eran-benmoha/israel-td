@@ -93,8 +93,9 @@ export class InterceptionSystem {
 
   launchInterceptorMissile(startPoint, interceptPoint, onHit) {
     const interceptorTrail = this.scene.add.graphics();
-    const interceptor = this.scene.add.circle(startPoint.x, startPoint.y, 2.8, 0x9fe7ff, 0.95);
-    interceptor.setStrokeStyle(1, 0x1c5b79, 0.9);
+    const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
+    const interceptor = this.scene.add.circle(startPoint.x, startPoint.y, 2.8 * sf, 0x9fe7ff, 0.95);
+    interceptor.setStrokeStyle(1 * sf, 0x1c5b79, 0.9);
     this.mapSystem.mapContainer.add(interceptorTrail);
     this.mapSystem.mapContainer.add(interceptor);
 
@@ -109,8 +110,9 @@ export class InterceptionSystem {
         const y = Phaser.Math.Linear(startPoint.y, interceptPoint.y, state.t);
         interceptor.setPosition(x, y);
 
+        const currentSf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
         interceptorTrail.clear();
-        interceptorTrail.lineStyle(2, 0x83dbff, 0.75);
+        interceptorTrail.lineStyle(2 * currentSf, 0x83dbff, 0.75);
         interceptorTrail.beginPath();
         interceptorTrail.moveTo(startPoint.x, startPoint.y);
         interceptorTrail.lineTo(x, y);
@@ -125,7 +127,8 @@ export class InterceptionSystem {
   }
 
   createInterceptionFlash(x, y) {
-    const burst = this.scene.add.circle(x, y, 3, 0xbef4ff, 0.95);
+    const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
+    const burst = this.scene.add.circle(x, y, 3 * sf, 0xbef4ff, 0.95);
     this.mapSystem.mapContainer.add(burst);
     this.scene.tweens.add({
       targets: burst,

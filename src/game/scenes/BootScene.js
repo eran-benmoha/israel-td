@@ -20,8 +20,6 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
-    this.titleText = null;
-    this.resizeHandler = null;
   }
 
   preload() {
@@ -56,40 +54,14 @@ export class BootScene extends Phaser.Scene {
 
     this.resourceSystem.start();
     this.waveSystem.start();
-    this.createStaticTitle();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
-  }
-
-  createStaticTitle() {
-    const { width } = this.scale;
-    this.titleText = this.add
-      .text(width / 2, 34, "Drag + pinch/scroll zoom • Hostile waves", {
-        fontFamily: "Arial",
-        fontSize: "18px",
-        color: "#dbe9ff",
-        backgroundColor: "rgba(0, 0, 0, 0.45)",
-        padding: { x: 10, y: 6 },
-      })
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0);
-
-    this.resizeHandler = (gameSize) => {
-      if (this.titleText) {
-        this.titleText.setPosition(gameSize.width / 2, 34);
-      }
-    };
-    this.scale.on("resize", this.resizeHandler);
   }
 
   destroySystems() {
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
     this.mapSystem?.destroy();
-    if (this.resizeHandler) {
-      this.scale.off("resize", this.resizeHandler);
-      this.resizeHandler = null;
-    }
   }
 }

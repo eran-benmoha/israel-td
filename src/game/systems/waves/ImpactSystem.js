@@ -9,7 +9,8 @@ export class ImpactSystem {
     const impactScale = (faction.impactMultiplier ?? 1) * (missileProfile.impactScale ?? 1);
     this.resourceSystem.onImpact(impactScale);
 
-    const impact = this.scene.add.circle(x, y, 3, missileProfile.rocketColor ?? faction.rocketColor, 0.95);
+    const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
+    const impact = this.scene.add.circle(x, y, 3 * sf, missileProfile.rocketColor ?? faction.rocketColor, 0.95);
     this.mapSystem.mapContainer.add(impact);
     this.scene.tweens.add({
       targets: impact,
