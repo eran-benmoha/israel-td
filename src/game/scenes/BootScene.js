@@ -199,6 +199,73 @@ const ISRAEL_BORDER_LAT_LON = [
   { lat: 33.28, lon: 35.22 },
 ];
 
+const ISRAEL_REGIONS = [
+  {
+    id: "north",
+    name: "North",
+    border: [
+      { lat: 33.29, lon: 34.9 },
+      { lat: 33.29, lon: 35.78 },
+      { lat: 32.78, lon: 35.75 },
+      { lat: 32.76, lon: 34.93 },
+    ],
+  },
+  {
+    id: "central",
+    name: "Central",
+    border: [
+      { lat: 32.78, lon: 34.93 },
+      { lat: 32.78, lon: 35.56 },
+      { lat: 31.95, lon: 35.52 },
+      { lat: 31.95, lon: 34.5 },
+    ],
+  },
+  {
+    id: "south",
+    name: "South",
+    border: [
+      { lat: 31.95, lon: 34.5 },
+      { lat: 31.95, lon: 35.48 },
+      { lat: 29.5, lon: 34.95 },
+      { lat: 29.5, lon: 34.3 },
+    ],
+  },
+  {
+    id: "gaza-border",
+    name: "Gaza Border",
+    border: [
+      { lat: 31.62, lon: 34.3 },
+      { lat: 31.62, lon: 34.85 },
+      { lat: 31.2, lon: 34.85 },
+      { lat: 31.2, lon: 34.34 },
+    ],
+  },
+  {
+    id: "west-bank",
+    name: "West Bank",
+    border: [
+      { lat: 32.56, lon: 35.12 },
+      { lat: 32.06, lon: 35.45 },
+      { lat: 31.27, lon: 35.46 },
+      { lat: 31.3, lon: 35.1 },
+      { lat: 31.86, lon: 34.99 },
+    ],
+  },
+];
+
+const REGION_CITY_MARKERS = [
+  { regionId: "north", name: "Haifa", lat: 32.794, lon: 34.9896 },
+  { regionId: "north", name: "Tiberias", lat: 32.794, lon: 35.5312 },
+  { regionId: "central", name: "Tel Aviv", lat: 32.0853, lon: 34.7818 },
+  { regionId: "central", name: "Jerusalem", lat: 31.7683, lon: 35.2137 },
+  { regionId: "south", name: "Be'er Sheva", lat: 31.252, lon: 34.7915 },
+  { regionId: "south", name: "Eilat", lat: 29.5577, lon: 34.9519 },
+  { regionId: "gaza-border", name: "Sderot", lat: 31.525, lon: 34.595 },
+  { regionId: "gaza-border", name: "Ashkelon", lat: 31.6688, lon: 34.5743 },
+  { regionId: "west-bank", name: "Ramallah", lat: 31.9038, lon: 35.2034 },
+  { regionId: "west-bank", name: "Hebron", lat: 31.5326, lon: 35.0998 },
+];
+
 export class BootScene extends Phaser.Scene {
   constructor() {
     super("boot");
@@ -252,9 +319,13 @@ export class BootScene extends Phaser.Scene {
     const mapImage = this.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
     const outline = this.add.graphics();
     this.drawIsraelOutline(outline, mapImage.width, mapImage.height);
+    const regionsLayer = this.add.container(0, 0);
+    this.drawIsraelRegions(regionsLayer, mapImage.width, mapImage.height);
+    const cityLayer = this.add.container(0, 0);
+    this.drawRegionCityMarkers(cityLayer, mapImage.width, mapImage.height);
     const hostileMarkers = this.add.container(0, 0);
     this.drawHostileFactionMarkers(hostileMarkers, mapImage.width, mapImage.height);
-    const mapContainer = this.add.container(0, 0, [mapImage, outline, hostileMarkers]);
+    const mapContainer = this.add.container(0, 0, [mapImage, regionsLayer, outline, hostileMarkers, cityLayer]);
     this.mapImage = mapImage;
     this.mapContainer = mapContainer;
 
@@ -918,6 +989,53 @@ export class BootScene extends Phaser.Scene {
         .setOrigin(0.5, 1);
 
       layerContainer.add([markerGraphics, markerDot, markerLabel]);
+    });
+  }
+
+  drawIsraelRegions(layerContainer, imageWidth, imageHeight) {
+    ISRAEL_REGIONS.forEach((region) => {
+      const boundaryPoints = region.border.map((point) =>
+        this.geoToImagePoint(point.lat, point.lon, imageWidth, imageHeight),
+      );
+      const regionGraphics = this.add.graphics();
+      regionGraphics.lineStyle(1, 0xd8ecff, 0.55);
+      regionGraphics.strokePoints(boundaryPoints, true);
+      layerContainer.add(regionGraphics);
+
+      const centroid = boundaryPoints.reduce(
+        (acc, point) => ({ x: acc.x + point.x, y: acc.y + point.y }),
+        { x: 0, y: 0 },
+      );
+      const centerX = centroid.x / boundaryPoints.length;
+      const centerY = centroid.y / boundaryPoints.length;
+      const regionLabel = this.add
+        .text(centerX, centerY, region.name, {
+          fontFamily: "Arial",
+          fontSize: "10px",
+          color: "#eaf5ff",
+          backgroundColor: "rgba(5, 14, 26, 0.5)",
+          padding: { x: 4, y: 2 },
+        })
+        .setOrigin(0.5);
+      layerContainer.add(regionLabel);
+    });
+  }
+
+  drawRegionCityMarkers(layerContainer, imageWidth, imageHeight) {
+    REGION_CITY_MARKERS.forEach((city) => {
+      const position = this.geoToImagePoint(city.lat, city.lon, imageWidth, imageHeight);
+      const dot = this.add.circle(position.x, position.y, 2.8, 0xfff1a8, 0.95);
+      dot.setStrokeStyle(1, 0x5a3f09, 0.85);
+      const label = this.add
+        .text(position.x + 5, position.y - 3, city.name, {
+          fontFamily: "Arial",
+          fontSize: "9px",
+          color: "#fff6d7",
+          backgroundColor: "rgba(13, 9, 4, 0.48)",
+          padding: { x: 3, y: 1 },
+        })
+        .setOrigin(0, 1);
+      layerContainer.add([dot, label]);
     });
   }
 
