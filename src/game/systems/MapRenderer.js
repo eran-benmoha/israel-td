@@ -89,15 +89,15 @@ export class MapRenderer {
 
   _drawOutlineAtScale(gfx, points, scaleCompensation) {
     gfx.clear();
-    gfx.lineStyle(4 * scaleCompensation, 0x00131f, 0.45);
+    gfx.lineStyle(18 * scaleCompensation, 0x00131f, 0.45);
     gfx.strokePoints(points, true);
-    gfx.lineStyle(2 * scaleCompensation, 0x53d8ff, 0.94);
+    gfx.lineStyle(10 * scaleCompensation, 0x53d8ff, 0.94);
     gfx.strokePoints(points, true);
   }
 
   _redrawOutline(containerScale) {
     if (!this._outlineGfx || !this._outlinePoints.length) return;
-    const sc = Math.pow(this._referenceScale / containerScale, 0.85);
+    const sc = Math.pow(this._referenceScale / containerScale, 0.5);
     this._drawOutlineAtScale(this._outlineGfx, this._outlinePoints, sc);
   }
 
@@ -107,7 +107,7 @@ export class MapRenderer {
     this.israelData.regions.forEach((region) => {
       const borderPoints = region.border.map((p) => this.geoToImagePoint(p.lat, p.lon));
       const gfx = this.scene.add.graphics();
-      gfx.lineStyle(1, 0xd8ecff, 0.55);
+      gfx.lineStyle(5, 0xd8ecff, 0.55);
       gfx.strokePoints(borderPoints, true);
       layerContainer.add(gfx);
 
@@ -131,12 +131,12 @@ export class MapRenderer {
   }
 
   _updateRegions(containerScale, ratio) {
-    const lineSc = Math.pow(ratio, 0.85);
+    const lineSc = Math.pow(ratio, 0.5);
     const labelSc = Math.pow(ratio, 0.75);
 
     this._regionEntries.forEach(({ gfx, borderPoints, label }) => {
       gfx.clear();
-      gfx.lineStyle(1 * lineSc, 0xd8ecff, 0.55);
+      gfx.lineStyle(5 * lineSc, 0xd8ecff, 0.55);
       gfx.strokePoints(borderPoints, true);
       label.setScale(labelSc);
     });
@@ -189,7 +189,7 @@ export class MapRenderer {
       const gfx = this.scene.add.graphics();
       gfx.fillStyle(faction.rocketColor, 0.09);
       gfx.fillPoints(corners, true);
-      gfx.lineStyle(2, faction.trailColor, 0.62);
+      gfx.lineStyle(8, faction.trailColor, 0.62);
       gfx.strokePoints(corners, true);
 
       const center = this.geoToImagePoint(
@@ -225,7 +225,7 @@ export class MapRenderer {
   }
 
   _updateHostiles(containerScale, ratio) {
-    const lineSc = Math.pow(ratio, 0.85);
+    const lineSc = Math.pow(ratio, 0.5);
     const labelSc = Math.pow(ratio, 0.65);
     const dotSc = Math.pow(ratio, 0.8);
 
@@ -233,7 +233,7 @@ export class MapRenderer {
       gfx.clear();
       gfx.fillStyle(rocketColor, 0.09);
       gfx.fillPoints(corners, true);
-      gfx.lineStyle(2 * lineSc, trailColor, 0.62);
+      gfx.lineStyle(8 * lineSc, trailColor, 0.62);
       gfx.strokePoints(corners, true);
       label.setScale(labelSc);
       dot.setScale(dotSc);
