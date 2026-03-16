@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import middleEastSatelliteUrl from "../../assets/maps/middle-east-satellite.jpg";
 import { MapRenderer } from "./MapRenderer";
+import { Events } from "../core/events";
 
 export class MapSystem {
   constructor({ scene, eventBus, mapViewConfig, israelData, factionsConfig }) {
@@ -283,7 +284,7 @@ export class MapSystem {
   }
 
   emitZoom() {
-    this.eventBus.emit("ui/debug-zoom", { zoom: this.zoomLevel });
+    this.eventBus.emit(Events.UI_DEBUG_ZOOM, { zoom: this.zoomLevel });
   }
 
   randomGeoPointFromRect(bounds) {

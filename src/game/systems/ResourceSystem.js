@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Events } from "../core/events";
 
 export class ResourceSystem {
   constructor({ eventBus, gameState, unitsConfig }) {
@@ -9,8 +10,8 @@ export class ResourceSystem {
   }
 
   start() {
-    this.unsubscribePurchase = this.eventBus.on("shop/purchase-unit", ({ unitId }) => this.purchaseUnit(unitId));
-    this.eventBus.emit("ui/shop-catalog", { units: this.units });
+    this.unsubscribePurchase = this.eventBus.on(Events.SHOP_PURCHASE_UNIT, ({ unitId }) => this.purchaseUnit(unitId));
+    this.eventBus.emit(Events.UI_SHOP_CATALOG, { units: this.units });
     this.publishResourceState();
   }
 
@@ -44,12 +45,12 @@ export class ResourceSystem {
   purchaseUnit(unitId) {
     const unit = this.units.find((candidate) => candidate.id === unitId);
     if (!unit) {
-      this.eventBus.emit("ui/shop-result", { success: false, message: "Unit not found." });
+      this.eventBus.emit(Events.UI_SHOP_RESULT, { success: false, message: "Unit not found." });
       return;
     }
 
     if (this.state.resources.money < unit.cost) {
-      this.eventBus.emit("ui/shop-result", { success: false, message: `Not enough money for ${unit.name}.` });
+      this.eventBus.emit(Events.UI_SHOP_RESULT, { success: false, message: `Not enough money for ${unit.name}.` });
       return;
     }
 
@@ -58,17 +59,17 @@ export class ResourceSystem {
     this.adjust("morale", unit.moraleBoost);
     this.state.purchasedUnits[unit.id] = (this.state.purchasedUnits[unit.id] ?? 0) + 1;
     this.publishResourceState();
-    this.eventBus.emit("ui/debug-status", { message: `Purchased ${unit.name}.` });
-    this.eventBus.emit("ui/shop-result", { success: true, message: `Purchased ${unit.name} for ${unit.cost}.` });
+    this.eventBus.emit(Events.UI_DEBUG_STATUS, { message: `Purchased ${unit.name}.` });
+    this.eventBus.emit(Events.UI_SHOP_RESULT, { success: true, message: `Purchased ${unit.name} for ${unit.cost}.` });
   }
 
   publishResourceState() {
     this.recalculateEconomy();
-    this.eventBus.emit("ui/resources", {
+    this.eventBus.emit(Events.UI_RESOURCES, {
       resources: { ...this.state.resources },
       maxResources: { ...this.state.maxResources },
     });
-    this.eventBus.emit("ui/shop-state", {
+    this.eventBus.emit(Events.UI_SHOP_STATE, {
       money: this.state.resources.money,
       purchased: { ...this.state.purchasedUnits },
     });
