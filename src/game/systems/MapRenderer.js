@@ -179,29 +179,30 @@ export class MapRenderer {
 
   _drawHostileFactionMarkers(layerContainer) {
     this.factions.forEach((faction) => {
-      const corners = [
-        this.geoToImagePoint(faction.bounds.north, faction.bounds.west),
-        this.geoToImagePoint(faction.bounds.north, faction.bounds.east),
-        this.geoToImagePoint(faction.bounds.south, faction.bounds.east),
-        this.geoToImagePoint(faction.bounds.south, faction.bounds.west),
-      ];
+      const borderPoints = faction.border
+        ? faction.border.map((p) => this.geoToImagePoint(p.lat, p.lon))
+        : [
+            this.geoToImagePoint(faction.bounds.north, faction.bounds.west),
+            this.geoToImagePoint(faction.bounds.north, faction.bounds.east),
+            this.geoToImagePoint(faction.bounds.south, faction.bounds.east),
+            this.geoToImagePoint(faction.bounds.south, faction.bounds.west),
+          ];
 
       const gfx = this.scene.add.graphics();
       gfx.fillStyle(faction.rocketColor, 0.09);
-      gfx.fillPoints(corners, true);
+      gfx.fillPoints(borderPoints, true);
       gfx.lineStyle(8, faction.trailColor, 0.62);
-      gfx.strokePoints(corners, true);
+      gfx.strokePoints(borderPoints, true);
 
-      const center = this.geoToImagePoint(
-        (faction.bounds.north + faction.bounds.south) / 2,
-        (faction.bounds.east + faction.bounds.west) / 2,
-      );
+      const centroid = borderPoints.reduce((acc, p) => ({ x: acc.x + p.x, y: acc.y + p.y }), { x: 0, y: 0 });
+      const cx = centroid.x / borderPoints.length;
+      const cy = centroid.y / borderPoints.length;
 
-      const dot = this.scene.add.circle(center.x, center.y, 18, faction.rocketColor, 0.95);
+      const dot = this.scene.add.circle(cx, cy, 18, faction.rocketColor, 0.95);
       dot.setStrokeStyle(6, 0x1f0d06, 0.85);
 
       const label = this.scene.add
-        .text(center.x, center.y - 35, `${faction.name}\n${faction.territory}`, {
+        .text(cx, cy - 35, `${faction.name}\n${faction.territory}`, {
           fontFamily: "Arial, Helvetica, sans-serif",
           fontSize: "44px",
           color: "#f2f8ff",
@@ -215,7 +216,7 @@ export class MapRenderer {
 
       this._hostileEntries.push({
         gfx,
-        corners,
+        corners: borderPoints,
         dot,
         label,
         rocketColor: faction.rocketColor,
