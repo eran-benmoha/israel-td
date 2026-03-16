@@ -20,10 +20,8 @@ export class MapSystem {
     this.zoomLevel = mapViewConfig.initial.zoomLevel;
     this.minZoomLevel = mapViewConfig.zoom.min;
     this.maxZoomLevel = mapViewConfig.zoom.max;
-    this.pinchStartDistance = 0;
-    this.pinchStartZoomLevel = this.zoomLevel;
-    this.inputHandlers = [];
     this.resizeHandler = null;
+    this.inputSystem = null;
   }
 
   preload() {
@@ -56,8 +54,9 @@ export class MapSystem {
     this.focusMapOnGeoPoint(width, height, this.mapViewConfig.initial.focus.lat, this.mapViewConfig.initial.focus.lon);
     this.emitZoom();
 
-    this.scene.input.addPointer(1);
-    this.registerInputHandlers({ width, height });
+    if (this.inputSystem) {
+      this.inputSystem.bindMapControls(this, width, height);
+    }
 
     this.resizeHandler = (gameSize) => {
       const oldScale = this.mapContainer.scaleX;
@@ -77,15 +76,16 @@ export class MapSystem {
       this.mapContainer.x = nextCenterWorld.x - centerWorldX * this.mapContainer.scaleX;
       this.mapContainer.y = nextCenterWorld.y - centerWorldY * this.mapContainer.scaleY;
       this.clampMapPosition(width, height);
+      if (this.inputSystem) this.inputSystem.onResize(width, height);
     };
     this.scene.scale.on("resize", this.resizeHandler);
   }
 
   destroy() {
-    this.inputHandlers.forEach(({ eventName, handler }) => {
-      this.scene.input.off(eventName, handler);
-    });
-    this.inputHandlers = [];
+    if (this.inputSystem) {
+      this.inputSystem.destroy();
+      this.inputSystem = null;
+    }
 
     if (this.resizeHandler) {
       this.scene.scale.off("resize", this.resizeHandler);
@@ -93,122 +93,21 @@ export class MapSystem {
     }
   }
 
+  setInputSystem(inputSystem) {
+    this.inputSystem = inputSystem;
+  }
+
+  panBy(dx, dy, viewportWidth, viewportHeight) {
+    this.mapContainer.x += dx;
+    this.mapContainer.y += dy;
+    this.clampMapPosition(viewportWidth, viewportHeight);
+  }
+
   _applyTextureFiltering() {
     const tex = this.scene.textures.get("middle-east-map");
     if (tex && tex.source && tex.source[0]) {
       tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
     }
-  }
-
-  registerInputHandlers({ width, height }) {
-    const camera = this.scene.cameras.main;
-    let isDragging = false;
-    let dragPointerId = null;
-    let dragStartWorldX = 0;
-    let dragStartWorldY = 0;
-    let mapStartX = this.mapContainer.x;
-    let mapStartY = this.mapContainer.y;
-
-    const getActiveTouchPointers = () => [this.scene.input.pointer1, this.scene.input.pointer2].filter((pointer) => pointer?.isDown);
-    const isPinching = () => getActiveTouchPointers().length >= 2;
-
-    const beginPinch = () => {
-      const [a, b] = getActiveTouchPointers();
-      if (!a || !b) {
-        return;
-      }
-      this.pinchStartDistance = Phaser.Math.Distance.Between(a.x, a.y, b.x, b.y);
-      this.pinchStartZoomLevel = this.zoomLevel;
-      isDragging = false;
-      dragPointerId = null;
-    };
-
-    const applyPinch = () => {
-      const [a, b] = getActiveTouchPointers();
-      if (!a || !b) {
-        return;
-      }
-      if (this.pinchStartDistance <= 0) {
-        beginPinch();
-      }
-      const distance = Phaser.Math.Distance.Between(a.x, a.y, b.x, b.y);
-      const midpointX = (a.x + b.x) / 2;
-      const midpointY = (a.y + b.y) / 2;
-      const ratio = this.pinchStartDistance > 0 ? distance / this.pinchStartDistance : 1;
-      const nextZoom = Phaser.Math.Clamp(this.pinchStartZoomLevel * ratio, this.minZoomLevel, this.maxZoomLevel);
-      this.applyZoomAtScreenPoint(nextZoom, midpointX, midpointY, width, height);
-    };
-
-    const pointerDown = (pointer) => {
-      if (isPinching()) {
-        beginPinch();
-        return;
-      }
-      const startWorld = camera.getWorldPoint(pointer.x, pointer.y);
-      isDragging = true;
-      dragPointerId = pointer.id;
-      dragStartWorldX = startWorld.x;
-      dragStartWorldY = startWorld.y;
-      mapStartX = this.mapContainer.x;
-      mapStartY = this.mapContainer.y;
-    };
-
-    const pointerMove = (pointer) => {
-      if (isPinching()) {
-        applyPinch();
-        return;
-      }
-
-      if (!isDragging || !pointer.isDown || pointer.id !== dragPointerId) {
-        return;
-      }
-
-      const currentWorld = camera.getWorldPoint(pointer.x, pointer.y);
-      this.mapContainer.x = mapStartX + (currentWorld.x - dragStartWorldX);
-      this.mapContainer.y = mapStartY + (currentWorld.y - dragStartWorldY);
-      this.clampMapPosition(width, height);
-    };
-
-    const stopDrag = () => {
-      if (isPinching()) {
-        beginPinch();
-        return;
-      }
-
-      isDragging = false;
-      dragPointerId = null;
-      this.pinchStartDistance = 0;
-      const [remaining] = getActiveTouchPointers();
-      if (remaining) {
-        const remainingWorld = camera.getWorldPoint(remaining.x, remaining.y);
-        isDragging = true;
-        dragPointerId = remaining.id;
-        dragStartWorldX = remainingWorld.x;
-        dragStartWorldY = remainingWorld.y;
-        mapStartX = this.mapContainer.x;
-        mapStartY = this.mapContainer.y;
-      }
-    };
-
-    const wheel = (pointer, _gameObjects, _deltaX, deltaY) => {
-      const zoomFactor = Math.exp(-deltaY * 0.0012);
-      const nextZoom = Phaser.Math.Clamp(this.zoomLevel * zoomFactor, this.minZoomLevel, this.maxZoomLevel);
-      this.applyZoomAtScreenPoint(nextZoom, pointer.x, pointer.y, width, height);
-    };
-
-    this.scene.input.on("pointerdown", pointerDown);
-    this.scene.input.on("pointermove", pointerMove);
-    this.scene.input.on("pointerup", stopDrag);
-    this.scene.input.on("pointerupoutside", stopDrag);
-    this.scene.input.on("wheel", wheel);
-
-    this.inputHandlers.push(
-      { eventName: "pointerdown", handler: pointerDown },
-      { eventName: "pointermove", handler: pointerMove },
-      { eventName: "pointerup", handler: stopDrag },
-      { eventName: "pointerupoutside", handler: stopDrag },
-      { eventName: "wheel", handler: wheel },
-    );
   }
 
   getMapCoverScale(viewportWidth, viewportHeight) {
