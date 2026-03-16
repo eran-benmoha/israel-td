@@ -60,13 +60,13 @@ export class ProjectileSystem {
         previousY = y;
 
         trail.clear();
-        trail.lineStyle(4 * sf, missileProfile.trailOuterColor, 0.24);
+        trail.lineStyle(16 * sf, missileProfile.trailOuterColor, 0.24);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);
         trail.strokePath();
 
-        trail.lineStyle(2 * sf, missileProfile.trailInnerColor, 0.78);
+        trail.lineStyle(8 * sf, missileProfile.trailInnerColor, 0.78);
         trail.beginPath();
         trail.moveTo(launchPoint.x, launchPoint.y);
         trail.lineTo(x, y);
