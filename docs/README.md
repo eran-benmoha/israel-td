@@ -16,6 +16,7 @@ This folder is the source of truth for product and technical decisions.
 - [Roadmap](./ROADMAP.md) - phased delivery plan.
 - [Decision Log](./DECISION_LOG.md) - concise snapshot of implemented choices.
 - [Agent Playbook](./AGENT_PLAYBOOK.md) - mandatory implementation rules and guardrails.
+- [Agent Task Splits](./AGENT_TASK_SPLITS.md) - parallel work board with file ownership and copy-paste prompts.
 - [ADRs](./adr/) - architecture/design decisions and rationale.
 
 ## Decision Process
