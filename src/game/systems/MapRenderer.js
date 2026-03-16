@@ -118,10 +118,10 @@ export class MapRenderer {
       const label = this.scene.add
         .text(cx, cy, region.name, {
           fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: "10px",
+          fontSize: "40px",
           color: "#eaf5ff",
           backgroundColor: "rgba(5, 14, 26, 0.5)",
-          padding: { x: 4, y: 2 },
+          padding: { x: 14, y: 6 },
         })
         .setOrigin(0.5);
       layerContainer.add(label);
@@ -132,7 +132,7 @@ export class MapRenderer {
 
   _updateRegions(containerScale, ratio) {
     const lineSc = Math.pow(ratio, 0.5);
-    const labelSc = Math.pow(ratio, 0.75);
+    const labelSc = Math.pow(ratio, 0.6);
 
     this._regionEntries.forEach(({ gfx, borderPoints, label }) => {
       gfx.clear();
@@ -147,27 +147,27 @@ export class MapRenderer {
   _drawRegionCityMarkers(layerContainer) {
     this.israelData.cities.forEach((city) => {
       const pos = this.geoToImagePoint(city.lat, city.lon);
-      const dot = this.scene.add.circle(pos.x, pos.y, 2.8, 0xfff1a8, 0.95);
-      dot.setStrokeStyle(1, 0x5a3f09, 0.85);
+      const dot = this.scene.add.circle(pos.x, pos.y, 10, 0xfff1a8, 0.95);
+      dot.setStrokeStyle(3, 0x5a3f09, 0.85);
 
       const label = this.scene.add
-        .text(pos.x + 5, pos.y - 3, city.name, {
+        .text(pos.x + 18, pos.y - 10, city.name, {
           fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: "9px",
+          fontSize: "36px",
           color: "#fff6d7",
           backgroundColor: "rgba(13, 9, 4, 0.48)",
-          padding: { x: 3, y: 1 },
+          padding: { x: 10, y: 4 },
         })
         .setOrigin(0, 1);
       layerContainer.add([dot, label]);
 
-      this._cityEntries.push({ dot, label, baseRadius: 2.8, baseStroke: 1 });
+      this._cityEntries.push({ dot, label });
     });
   }
 
   _updateCities(_containerScale, ratio) {
-    const labelSc = Math.pow(ratio, 0.7);
-    const dotSc = Math.pow(ratio, 0.8);
+    const labelSc = Math.pow(ratio, 0.55);
+    const dotSc = Math.pow(ratio, 0.55);
 
     this._cityEntries.forEach(({ dot, label }) => {
       label.setScale(labelSc);
@@ -197,17 +197,17 @@ export class MapRenderer {
         (faction.bounds.east + faction.bounds.west) / 2,
       );
 
-      const dot = this.scene.add.circle(center.x, center.y, 5, faction.rocketColor, 0.95);
-      dot.setStrokeStyle(2, 0x1f0d06, 0.85);
+      const dot = this.scene.add.circle(center.x, center.y, 18, faction.rocketColor, 0.95);
+      dot.setStrokeStyle(6, 0x1f0d06, 0.85);
 
       const label = this.scene.add
-        .text(center.x, center.y - 10, `${faction.name}\n${faction.territory}`, {
+        .text(center.x, center.y - 35, `${faction.name}\n${faction.territory}`, {
           fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: "11px",
+          fontSize: "44px",
           color: "#f2f8ff",
           align: "center",
           backgroundColor: "rgba(2, 8, 14, 0.62)",
-          padding: { x: 5, y: 3 },
+          padding: { x: 16, y: 8 },
         })
         .setOrigin(0.5, 1);
 
@@ -226,8 +226,8 @@ export class MapRenderer {
 
   _updateHostiles(containerScale, ratio) {
     const lineSc = Math.pow(ratio, 0.5);
-    const labelSc = Math.pow(ratio, 0.65);
-    const dotSc = Math.pow(ratio, 0.8);
+    const labelSc = Math.pow(ratio, 0.55);
+    const dotSc = Math.pow(ratio, 0.55);
 
     this._hostileEntries.forEach(({ gfx, corners, dot, label, rocketColor, trailColor }) => {
       gfx.clear();
@@ -244,10 +244,10 @@ export class MapRenderer {
 
   createMissileVisual(x, y, missileProfile) {
     const container = this.scene.add.container(x, y);
-    const body = this.scene.add.polygon(0, 0, [-10, -2, 6, -2, 10, 0, 6, 2, -10, 2, -8, 0], missileProfile.rocketColor, 1);
-    body.setStrokeStyle(1, 0x2a0f08, 0.92);
-    const flame = this.scene.add.triangle(-10.5, 0, 0, 0, -6.5, 2.2, -6.5, -2.2, missileProfile.flameColor, 0.9);
-    const highlight = this.scene.add.rectangle(1.5, -0.8, 5, 0.9, 0xfff4e8, 0.72);
+    const body = this.scene.add.polygon(0, 0, [-40, -8, 24, -8, 40, 0, 24, 8, -40, 8, -32, 0], missileProfile.rocketColor, 1);
+    body.setStrokeStyle(4, 0x2a0f08, 0.92);
+    const flame = this.scene.add.triangle(-42, 0, 0, 0, -26, 9, -26, -9, missileProfile.flameColor, 0.9);
+    const highlight = this.scene.add.rectangle(6, -3, 20, 3.6, 0xfff4e8, 0.72);
     container.add([flame, body, highlight]);
     this.mapContainer.add(container);
     return { container, flame };
