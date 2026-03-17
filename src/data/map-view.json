@@ -1,6 +1,6 @@
 {
   "tiles": {
-    "urlTemplate": "https://{s}.basemaps.cartocdn.com/rastertiles/dark_nolabels/{z}/{x}/{y}.png",
+    "urlTemplate": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png",
     "subdomains": ["a", "b", "c", "d"],
     "tileSize": 256,
     "baseZoom": 6,

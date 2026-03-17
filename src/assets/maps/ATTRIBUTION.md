@@ -1,9 +1,9 @@
 # Map Asset Attribution
 
-## CartoDB Dark Matter Tiles (active)
+## CartoDB Voyager Tiles (active)
 
 - Source: CARTO / CartoDB
-- URL template: `https://{s}.basemaps.cartocdn.com/rastertiles/dark_nolabels/{z}/{x}/{y}.png`
+- URL template: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png`
 - Map data: © OpenStreetMap contributors
 - Tiles: © CARTO
 - License: CC BY 3.0 (tiles), ODbL (underlying OSM data)
