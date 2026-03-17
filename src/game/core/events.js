@@ -8,4 +8,6 @@ export const Events = {
   UI_SHOP_RESULT: "ui/shop-result",
   UI_DEBUG_STATUS: "ui/debug-status",
   UI_DEBUG_ZOOM: "ui/debug-zoom",
+  CAMERA_FLY_TO: "camera/fly-to",
+  CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
 };

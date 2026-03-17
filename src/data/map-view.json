@@ -8,12 +8,44 @@
     "latMax": 43
   },
   "initial": {
-    "zoomLevel": 2.6,
-    "focus": { "lat": 31.45, "lon": 34.95 },
+    "zoomLevel": 15,
+    "focus": { "lat": 31.75, "lon": 34.58 },
     "rotationDeg": 0
   },
   "zoom": {
     "min": 0.5,
-    "max": 12
+    "max": 30
+  },
+  "cameraPresets": {
+    "gaza-telaviv": {
+      "lat": 31.75,
+      "lon": 34.58,
+      "zoom": 15
+    },
+    "israel-full": {
+      "lat": 31.45,
+      "lon": 34.95,
+      "zoom": 6
+    },
+    "middle-east": {
+      "lat": 29.0,
+      "lon": 44.0,
+      "zoom": 1.5
+    },
+    "south-lebanon": {
+      "lat": 33.35,
+      "lon": 35.65,
+      "zoom": 14
+    },
+    "yemen": {
+      "lat": 15.0,
+      "lon": 44.0,
+      "zoom": 6
+    },
+    "iran": {
+      "lat": 33.0,
+      "lon": 53.0,
+      "zoom": 3
+    }
   }
 }
