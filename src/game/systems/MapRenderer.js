@@ -123,8 +123,17 @@ export class MapRenderer {
           backgroundColor: "rgba(5, 14, 26, 0.5)",
           padding: { x: 14, y: 6 },
         })
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setAlpha(0);
       layerContainer.add(label);
+
+      this.scene.tweens.add({
+        targets: label,
+        alpha: 1,
+        duration: 600,
+        ease: "Sine.easeOut",
+        delay: 200 + this._regionEntries.length * 120,
+      });
 
       this._regionEntries.push({ gfx, borderPoints, label });
     });
@@ -178,8 +187,35 @@ export class MapRenderer {
         new Phaser.Geom.Circle(0, 0, 22),
         Phaser.Geom.Circle.Contains,
       );
-      star.on("pointerover", () => label.setAlpha(1));
-      star.on("pointerout", () => label.setAlpha(0));
+      star.on("pointerover", () => {
+        this.scene.tweens.killTweensOf(label);
+        this.scene.tweens.add({
+          targets: label,
+          alpha: 1,
+          scaleX: label.scaleX,
+          scaleY: label.scaleY,
+          duration: 180,
+          ease: "Back.easeOut",
+        });
+      });
+      star.on("pointerout", () => {
+        this.scene.tweens.killTweensOf(label);
+        this.scene.tweens.add({
+          targets: label,
+          alpha: 0,
+          duration: 250,
+          ease: "Sine.easeIn",
+        });
+      });
+
+      this.scene.tweens.add({
+        targets: star,
+        alpha: { from: 0.65, to: 0.95 },
+        duration: 1200 + Math.random() * 800,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
 
       layerContainer.add([star, label]);
       this._cityEntries.push({ star, label });
@@ -231,7 +267,25 @@ export class MapRenderer {
           backgroundColor: "rgba(2, 8, 14, 0.62)",
           padding: { x: 16, y: 8 },
         })
-        .setOrigin(0.5, 1);
+        .setOrigin(0.5, 1)
+        .setAlpha(0);
+
+      this.scene.tweens.add({
+        targets: label,
+        alpha: 1,
+        duration: 700,
+        ease: "Sine.easeOut",
+        delay: 500 + this._hostileEntries.length * 200,
+      });
+
+      dot.setAlpha(0);
+      this.scene.tweens.add({
+        targets: dot,
+        alpha: 0.95,
+        duration: 500,
+        ease: "Sine.easeOut",
+        delay: 400 + this._hostileEntries.length * 200,
+      });
 
       layerContainer.add([gfx, dot, label]);
 
