@@ -1,7 +1,13 @@
 {
-  "mapImagePath": "",
+  "tiles": {
+    "urlTemplate": "https://{s}.basemaps.cartocdn.com/rastertiles/dark_nolabels/{z}/{x}/{y}.png",
+    "subdomains": ["a", "b", "c", "d"],
+    "tileSize": 256,
+    "baseZoom": 6,
+    "attribution": "© OpenStreetMap contributors © CARTO"
+  },
   "projection": {
-    "type": "equirectangular",
+    "type": "mercator",
     "lonMin": 18,
     "lonMax": 70,
     "latMin": 8,

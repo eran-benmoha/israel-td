@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import middleEastSatelliteUrl from "../../assets/maps/middle-east-satellite.jpg";
 import { MapRenderer } from "./MapRenderer";
 import { Events } from "../core/events";
 
@@ -22,12 +21,14 @@ export class MapSystem {
     this.maxZoomLevel = mapViewConfig.zoom.max;
     this.resizeHandler = null;
     this.inputSystem = null;
+    this._tileGrid = null;
   }
 
   preload() {
-    const configuredPath = this.mapViewConfig.mapImagePath ?? "";
-    const mapUrl = /^https?:\/\//i.test(configuredPath) ? configuredPath : middleEastSatelliteUrl;
-    this.scene.load.image("middle-east-map", mapUrl);
+    const tiles = this.mapViewConfig.tiles;
+    if (tiles) {
+      this._preloadTiles(tiles);
+    }
   }
 
   create() {
@@ -35,14 +36,21 @@ export class MapSystem {
     camera.setBackgroundColor("#05070e");
     camera.setRotation(Phaser.Math.DegToRad(this.mapViewConfig.initial.rotationDeg));
 
-    this._applyTextureFiltering();
-
     let { width, height } = this.scene.scale;
-    this.mapImage = this.scene.add.image(0, 0, "middle-east-map").setOrigin(0, 0);
+
+    const tiles = this.mapViewConfig.tiles;
+    if (tiles && this._tileGrid) {
+      this._createTileLayer();
+    }
+
     this.mapRenderer.setMapImage(this.mapImage);
     const { outline, regionLayer, cityLayer, hostileLayer } = this.mapRenderer.createOverlayLayers();
 
-    this.mapContainer = this.scene.add.container(0, 0, [this.mapImage, regionLayer, outline, hostileLayer, cityLayer]);
+    const children = [];
+    if (this._tileContainer) children.push(this._tileContainer);
+    children.push(regionLayer, outline, hostileLayer, cityLayer);
+
+    this.mapContainer = this.scene.add.container(0, 0, children);
     this.mapRenderer.setMapContainer(this.mapContainer);
     this.baseMapScale = this.getMapCoverScale(width, height);
     this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
@@ -119,12 +127,83 @@ export class MapSystem {
     this.clampMapPosition(viewportWidth, viewportHeight);
   }
 
-  _applyTextureFiltering() {
-    const tex = this.scene.textures.get("middle-east-map");
-    if (tex && tex.source && tex.source[0]) {
-      tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
+  // -- tile loading ------------------------------------------------------------
+
+  _preloadTiles(tilesConfig) {
+    const grid = this._computeTileGrid(tilesConfig);
+    this._tileGrid = grid;
+
+    const subs = tilesConfig.subdomains ?? ["a", "b", "c", "d"];
+    let idx = 0;
+
+    for (let ty = grid.yMin; ty <= grid.yMax; ty++) {
+      for (let tx = grid.xMin; tx <= grid.xMax; tx++) {
+        const sub = subs[idx % subs.length];
+        const url = tilesConfig.urlTemplate
+          .replace("{s}", sub)
+          .replace("{z}", String(tilesConfig.baseZoom))
+          .replace("{x}", String(tx))
+          .replace("{y}", String(ty));
+        this.scene.load.image(`tile-${tx}-${ty}`, url);
+        idx++;
+      }
     }
   }
+
+  _computeTileGrid(tilesConfig) {
+    const z = tilesConfig.baseZoom;
+    const ts = tilesConfig.tileSize;
+    const proj = this.mapViewConfig.projection;
+    const n = Math.pow(2, z);
+
+    const xMin = Math.floor(((proj.lonMin + 180) / 360) * n);
+    const xMax = Math.floor(((proj.lonMax + 180) / 360) * n);
+
+    const latMinRad = (proj.latMin * Math.PI) / 180;
+    const latMaxRad = (proj.latMax * Math.PI) / 180;
+    const yMax = Math.floor((1 - Math.log(Math.tan(latMinRad) + 1 / Math.cos(latMinRad)) / Math.PI) / 2 * n);
+    const yMin = Math.floor((1 - Math.log(Math.tan(latMaxRad) + 1 / Math.cos(latMaxRad)) / Math.PI) / 2 * n);
+
+    const cols = xMax - xMin + 1;
+    const rows = yMax - yMin + 1;
+
+    return {
+      xMin, xMax, yMin, yMax,
+      cols, rows, zoom: z, tileSize: ts,
+      totalWidth: cols * ts,
+      totalHeight: rows * ts,
+    };
+  }
+
+  _createTileLayer() {
+    const grid = this._tileGrid;
+    const ts = grid.tileSize;
+    this._tileContainer = this.scene.add.container(0, 0);
+
+    for (let ty = grid.yMin; ty <= grid.yMax; ty++) {
+      for (let tx = grid.xMin; tx <= grid.xMax; tx++) {
+        const key = `tile-${tx}-${ty}`;
+        if (!this.scene.textures.exists(key)) continue;
+
+        const tex = this.scene.textures.get(key);
+        if (tex?.source?.[0]) {
+          tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        }
+
+        const img = this.scene.add.image(
+          (tx - grid.xMin) * ts,
+          (ty - grid.yMin) * ts,
+          key,
+        ).setOrigin(0, 0);
+        this._tileContainer.add(img);
+      }
+    }
+
+    this.mapImage = { width: grid.totalWidth, height: grid.totalHeight };
+    this.mapRenderer.setTileGrid(grid);
+  }
+
+  // -- map geometry ------------------------------------------------------------
 
   getMapCoverScale(viewportWidth, viewportHeight) {
     const { width, height } = this.getEffectiveViewportAabb(viewportWidth, viewportHeight);

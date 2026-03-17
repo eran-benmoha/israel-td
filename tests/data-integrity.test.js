@@ -89,9 +89,18 @@ describe("factions.json", () => {
 describe("map-view.json", () => {
   it("has valid projection config", () => {
     const p = mapViewConfig.projection;
-    expect(p.type).toBe("equirectangular");
+    expect(["equirectangular", "mercator"]).toContain(p.type);
     expect(p.lonMax).toBeGreaterThan(p.lonMin);
     expect(p.latMax).toBeGreaterThan(p.latMin);
+  });
+
+  it("has tiles config when using mercator projection", () => {
+    if (mapViewConfig.projection.type === "mercator") {
+      expect(mapViewConfig.tiles).toBeDefined();
+      expect(mapViewConfig.tiles.urlTemplate).toBeTruthy();
+      expect(mapViewConfig.tiles.baseZoom).toBeGreaterThan(0);
+      expect(mapViewConfig.tiles.tileSize).toBeGreaterThan(0);
+    }
   });
 
   it("has valid zoom range", () => {

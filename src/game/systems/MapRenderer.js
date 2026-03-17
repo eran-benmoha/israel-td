@@ -15,6 +15,7 @@ export class MapRenderer {
     this._cityEntries = [];
     this._hostileEntries = [];
     this._referenceScale = null;
+    this._mercatorBounds = null;
   }
 
   setMapImage(mapImage) {
@@ -27,6 +28,16 @@ export class MapRenderer {
 
   setReferenceScale(scale) {
     this._referenceScale = scale;
+  }
+
+  setTileGrid({ xMin, yMin, cols, rows, zoom }) {
+    const n = Math.pow(2, zoom);
+    this._mercatorBounds = {
+      leftFrac: xMin / n,
+      rightFrac: (xMin + cols) / n,
+      topFrac: yMin / n,
+      bottomFrac: (yMin + rows) / n,
+    };
   }
 
   createOverlayLayers() {
@@ -67,9 +78,17 @@ export class MapRenderer {
 
   projectGeoToMapXPercent(lat, lon) {
     const p = this.mapViewConfig.projection;
+
+    if (p.type === "mercator" && this._mercatorBounds) {
+      const worldFrac = (lon + 180) / 360;
+      const { leftFrac, rightFrac } = this._mercatorBounds;
+      return ((worldFrac - leftFrac) / (rightFrac - leftFrac)) * 100;
+    }
+
     if (p.type === "equirectangular") {
       return ((lon - p.lonMin) / (p.lonMax - p.lonMin)) * 100;
     }
+
     const latRad = Phaser.Math.DegToRad(lat);
     const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
     return 50 + p.xScale * (p.rOffset - latRad) * Math.sin(p.thetaScale * lonDeltaRad) * p.xCompression;
@@ -77,9 +96,18 @@ export class MapRenderer {
 
   projectGeoToMapYPercent(lat, lon) {
     const p = this.mapViewConfig.projection;
+
+    if (p.type === "mercator" && this._mercatorBounds) {
+      const latRad = (lat * Math.PI) / 180;
+      const worldFrac = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2;
+      const { topFrac, bottomFrac } = this._mercatorBounds;
+      return ((worldFrac - topFrac) / (bottomFrac - topFrac)) * 100;
+    }
+
     if (p.type === "equirectangular") {
       return ((p.latMax - lat) / (p.latMax - p.latMin)) * 100;
     }
+
     const latRad = Phaser.Math.DegToRad(lat);
     const lonDeltaRad = Phaser.Math.DegToRad(lon - p.centralMeridian);
     return 50 - p.xScale * (p.yAnchor - (p.rOffset - latRad) * Math.cos(p.thetaScale * lonDeltaRad));
