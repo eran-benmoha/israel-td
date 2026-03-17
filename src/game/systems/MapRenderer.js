@@ -144,34 +144,55 @@ export class MapRenderer {
 
   // --------------- cities ---------------
 
+  _createStarPolygon(cx, cy, outerRadius, innerRadius, points) {
+    const verts = [];
+    for (let i = 0; i < points * 2; i++) {
+      const angle = (Math.PI / 2) * -1 + (Math.PI / points) * i;
+      const r = i % 2 === 0 ? outerRadius : innerRadius;
+      verts.push(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+    }
+    return verts;
+  }
+
   _drawRegionCityMarkers(layerContainer) {
     this.israelData.cities.forEach((city) => {
       const pos = this.geoToImagePoint(city.lat, city.lon);
-      const dot = this.scene.add.circle(pos.x, pos.y, 10, 0xfff1a8, 0.95);
-      dot.setStrokeStyle(3, 0x5a3f09, 0.85);
+
+      const starVerts = this._createStarPolygon(0, 0, 14, 6, 5);
+      const star = this.scene.add.polygon(pos.x, pos.y, starVerts, 0xfff1a8, 0.95);
+      star.setStrokeStyle(3, 0x5a3f09, 0.85);
 
       const label = this.scene.add
-        .text(pos.x + 18, pos.y - 10, city.name, {
+        .text(pos.x + 22, pos.y - 14, city.name, {
           fontFamily: "Arial, Helvetica, sans-serif",
           fontSize: "36px",
           color: "#fff6d7",
-          backgroundColor: "rgba(13, 9, 4, 0.48)",
+          backgroundColor: "rgba(13, 9, 4, 0.72)",
           padding: { x: 10, y: 4 },
         })
-        .setOrigin(0, 1);
-      layerContainer.add([dot, label]);
+        .setOrigin(0, 1)
+        .setAlpha(0)
+        .setDepth(10);
 
-      this._cityEntries.push({ dot, label });
+      star.setInteractive(
+        new Phaser.Geom.Circle(0, 0, 22),
+        Phaser.Geom.Circle.Contains,
+      );
+      star.on("pointerover", () => label.setAlpha(1));
+      star.on("pointerout", () => label.setAlpha(0));
+
+      layerContainer.add([star, label]);
+      this._cityEntries.push({ star, label });
     });
   }
 
   _updateCities(_containerScale, ratio) {
     const labelSc = Math.pow(ratio, 0.55);
-    const dotSc = Math.pow(ratio, 0.55);
+    const starSc = Math.pow(ratio, 0.55);
 
-    this._cityEntries.forEach(({ dot, label }) => {
+    this._cityEntries.forEach(({ star, label }) => {
       label.setScale(labelSc);
-      dot.setScale(dotSc);
+      star.setScale(starSc);
     });
   }
 
