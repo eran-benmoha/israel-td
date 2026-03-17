@@ -3,6 +3,7 @@ import { eventBus } from "../core/EventBus";
 import { Events } from "../core/events";
 import { GameState } from "../core/GameState";
 import { MapSystem } from "../systems/MapSystem";
+import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
@@ -17,6 +18,7 @@ export class BootScene extends Phaser.Scene {
     super("boot");
     this.state = new GameState();
     this.mapSystem = null;
+    this.inputSystem = null;
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
@@ -34,6 +36,13 @@ export class BootScene extends Phaser.Scene {
   }
 
   create() {
+    this.inputSystem = new InputSystem({
+      scene: this,
+      eventBus,
+      mapViewConfig,
+    });
+    this.mapSystem.setInputSystem(this.inputSystem);
+
     this.mapSystem.create();
     this.factionSystem = new FactionSystem(factionsConfig);
     this.resourceSystem = new ResourceSystem({
@@ -57,6 +66,10 @@ export class BootScene extends Phaser.Scene {
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
+  }
+
+  update() {
+    this.inputSystem?.update();
   }
 
   destroySystems() {
