@@ -10,7 +10,7 @@
   "initial": {
     "zoomLevel": 2.6,
     "focus": { "lat": 31.45, "lon": 34.95 },
-    "rotationDeg": -4.5
+    "rotationDeg": 0
   },
   "zoom": {
     "min": 0.5,
