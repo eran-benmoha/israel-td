@@ -49,6 +49,8 @@ function createRenderer() {
         setStrokeStyle: function () { return this; },
         setScale: vi.fn(),
         setAlpha: vi.fn(),
+        setInteractive: vi.fn(),
+        on: vi.fn(),
       }),
       polygon: () => ({
         setStrokeStyle: function () { return this; },

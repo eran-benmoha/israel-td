@@ -268,14 +268,30 @@ export class MapRenderer {
           padding: { x: 16, y: 8 },
         })
         .setOrigin(0.5, 1)
-        .setAlpha(0);
+        .setAlpha(0)
+        .setDepth(10);
 
-      this.scene.tweens.add({
-        targets: label,
-        alpha: 1,
-        duration: 700,
-        ease: "Sine.easeOut",
-        delay: 500 + this._hostileEntries.length * 200,
+      dot.setInteractive(
+        new Phaser.Geom.Circle(0, 0, 28),
+        Phaser.Geom.Circle.Contains,
+      );
+      dot.on("pointerover", () => {
+        this.scene.tweens.killTweensOf(label);
+        this.scene.tweens.add({
+          targets: label,
+          alpha: 1,
+          duration: 180,
+          ease: "Back.easeOut",
+        });
+      });
+      dot.on("pointerout", () => {
+        this.scene.tweens.killTweensOf(label);
+        this.scene.tweens.add({
+          targets: label,
+          alpha: 0,
+          duration: 250,
+          ease: "Sine.easeIn",
+        });
       });
 
       dot.setAlpha(0);
