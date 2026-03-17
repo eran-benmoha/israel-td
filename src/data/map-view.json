@@ -14,7 +14,8 @@
   },
   "zoom": {
     "min": 0.5,
-    "max": 30
+    "max": 30,
+    "designZoom": 2.6
   },
   "cameraPresets": {
     "gaza-telaviv": {
