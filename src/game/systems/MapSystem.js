@@ -47,7 +47,8 @@ export class MapSystem {
     this.baseMapScale = this.getMapCoverScale(width, height);
     this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
 
-    const referenceScale = this.baseMapScale * this.mapViewConfig.initial.zoomLevel;
+    const designZoom = this.mapViewConfig.zoom.designZoom ?? this.mapViewConfig.initial.zoomLevel;
+    const referenceScale = this.baseMapScale * designZoom;
     this.mapRenderer.setReferenceScale(referenceScale);
     this.mapRenderer.updateForZoom(this.mapContainer.scaleX);
 
@@ -68,8 +69,8 @@ export class MapSystem {
       this.baseMapScale = this.getMapCoverScale(width, height);
       this.mapContainer.setScale(this.baseMapScale * this.zoomLevel);
 
-      const newRef = this.baseMapScale * this.mapViewConfig.initial.zoomLevel;
-      this.mapRenderer.setReferenceScale(newRef);
+      const dz = this.mapViewConfig.zoom.designZoom ?? this.mapViewConfig.initial.zoomLevel;
+      this.mapRenderer.setReferenceScale(this.baseMapScale * dz);
       this.mapRenderer.updateForZoom(this.mapContainer.scaleX);
 
       const nextCenterWorld = camera.getWorldPoint(width / 2, height / 2);
