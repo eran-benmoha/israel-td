@@ -244,39 +244,51 @@ body {
   color: #a9c6df;
 }
 
-.debug-toggle {
-  position: fixed;
-  right: 0.9rem;
-  top: calc(max(env(safe-area-inset-top), 0.75rem) + 3.35rem);
-  min-width: 34px;
-  min-height: 34px;
-  border: 1px solid rgba(157, 199, 230, 0.55);
-  border-radius: 999px;
-  background: transparent;
-  color: #d8eeff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1;
-  z-index: 40;
+.debug-toggle,
+.debug-panel {
+  display: none;
 }
 
-.debug-panel {
-  position: fixed;
-  right: 0.9rem;
-  top: calc(max(env(safe-area-inset-top), 0.75rem) + 5.8rem);
-  width: auto;
-  max-width: min(68vw, 240px);
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: #d8edff;
-  padding: 0;
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.22rem;
-  overflow: visible;
+@media (min-width: 768px) {
+  .debug-toggle {
+    display: block;
+    position: fixed;
+    right: 0.9rem;
+    top: calc(max(env(safe-area-inset-top), 0.75rem) + 3.35rem);
+    min-width: 34px;
+    min-height: 34px;
+    border: 1px solid rgba(157, 199, 230, 0.55);
+    border-radius: 999px;
+    background: transparent;
+    color: #d8eeff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    z-index: 40;
+  }
+
+  .debug-panel {
+    position: fixed;
+    right: 0.9rem;
+    top: calc(max(env(safe-area-inset-top), 0.75rem) + 5.8rem);
+    width: auto;
+    max-width: min(68vw, 240px);
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #d8edff;
+    padding: 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.22rem;
+    overflow: visible;
+  }
+
+  .debug-panel[hidden] {
+    display: none;
+  }
 }
 
 .debug-panel__title {
@@ -314,7 +326,10 @@ body {
     border-right: 1px solid #1a2635;
   }
 
-  .debug-toggle,
+  .debug-toggle {
+    right: calc((100vw - 560px) / 2 + 0.9rem);
+  }
+
   .debug-panel {
     right: calc((100vw - 560px) / 2 + 0.9rem);
   }
@@ -323,14 +338,6 @@ body {
 @media (max-height: 760px) {
   .shop {
     max-height: min(34dvh, 260px);
-  }
-
-  .debug-panel {
-    top: calc(max(env(safe-area-inset-top), 0.65rem) + 5.4rem);
-  }
-
-  .debug-toggle {
-    top: calc(max(env(safe-area-inset-top), 0.65rem) + 3.2rem);
   }
 }
 
