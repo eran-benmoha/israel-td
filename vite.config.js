@@ -5,4 +5,8 @@ const pagesBase = repoName ? `/${repoName}/` : "/";
 
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? pagesBase : "/",
+  test: {
+    environment: "node",
+    include: ["tests/**/*.test.js"],
+  },
 });
