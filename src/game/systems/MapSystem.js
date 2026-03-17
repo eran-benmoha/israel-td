@@ -79,6 +79,13 @@ export class MapSystem {
       this.clampMapPosition(width, height);
     };
     this.scene.scale.on("resize", this.resizeHandler);
+
+    this._unsubFlyTo = this.eventBus.on(Events.CAMERA_FLY_TO, ({ lat, lon, zoom, duration }) => {
+      this.animateToGeoPoint(lat, lon, zoom, duration);
+    });
+    this._unsubFlyToPreset = this.eventBus.on(Events.CAMERA_FLY_TO_PRESET, ({ preset, duration }) => {
+      this.animateToPreset(preset, duration);
+    });
   }
 
   destroy() {
@@ -90,6 +97,14 @@ export class MapSystem {
     if (this.resizeHandler) {
       this.scene.scale.off("resize", this.resizeHandler);
       this.resizeHandler = null;
+    }
+
+    this._unsubFlyTo?.();
+    this._unsubFlyToPreset?.();
+
+    if (this._cameraAnimTween) {
+      this._cameraAnimTween.stop();
+      this._cameraAnimTween = null;
     }
   }
 
@@ -276,6 +291,56 @@ export class MapSystem {
       width: viewportWidth * cos + viewportHeight * sin,
       height: viewportWidth * sin + viewportHeight * cos,
     };
+  }
+
+  animateToGeoPoint(lat, lon, targetZoom, durationMs = 1200) {
+    const { width, height } = this.scene.scale;
+    const clampedZoom = Phaser.Math.Clamp(targetZoom, this.minZoomLevel, this.maxZoomLevel);
+    const targetScale = this.baseMapScale * clampedZoom;
+    const focusPoint = this.geoToImagePoint(lat, lon);
+    const targetX = width / 2 - focusPoint.x * targetScale;
+    const targetY = height / 2 - focusPoint.y * targetScale;
+
+    const tweenState = {
+      x: this.mapContainer.x,
+      y: this.mapContainer.y,
+      zoom: this.zoomLevel,
+    };
+
+    if (this._cameraAnimTween) {
+      this._cameraAnimTween.stop();
+    }
+
+    this._cameraAnimTween = this.scene.tweens.add({
+      targets: tweenState,
+      x: targetX,
+      y: targetY,
+      zoom: clampedZoom,
+      duration: durationMs,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        this.zoomLevel = tweenState.zoom;
+        const currentScale = this.baseMapScale * this.zoomLevel;
+        this.mapContainer.setScale(currentScale);
+        this.mapContainer.x = tweenState.x;
+        this.mapContainer.y = tweenState.y;
+        this.clampMapPosition(width, height);
+        this.mapRenderer.updateForZoom(currentScale);
+        this.emitZoom();
+      },
+      onComplete: () => {
+        this._cameraAnimTween = null;
+      },
+    });
+
+    return this._cameraAnimTween;
+  }
+
+  animateToPreset(presetName, durationMs = 1200) {
+    const presets = this.mapViewConfig.cameraPresets ?? {};
+    const preset = presets[presetName];
+    if (!preset) return null;
+    return this.animateToGeoPoint(preset.lat, preset.lon, preset.zoom, durationMs);
   }
 
   getOverlayScaleFactor() {
