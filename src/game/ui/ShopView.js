@@ -123,7 +123,9 @@ export class ShopView {
     this.elements.shopTabs.innerHTML = this.state.categories
       .map((category) => {
         const active = category === this.state.activeCategory;
-        return `<button class="shop__tab${active ? " is-active" : ""}" type="button" data-category="${category}" role="tab" aria-selected="${active ? "true" : "false"}">${this.categoryLabel(category)}</button>`;
+        const emoji = this.categoryEmoji(category);
+        const label = this.categoryShortLabel(category);
+        return `<button class="shop__tab${active ? " is-active" : ""}" type="button" data-category="${category}" role="tab" aria-selected="${active ? "true" : "false"}"><span class="shop__tab-icon">${emoji}</span>${label}</button>`;
       })
       .join("");
   }
@@ -143,19 +145,19 @@ export class ShopView {
         const owned = this.state.purchased[unit.id] ?? 0;
         const canAfford = this.state.money >= unit.cost;
         const icon = this.categoryEmoji(unit.category);
-        return `<div class="shop__item"><div class="shop__item-name">${icon} ${unit.name}</div><div class="shop__item-meta"><span>💸 ${unit.cost}</span><span>📦 ${owned}</span></div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "🛍️ Buy" : "⛔ Funds"}</button></div>`;
+        return `<div class="shop__item"><div class="shop__item-name">${icon} ${unit.name}</div><div class="shop__item-meta"><span>💰 ${unit.cost}</span>${owned > 0 ? `<span>x${owned}</span>` : ""}</div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "Buy" : "No funds"}</button></div>`;
       })
       .join("");
   }
 
-  categoryLabel(categoryKey) {
+  categoryShortLabel(categoryKey) {
     switch (categoryKey) {
       case "air-defense":
-        return "🛡️ AD";
+        return "Defense";
       case "air-force":
-        return "✈️ AF";
+        return "Air Force";
       case "ground-troops":
-        return "🪖 GT";
+        return "Troops";
       default:
         return categoryKey;
     }
