@@ -12,6 +12,8 @@ export class ShopView {
       money: 0,
       purchased: {},
     };
+    this._tutorialDismissed = false;
+    this._tutorialEl = document.getElementById("tutorial-tooltip");
   }
 
   bindDomEvents() {
@@ -82,6 +84,17 @@ export class ShopView {
     }
     this.elements.shopStatus.textContent = message;
     this.elements.shopStatus.style.color = success ? "#9be3b2" : "#ffb4b4";
+
+    if (success && !this._tutorialDismissed) {
+      this._dismissTutorial();
+    }
+  }
+
+  _dismissTutorial() {
+    this._tutorialDismissed = true;
+    if (this._tutorialEl) {
+      this._tutorialEl.hidden = true;
+    }
   }
 
   render() {

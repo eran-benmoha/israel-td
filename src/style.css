@@ -362,6 +362,51 @@ body {
   }
 }
 
+.tutorial-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(12, 40, 70, 0.94);
+  border: 1.5px solid #5bb8ff;
+  border-radius: 8px;
+  color: #d6f0ff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  animation: tutorial-pulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 18px rgba(91, 184, 255, 0.35);
+}
+
+.tutorial-tooltip[hidden] {
+  display: none;
+}
+
+.tutorial-tooltip__arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: rgba(12, 40, 70, 0.94);
+  border-right: 1.5px solid #5bb8ff;
+  border-bottom: 1.5px solid #5bb8ff;
+}
+
+.tutorial-tooltip__text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes tutorial-pulse {
+  0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.8; transform: translateX(-50%) translateY(-3px); }
+}
+
 @media (max-height: 760px) {
   .shop {
     max-height: min(34dvh, 260px);
