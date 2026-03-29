@@ -324,7 +324,7 @@ export class MapSystem {
 
   getOverlayScaleFactor() {
     if (!this.mapContainer || !this.mapRenderer._referenceScale) return 1;
-    return Math.pow(this.mapRenderer._referenceScale / this.mapContainer.scaleX, 0.5);
+    return this.mapRenderer._referenceScale / this.mapContainer.scaleX;
   }
 
   emitZoom() {
