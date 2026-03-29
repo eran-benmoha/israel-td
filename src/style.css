@@ -363,23 +363,22 @@ body {
 }
 
 .tutorial-tooltip {
-  position: absolute;
-  bottom: 100%;
+  position: fixed;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 0.85rem;
-  background: rgba(12, 40, 70, 0.94);
+  padding: 0.55rem 1rem;
+  background: rgba(12, 40, 70, 0.95);
   border: 1.5px solid #5bb8ff;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #d6f0ff;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   white-space: nowrap;
-  z-index: 100;
+  z-index: 200;
   pointer-events: none;
-  animation: tutorial-pulse 1.6s ease-in-out infinite;
-  box-shadow: 0 0 18px rgba(91, 184, 255, 0.35);
+  animation: tutorial-pulse 1.8s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(91, 184, 255, 0.4), 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .tutorial-tooltip[hidden] {
@@ -393,7 +392,7 @@ body {
   transform: translateX(-50%) rotate(45deg);
   width: 10px;
   height: 10px;
-  background: rgba(12, 40, 70, 0.94);
+  background: rgba(12, 40, 70, 0.95);
   border-right: 1.5px solid #5bb8ff;
   border-bottom: 1.5px solid #5bb8ff;
 }
@@ -404,7 +403,7 @@ body {
 
 @keyframes tutorial-pulse {
   0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  50% { opacity: 0.8; transform: translateX(-50%) translateY(-3px); }
+  50% { opacity: 0.85; transform: translateX(-50%) translateY(-4px); }
 }
 
 @media (max-height: 760px) {

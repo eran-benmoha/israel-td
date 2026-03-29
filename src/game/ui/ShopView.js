@@ -70,6 +70,13 @@ export class ShopView {
       this.state.activeCategory = this.state.categories[0] ?? "air-defense";
     }
     this.render();
+    this._positionTutorial();
+  }
+
+  _positionTutorial() {
+    if (this._tutorialDismissed || !this._tutorialEl || !this.elements.shopPanel) return;
+    const shopRect = this.elements.shopPanel.getBoundingClientRect();
+    this._tutorialEl.style.bottom = `${window.innerHeight - shopRect.top + 8}px`;
   }
 
   onShopState(money, purchased) {
