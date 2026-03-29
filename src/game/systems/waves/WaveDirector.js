@@ -10,6 +10,8 @@ export class WaveDirector {
     this.level = levelConfig;
     this.factionSystem = factionSystem;
     this.nextWaveAt = 0;
+    this.nextWaveScheduledAt = 0;
+    this.nextWaveDelayMs = 0;
     this.nextWaveEvent = null;
     this.clockTickEvent = null;
     this.lastSimulationUpdateAt = 0;
@@ -66,6 +68,16 @@ export class WaveDirector {
     this.state.wave.simulationClockMs +=
       (elapsedRealMs * this.level.simulation.hoursPerSecond * 60 * 60 * 1000) / 1000;
     this.publishWaveHud();
+    this.publishWaveProgress();
+  }
+
+  publishWaveProgress() {
+    if (this.nextWaveDelayMs <= 0) return;
+    const now = this.scene.time.now;
+    const elapsed = now - this.nextWaveScheduledAt;
+    const progress = Math.min(elapsed / this.nextWaveDelayMs, 1);
+    const remainingMs = Math.max(0, this.nextWaveAt - now);
+    this.eventBus.emit(Events.UI_WAVE_PROGRESS, { progress, remainingMs });
   }
 
   publishWaveHud() {
@@ -101,7 +113,10 @@ export class WaveDirector {
       this.nextWaveEvent.remove(false);
     }
 
-    this.nextWaveAt = this.scene.time.now + delayMs;
+    const now = this.scene.time.now;
+    this.nextWaveScheduledAt = now;
+    this.nextWaveDelayMs = delayMs;
+    this.nextWaveAt = now + delayMs;
     this.nextWaveEvent = this.scene.time.delayedCall(delayMs, () => onWaveDue({ source: "timer" }));
   }
 }

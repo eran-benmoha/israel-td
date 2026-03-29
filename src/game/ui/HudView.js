@@ -15,6 +15,16 @@ export class HudView {
     }
   }
 
+  updateWaveProgress({ progress, remainingMs }) {
+    if (this.elements.waveProgressBar) {
+      this.elements.waveProgressBar.style.width = `${(progress * 100).toFixed(1)}%`;
+    }
+    if (this.elements.waveProgressLabel) {
+      const seconds = Math.ceil(remainingMs / 1000);
+      this.elements.waveProgressLabel.textContent = seconds > 0 ? `${seconds}s` : "";
+    }
+  }
+
   updateResourceHud({ resources, maxResources }) {
     Object.keys(resources).forEach((key) => {
       const valueEl = this.elements.resourceValues[key];

@@ -6,8 +6,8 @@
     "hoursPerSecond": 3
   },
   "waveTiming": {
-    "minDelayMs": 22000,
-    "maxDelayMs": 95000
+    "minDelayMs": 5000,
+    "maxDelayMs": 15000
   },
   "waves": [
     { "factionId": "hamas-gaza", "intensityBonus": 0 },

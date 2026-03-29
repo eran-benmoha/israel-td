@@ -11,6 +11,8 @@ export class UiSystem {
       waveIndicator: document.getElementById("wave-indicator"),
       waveTimer: document.getElementById("wave-timer"),
       waveOrigin: document.getElementById("wave-origin"),
+      waveProgressBar: document.getElementById("wave-progress-bar"),
+      waveProgressLabel: document.getElementById("wave-progress-label"),
       debugToggleButton: document.getElementById("debug-toggle"),
       debugPanel: document.getElementById("debug-panel"),
       debugLaunchWaveButton: document.getElementById("debug-launch-wave"),
@@ -51,6 +53,7 @@ export class UiSystem {
   bindBusEvents() {
     this.unsubscribers.push(
       this.eventBus.on(Events.UI_WAVE, (payload) => this.hudView.updateWaveHud(payload)),
+      this.eventBus.on(Events.UI_WAVE_PROGRESS, (payload) => this.hudView.updateWaveProgress(payload)),
       this.eventBus.on(Events.UI_RESOURCES, (payload) => this.hudView.updateResourceHud(payload)),
       this.eventBus.on(Events.UI_SHOP_CATALOG, ({ units }) => this.shopView.onShopCatalog(units)),
       this.eventBus.on(Events.UI_SHOP_STATE, ({ money, purchased }) => this.shopView.onShopState(money, purchased)),

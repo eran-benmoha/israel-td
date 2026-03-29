@@ -85,6 +85,33 @@ body {
   color: #8bd9ff;
 }
 
+.wave-progress {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(30, 60, 90, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 0.2rem;
+}
+
+.wave-progress__bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff6a3a, #ffaa42);
+  border-radius: 3px;
+  transition: width 0.2s linear;
+}
+
+.wave-progress__label {
+  position: absolute;
+  right: 0;
+  top: -1.05rem;
+  font-size: 0.62rem;
+  color: #ffc98a;
+  font-variant-numeric: tabular-nums;
+}
+
 #wave-timer {
   font-size: 0.86rem;
   font-variant-numeric: tabular-nums;

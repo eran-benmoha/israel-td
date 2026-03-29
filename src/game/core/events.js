@@ -10,4 +10,5 @@ export const Events = {
   UI_DEBUG_ZOOM: "ui/debug-zoom",
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
+  UI_WAVE_PROGRESS: "ui/wave-progress",
 };
