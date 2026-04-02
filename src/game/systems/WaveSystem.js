@@ -31,6 +31,7 @@ export class WaveSystem {
     });
     this.impactSystem = new ImpactSystem({
       scene,
+      eventBus,
       mapSystem,
       resourceSystem,
     });
@@ -47,6 +48,12 @@ export class WaveSystem {
   start() {
     this.director.start((payload) => this.launchWave(payload));
     this.unsubscribeDebugLaunch = this.eventBus.on(Events.DEBUG_LAUNCH_WAVE, () => this.launchWave({ source: "debug" }));
+    this.unsubscribeGameOver = this.eventBus.on(Events.GAME_OVER, () => this.stopWaves());
+    this.unsubscribeVictory = this.eventBus.on(Events.GAME_VICTORY, () => this.stopWaves());
+  }
+
+  stopWaves() {
+    this.director.destroy();
   }
 
   launchWave({ source }) {
@@ -74,6 +81,14 @@ export class WaveSystem {
     if (this.unsubscribeDebugLaunch) {
       this.unsubscribeDebugLaunch();
       this.unsubscribeDebugLaunch = null;
+    }
+    if (this.unsubscribeGameOver) {
+      this.unsubscribeGameOver();
+      this.unsubscribeGameOver = null;
+    }
+    if (this.unsubscribeVictory) {
+      this.unsubscribeVictory();
+      this.unsubscribeVictory = null;
     }
   }
 }

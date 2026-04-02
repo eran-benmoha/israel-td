@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { EndScreenView } from "../ui/EndScreenView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -24,6 +25,7 @@ export class UiSystem {
       shopStatus: document.getElementById("shop-status"),
       shopMoney: document.getElementById("shop-money"),
       shopToggleButton: document.getElementById("shop-toggle"),
+      scoreValue: document.getElementById("resource-score-value"),
       resourceValues: {
         money: document.getElementById("resource-money-value"),
         morale: document.getElementById("resource-morale-value"),
@@ -31,15 +33,27 @@ export class UiSystem {
         army: document.getElementById("resource-army-value"),
         economy: document.getElementById("resource-economy-value"),
       },
+      endOverlay: document.getElementById("end-overlay"),
+      endTitle: document.getElementById("end-title"),
+      endSubtitle: document.getElementById("end-subtitle"),
+      endScore: document.getElementById("end-score"),
+      endHighScore: document.getElementById("end-highscore"),
+      endStatsWaves: document.getElementById("end-stats-waves"),
+      endStatsIntercepted: document.getElementById("end-stats-intercepted"),
+      endStatsImpacts: document.getElementById("end-stats-impacts"),
+      endNewHighScore: document.getElementById("end-new-highscore"),
+      endRestartButton: document.getElementById("end-restart"),
     };
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.endScreenView = new EndScreenView({ eventBus, elements: this.elements });
   }
 
   start() {
     this.debugView.bindDomEvents();
     this.shopView.bindDomEvents();
+    this.endScreenView.bindDomEvents();
     this.bindBusEvents();
   }
 
@@ -48,6 +62,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.endScreenView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +75,14 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.SCORE_UPDATED, ({ score }) => this.hudView.updateScore(score)),
+      this.eventBus.on(Events.GAME_OVER, (payload) =>
+        this.endScreenView.show({ isVictory: false, ...payload }),
+      ),
+      this.eventBus.on(Events.GAME_VICTORY, (payload) =>
+        this.endScreenView.show({ isVictory: true, ...payload }),
+      ),
+      this.eventBus.on(Events.GAME_RESTART, () => this.endScreenView.hide()),
     );
   }
 }

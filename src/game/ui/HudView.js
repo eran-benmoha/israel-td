@@ -39,6 +39,12 @@ export class HudView {
     });
   }
 
+  updateScore(score) {
+    if (this.elements.scoreValue) {
+      this.elements.scoreValue.textContent = `${score} pts`;
+    }
+  }
+
   formatResourceChip(resourceKey, value, max, percent) {
     const roundedPercent = `${Math.round(percent)}%`;
     switch (resourceKey) {
