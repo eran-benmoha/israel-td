@@ -58,3 +58,12 @@ This file is a compact "what is true now" reference.
 1. ADRs are append-only decision history.
 2. Any behavior change should update docs in the same change set.
 3. Future agents must follow `AGENTS.md` and `docs/AGENT_PLAYBOOK.md`.
+4. Multi-agent collaboration follows the pipeline in `docs/AGENT_TEAM_PIPELINE.md`:
+   - Six agent roles: Planner, Implementer, Reviewer, Doc Writer, CI Watcher, Integrator.
+   - Branch naming: `feature/`, `fix/`, `docs/`, `chore/` prefixes.
+   - PR template and issue templates in `.github/`.
+   - Label taxonomy (type, scope, status, priority) defined in `.github/labels.yml`.
+   - Conventional commit messages: `<type>(<scope>): <summary>`.
+   - PR review prefixes: `[MUST]`, `[SHOULD]`, `[NIT]`.
+   - Structured handoff protocol for mid-task agent transitions.
+   - CI runs on PR branches via `.github/workflows/ci.yml`.
