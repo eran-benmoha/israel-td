@@ -15,3 +15,19 @@ export function getWaveDefinition(levelConfig, waveNumber) {
 export function getUpcomingFactionId(levelConfig, waveNumber) {
   return getWaveDefinition(levelConfig, waveNumber)?.factionId ?? null;
 }
+
+export function getAbilityState(gameState, abilityId) {
+  return gameState.abilities[abilityId] ?? null;
+}
+
+export function isAbilityReady(gameState, abilityId) {
+  const state = gameState.abilities[abilityId];
+  if (!state) return false;
+  return state.remainingCooldownMs <= 0;
+}
+
+export function isAbilityActive(gameState, abilityId) {
+  const state = gameState.abilities[abilityId];
+  if (!state) return false;
+  return state.remainingDurationMs > 0;
+}

@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { AbilityView } from "../ui/AbilityView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -31,15 +32,19 @@ export class UiSystem {
         army: document.getElementById("resource-army-value"),
         economy: document.getElementById("resource-economy-value"),
       },
+      abilityBar: document.getElementById("ability-bar"),
+      abilityStatus: document.getElementById("ability-status"),
     };
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.abilityView = new AbilityView({ eventBus, elements: this.elements });
   }
 
   start() {
     this.debugView.bindDomEvents();
     this.shopView.bindDomEvents();
+    this.abilityView.bindDomEvents();
     this.bindBusEvents();
   }
 
@@ -48,6 +53,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.abilityView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +66,8 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_ABILITY_STATE, ({ abilities }) => this.abilityView.onAbilityState(abilities)),
+      this.eventBus.on(Events.UI_ABILITY_RESULT, ({ success, message }) => this.abilityView.onAbilityResult(success, message)),
     );
   }
 }

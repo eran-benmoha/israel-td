@@ -24,5 +24,7 @@ export class GameState {
     };
 
     this.purchasedUnits = {};
+
+    this.abilities = {};
   }
 }

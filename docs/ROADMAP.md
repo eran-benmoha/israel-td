@@ -44,6 +44,7 @@
 
 - Explicit win/lose loop and persistence of campaign progress.
 - Defense effects tied to actual interception/survivability mechanics.
+- ✅ Strategic Abilities system (Emergency Siren, Airstrike, Emergency Funding) with cooldowns and active powers UI.
 
 ---
 
