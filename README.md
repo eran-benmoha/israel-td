@@ -44,6 +44,7 @@ Expected URL format:
 - [Decision log](./docs/DECISION_LOG.md)
 - [Architecture Decision Records](./docs/adr/)
 - [Agent Playbook (mandatory rules)](./docs/AGENT_PLAYBOOK.md)
+- [Agent Team Pipeline](./docs/AGENT_TEAM_PIPELINE.md)
 
 ## Agent rules
 
@@ -51,3 +52,4 @@ Future agents should read and follow:
 
 - [`AGENTS.md`](./AGENTS.md)
 - [`docs/AGENT_PLAYBOOK.md`](./docs/AGENT_PLAYBOOK.md)
+- [`docs/AGENT_TEAM_PIPELINE.md`](./docs/AGENT_TEAM_PIPELINE.md)

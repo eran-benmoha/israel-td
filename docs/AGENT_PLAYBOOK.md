@@ -52,11 +52,25 @@ This file defines mandatory rules for any future agent/contributor working on th
 4. Keep data-driven configs in `src/data/` as source of truth for levels/factions/units/map metadata.
 5. Preserve modular system boundaries (`MapSystem`, `InputSystem`, `WaveSystem`, `ResourceSystem`, `FactionSystem`, `UiSystem`) unless formally redesigned.
 
-## 6) Change policy
+## 6) Agent team workflow
+
+This project uses a structured multi-agent pipeline. All agents must follow
+the conventions in [`docs/AGENT_TEAM_PIPELINE.md`](./AGENT_TEAM_PIPELINE.md):
+
+1. **Branches** — use `feature/`, `fix/`, `docs/`, `chore/` prefixes.
+2. **Pull requests** — use the PR template at `.github/PULL_REQUEST_TEMPLATE.md`.
+3. **Labels** — apply type, scope, status, and priority labels (defined in `.github/labels.yml`).
+4. **Commits** — follow conventional format: `<type>(<scope>): <summary>`.
+5. **Reviews** — use `[MUST]`, `[SHOULD]`, `[NIT]` prefixes in review comments.
+6. **Handoffs** — push all work, update PR description, and leave a structured handoff comment before ending a session.
+7. **Issues** — use the issue templates in `.github/ISSUE_TEMPLATE/`.
+
+## 7) Change policy
 
 Before shipping major changes, verify:
 
 - `npm run build` succeeds
+- `npm test` passes
 - key UI panels still open/close correctly
 - map navigation/zoom still works
 - docs reflect new behavior

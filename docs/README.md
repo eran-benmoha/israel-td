@@ -16,6 +16,7 @@ This folder is the source of truth for product and technical decisions.
 - [Roadmap](./ROADMAP.md) - phased delivery plan.
 - [Decision Log](./DECISION_LOG.md) - concise snapshot of implemented choices.
 - [Agent Playbook](./AGENT_PLAYBOOK.md) - mandatory implementation rules and guardrails.
+- [Agent Team Pipeline](./AGENT_TEAM_PIPELINE.md) - multi-agent communication and workflow conventions.
 - [ADRs](./adr/) - architecture/design decisions and rationale.
 
 ## Decision Process
@@ -41,3 +42,4 @@ We use ADRs (Architecture Decision Records):
 11. Data-driven level/faction/unit/map configs stored in JSON files.
 12. Modular system architecture with event bus + shared state layer.
 13. GitHub Actions deployment to GitHub Pages.
+14. Multi-agent team pipeline using Git-native communication (PRs, labels, issues, CI).
