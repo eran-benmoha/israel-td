@@ -9,12 +9,20 @@
       "armyBoost": 2.2
     },
     {
+      "id": "davids-sling",
+      "name": "David's Sling",
+      "category": "air-defense",
+      "cost": 200,
+      "moraleBoost": 1.2,
+      "armyBoost": 2.8
+    },
+    {
       "id": "arrow-system",
       "name": "Arrow Interceptor",
       "category": "air-defense",
-      "cost": 180,
-      "moraleBoost": 1.1,
-      "armyBoost": 3
+      "cost": 280,
+      "moraleBoost": 1.5,
+      "armyBoost": 3.5
     },
     {
       "id": "fighter-sortie",

@@ -18,7 +18,7 @@ This file defines mandatory rules for any future agent/contributor working on th
    - Western Yemen (Houthis)
    - Iran (Iran regime)
 3. Wave pacing uses a running simulation clock and randomized intervals (not fixed interval countdown).
-4. Missile visuals and trail colors communicate missile type/range classes.
+4. Missile visuals and trail colors communicate missile type/range classes. Interceptor visuals (color, trail) differ per defense tier.
 5. Israel regional overlays and city markers are part of map readability and should remain visible unless explicitly redesigned.
 
 ## 3) UX rules
@@ -43,6 +43,11 @@ This file defines mandatory rules for any future agent/contributor working on th
    - air force
    - ground troops
 3. Purchases must update resources and UI state consistently.
+4. Air defense purchases in the "air-defense" category correspond to three functional defense tiers:
+   - **Iron Dome** — intercepts short-range rockets (≤ 70 km)
+   - **David's Sling** — intercepts medium-range missiles (71–300 km)
+   - **Arrow** — intercepts long-range ballistic missiles (> 300 km)
+5. Each tier fires independently per inbound missile; first successful interception prevents redundant intercepts.
 
 ## 5) Technical constraints
 

@@ -84,6 +84,37 @@ describe("factions.json", () => {
     const ids = factionsConfig.factions.map((f) => f.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("every faction has at least one missile profile", () => {
+    factionsConfig.factions.forEach((f) => {
+      expect(f.missileProfiles, `${f.id} missing missileProfiles`).toBeDefined();
+      expect(f.missileProfiles.length, `${f.id} has empty missileProfiles`).toBeGreaterThan(0);
+    });
+  });
+
+  it("missile profiles have required fields", () => {
+    const requiredFields = [
+      "id", "label", "weight", "minRangeKm", "maxRangeKm",
+      "rocketColor", "trailOuterColor", "trailInnerColor", "flameColor",
+      "durationMin", "durationMax", "impactScale",
+    ];
+    factionsConfig.factions.forEach((f) => {
+      (f.missileProfiles ?? []).forEach((mp) => {
+        requiredFields.forEach((field) => {
+          expect(mp[field], `${f.id}/${mp.id} missing ${field}`).toBeDefined();
+        });
+        expect(mp.maxRangeKm).toBeGreaterThan(mp.minRangeKm);
+        expect(mp.durationMax).toBeGreaterThan(mp.durationMin);
+      });
+    });
+  });
+
+  it("missile profile ids are unique across all factions", () => {
+    const ids = factionsConfig.factions.flatMap(
+      (f) => (f.missileProfiles ?? []).map((mp) => mp.id),
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });
 
 describe("map-view.json", () => {
@@ -132,8 +163,15 @@ describe("map-view.json", () => {
 });
 
 describe("units.json", () => {
-  it("has at least 3 units", () => {
-    expect(unitsConfig.units.length).toBeGreaterThanOrEqual(3);
+  it("has at least 7 units", () => {
+    expect(unitsConfig.units.length).toBeGreaterThanOrEqual(7);
+  });
+
+  it("includes all three defense tier units", () => {
+    const ids = unitsConfig.units.map((u) => u.id);
+    expect(ids).toContain("iron-dome-battery");
+    expect(ids).toContain("davids-sling");
+    expect(ids).toContain("arrow-system");
   });
 
   it("each unit has required fields", () => {
