@@ -17,6 +17,7 @@ This folder is the source of truth for product and technical decisions.
 - [Decision Log](./DECISION_LOG.md) - concise snapshot of implemented choices.
 - [Agent Playbook](./AGENT_PLAYBOOK.md) - mandatory implementation rules and guardrails.
 - [Agent Team Pipeline](./AGENT_TEAM_PIPELINE.md) - multi-agent communication and workflow conventions.
+- [Cursor Agent Guide](./CURSOR_AGENT_GUIDE.md) - prompt templates for running the pipeline with Cursor agents.
 - [ADRs](./adr/) - architecture/design decisions and rationale.
 
 ## Decision Process

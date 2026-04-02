@@ -401,3 +401,11 @@ points.
 | Record decision | New ADR in `docs/adr/` | Doc Writer |
 | Escalate blocker | Issue with `status: blocked` | Any agent |
 | Hand off mid-task | Push WIP + update PR description | Any agent |
+
+---
+
+## 13) Running This Pipeline with Cursor
+
+For concrete prompt templates, parallel invocation strategies, and a full-cycle
+walkthrough using Cursor's Background Agent feature, see
+[`docs/CURSOR_AGENT_GUIDE.md`](./CURSOR_AGENT_GUIDE.md).
