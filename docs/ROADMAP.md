@@ -42,7 +42,7 @@
 
 ### Remaining for full phase completion
 
-- Explicit win/lose loop and persistence of campaign progress.
+- ~~Explicit win/lose loop and persistence of campaign progress.~~ ✅ (ADR 0017 — ScoreSystem, game-over/victory conditions, high-score persistence)
 - Defense effects tied to actual interception/survivability mechanics.
 
 ---

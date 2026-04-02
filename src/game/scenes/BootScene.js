@@ -7,6 +7,7 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { ScoreSystem } from "../systems/ScoreSystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
@@ -22,6 +23,8 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.scoreSystem = null;
+    this.unsubscribeRestart = null;
   }
 
   preload() {
@@ -60,11 +63,18 @@ export class BootScene extends Phaser.Scene {
       mapSystem: this.mapSystem,
       resourceSystem: this.resourceSystem,
     });
+    this.scoreSystem = new ScoreSystem({
+      eventBus,
+      gameState: this.state,
+      totalWaves: (level01.waves ?? []).length,
+    });
 
     this.resourceSystem.start();
     this.waveSystem.start();
+    this.scoreSystem.start();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
+    this.unsubscribeRestart = eventBus.on(Events.GAME_RESTART, () => this.restartGame());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
   }
 
@@ -72,9 +82,45 @@ export class BootScene extends Phaser.Scene {
     this.inputSystem?.update();
   }
 
+  restartGame() {
+    this.destroySystems();
+    this.state.reset();
+
+    this.factionSystem = new FactionSystem(factionsConfig);
+    this.resourceSystem = new ResourceSystem({
+      eventBus,
+      gameState: this.state,
+      unitsConfig,
+    });
+    this.waveSystem = new WaveSystem({
+      scene: this,
+      eventBus,
+      gameState: this.state,
+      levelConfig: level01,
+      israelData,
+      factionSystem: this.factionSystem,
+      mapSystem: this.mapSystem,
+      resourceSystem: this.resourceSystem,
+    });
+    this.scoreSystem = new ScoreSystem({
+      eventBus,
+      gameState: this.state,
+      totalWaves: (level01.waves ?? []).length,
+    });
+
+    this.resourceSystem.start();
+    this.waveSystem.start();
+    this.scoreSystem.start();
+    eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Game restarted." });
+  }
+
   destroySystems() {
+    this.scoreSystem?.destroy();
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
-    this.mapSystem?.destroy();
+    if (this.unsubscribeRestart) {
+      this.unsubscribeRestart();
+      this.unsubscribeRestart = null;
+    }
   }
 }

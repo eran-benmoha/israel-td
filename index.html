@@ -19,6 +19,7 @@
         <div class="hud__left">
           <div class="hud__title">Israel TD</div>
           <div class="resource-icons" aria-label="Resource status">
+            <span id="resource-score-value" class="resource-chip resource-chip--score">0 pts</span>
             <span id="resource-money-value" class="resource-chip">💰 120</span>
             <span id="resource-morale-value" class="resource-chip">🙂 100%</span>
             <span id="resource-population-value" class="resource-chip">🩺 100%</span>
@@ -59,6 +60,36 @@
       <div id="tutorial-tooltip" class="tutorial-tooltip">
         <span class="tutorial-tooltip__arrow"></span>
         <span class="tutorial-tooltip__text">Buy an Iron Dome to intercept incoming missiles!</span>
+      </div>
+      <div id="end-overlay" class="end-overlay" hidden>
+        <div class="end-overlay__card">
+          <h1 id="end-title" class="end-overlay__title">Defeat</h1>
+          <p id="end-subtitle" class="end-overlay__subtitle">Your nation has fallen.</p>
+          <div class="end-overlay__score-row">
+            <span class="end-overlay__score-label">Score</span>
+            <span id="end-score" class="end-overlay__score-value">0</span>
+          </div>
+          <span id="end-new-highscore" class="end-overlay__badge" hidden>New High Score!</span>
+          <div class="end-overlay__score-row end-overlay__score-row--secondary">
+            <span class="end-overlay__score-label">Best</span>
+            <span id="end-highscore" class="end-overlay__score-value end-overlay__score-value--secondary">0</span>
+          </div>
+          <div class="end-overlay__stats">
+            <div class="end-overlay__stat">
+              <span class="end-overlay__stat-label">Waves</span>
+              <span id="end-stats-waves" class="end-overlay__stat-value">0 / 12</span>
+            </div>
+            <div class="end-overlay__stat">
+              <span class="end-overlay__stat-label">Intercepted</span>
+              <span id="end-stats-intercepted" class="end-overlay__stat-value">0</span>
+            </div>
+            <div class="end-overlay__stat">
+              <span class="end-overlay__stat-label">Impacts</span>
+              <span id="end-stats-impacts" class="end-overlay__stat-value">0</span>
+            </div>
+          </div>
+          <button id="end-restart" class="end-overlay__restart" type="button">Play Again</button>
+        </div>
       </div>
     </div>
     <script type="module" src="./src/main.js"></script>
