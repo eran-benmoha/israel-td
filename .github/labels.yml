@@ -1,0 +1,104 @@
+# Label definitions for the israel-td project.
+# Sync with: https://github.com/marketplace/actions/github-labeler
+# or apply manually via `gh label create`.
+
+# --- Type labels (mutually exclusive) ---
+- name: "type: feature"
+  color: "1d76db"
+  description: "New capability or enhancement"
+
+- name: "type: bug"
+  color: "d73a4a"
+  description: "Something is broken"
+
+- name: "type: docs"
+  color: "0075ca"
+  description: "Documentation only"
+
+- name: "type: chore"
+  color: "e4e669"
+  description: "Tooling, deps, CI config"
+
+- name: "type: refactor"
+  color: "d4c5f9"
+  description: "Code restructure, no behavior change"
+
+# --- Scope labels (one or more) ---
+- name: "scope: map"
+  color: "c5def5"
+  description: "MapSystem, MapRenderer, tiles, projection"
+
+- name: "scope: waves"
+  color: "c5def5"
+  description: "WaveSystem, WaveDirector, factions"
+
+- name: "scope: resources"
+  color: "c5def5"
+  description: "ResourceSystem, economy, purchases"
+
+- name: "scope: ui"
+  color: "c5def5"
+  description: "UiSystem, HUD, ShopView, DebugView"
+
+- name: "scope: input"
+  color: "c5def5"
+  description: "InputSystem, controls, keyboard/touch"
+
+- name: "scope: data"
+  color: "c5def5"
+  description: "JSON configs, level data, unit stats"
+
+- name: "scope: ci"
+  color: "c5def5"
+  description: "GitHub Actions, build pipeline"
+
+- name: "scope: core"
+  color: "c5def5"
+  description: "EventBus, GameState, selectors, BootScene"
+
+# --- Status labels (mutually exclusive) ---
+- name: "status: ready"
+  color: "0e8a16"
+  description: "Triaged, ready for an agent to pick up"
+
+- name: "status: in-progress"
+  color: "fbca04"
+  description: "An agent is actively working on this"
+
+- name: "status: review"
+  color: "6f42c1"
+  description: "PR open, awaiting review"
+
+- name: "status: blocked"
+  color: "b60205"
+  description: "Waiting on external dependency or decision"
+
+# --- Priority labels (one per issue) ---
+- name: "priority: critical"
+  color: "b60205"
+  description: "Blocks deployment or breaks existing functionality"
+
+- name: "priority: high"
+  color: "d93f0b"
+  description: "Important for current phase milestone"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Should be done soon"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Nice to have, no urgency"
+
+# --- Special labels ---
+- name: "needs-adr"
+  color: "f9d0c4"
+  description: "Change requires a new ADR before implementation"
+
+- name: "breaking"
+  color: "b60205"
+  description: "Introduces a breaking change to APIs or data schemas"
+
+- name: "good-first-task"
+  color: "7057ff"
+  description: "Simple, well-scoped — good for onboarding a new agent"
