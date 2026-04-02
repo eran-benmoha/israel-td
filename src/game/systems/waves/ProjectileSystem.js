@@ -10,6 +10,7 @@ export class ProjectileSystem {
     this.targets = targets;
     this.interceptionSystem = interceptionSystem;
     this.impactSystem = impactSystem;
+    this.activeRockets = [];
   }
 
   spawnRocketWave(faction, wave, waveNumber) {
@@ -75,12 +76,16 @@ export class ProjectileSystem {
       onComplete: () => {
         trail.destroy();
         rocket.container.destroy();
+        this.removeRocketEntry(rocketEntry);
         if (intercepted) {
           return;
         }
         this.impactSystem.createImpact(targetPoint.x, targetPoint.y, faction, missileProfile);
       },
     });
+
+    const rocketEntry = { trail, rocket, rocketTween, state, intercepted: false };
+    this.activeRockets.push(rocketEntry);
 
     this.interceptionSystem.tryScheduleInterception({
       launch,
@@ -94,9 +99,32 @@ export class ProjectileSystem {
       rocketState: state,
       setIntercepted: () => {
         intercepted = true;
+        rocketEntry.intercepted = true;
+        this.removeRocketEntry(rocketEntry);
       },
       flightDurationMs: duration,
     });
+  }
+
+  removeRocketEntry(entry) {
+    const idx = this.activeRockets.indexOf(entry);
+    if (idx !== -1) this.activeRockets.splice(idx, 1);
+  }
+
+  destroyAllActiveRockets() {
+    const rockets = [...this.activeRockets];
+    let count = 0;
+    for (const entry of rockets) {
+      if (entry.intercepted) continue;
+      if (!entry.rocket.container?.active || !entry.trail?.active) continue;
+      entry.intercepted = true;
+      entry.rocketTween.stop();
+      entry.trail.destroy();
+      entry.rocket.container.destroy();
+      count++;
+    }
+    this.activeRockets = [];
+    return count;
   }
 
   pickTargetForMissile(launch, missileProfile) {

@@ -148,6 +148,136 @@ body {
   height: 100%;
 }
 
+/* ====== ABILITY BAR ====== */
+
+.ability-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.35rem 0.5rem 0.15rem;
+  background: rgba(6, 14, 26, 0.65);
+  border-top: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  gap: 0.2rem;
+}
+
+.ability-bar {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.ability__btn {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border: 2px solid rgba(91, 184, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(14, 28, 48, 0.85);
+  color: #e3f3ff;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ability__btn:active:not(:disabled) {
+  transform: scale(0.93);
+}
+
+.ability__btn:not(:disabled):hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.ability__btn.is-active {
+  border-color: #4dff88;
+  box-shadow: 0 0 16px rgba(77, 255, 136, 0.35);
+  animation: ability-pulse 1s ease-in-out infinite;
+}
+
+.ability__btn.is-cooldown {
+  border-color: rgba(100, 120, 140, 0.3);
+}
+
+.ability__btn.is-locked {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+}
+
+.ability__btn:disabled {
+  cursor: default;
+}
+
+.ability__icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ability__cooldown-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+  transition: height 0.2s linear;
+  border-radius: 0 0 12px 12px;
+}
+
+.ability__cooldown-text {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: #aac8e0;
+  z-index: 3;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.ability__active-indicator {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #4dff88;
+  z-index: 3;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.ability__lock {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 0.6rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.ability-status {
+  font-size: 0.65rem;
+  color: #9be3b2;
+  min-height: 1em;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+@keyframes ability-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(77, 255, 136, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(77, 255, 136, 0.5); }
+}
+
 /* ====== SHOP / BOTTOM PANEL ====== */
 
 .shop {

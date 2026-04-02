@@ -12,6 +12,11 @@ export class InterceptionSystem {
     this.factionSystem = factionSystem;
     this.mapSystem = mapSystem;
     this.targets = targets;
+    this.interceptionBoostMultiplier = 1;
+  }
+
+  setInterceptionBoost(multiplier) {
+    this.interceptionBoostMultiplier = multiplier;
   }
 
   tryScheduleInterception({
@@ -32,7 +37,8 @@ export class InterceptionSystem {
       return;
     }
 
-    const interceptionChance = this.getIronDomeInterceptionChance(missileProfile, batteryCount);
+    const baseChance = this.getIronDomeInterceptionChance(missileProfile, batteryCount);
+    const interceptionChance = Phaser.Math.Clamp(baseChance * this.interceptionBoostMultiplier, 0, 0.95);
     if (Math.random() > interceptionChance) {
       return;
     }

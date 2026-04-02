@@ -1,0 +1,46 @@
+{
+  "abilities": [
+    {
+      "id": "emergency-siren",
+      "name": "Emergency Siren",
+      "icon": "🚨",
+      "description": "Doubles interception chance for 15 seconds.",
+      "cooldownMs": 60000,
+      "durationMs": 15000,
+      "moneyCost": 30,
+      "unlockWave": 2,
+      "effect": {
+        "type": "interception-boost",
+        "multiplier": 2
+      }
+    },
+    {
+      "id": "airstrike",
+      "name": "Airstrike",
+      "icon": "💥",
+      "description": "Destroys all in-flight enemy missiles instantly.",
+      "cooldownMs": 90000,
+      "durationMs": 0,
+      "moneyCost": 80,
+      "unlockWave": 3,
+      "effect": {
+        "type": "destroy-all-missiles"
+      }
+    },
+    {
+      "id": "emergency-funding",
+      "name": "Emergency Fund",
+      "icon": "💸",
+      "description": "Grants 100 money but costs 5 morale.",
+      "cooldownMs": 45000,
+      "durationMs": 0,
+      "moneyCost": 0,
+      "unlockWave": 1,
+      "effect": {
+        "type": "resource-grant",
+        "grants": { "money": 100 },
+        "penalties": { "morale": -5 }
+      }
+    }
+  ]
+}
