@@ -88,7 +88,51 @@
       "impactMultiplier": 1.05,
       "durationMin": 4200,
       "durationMax": 7000,
-      "launchCadenceMs": 680
+      "launchCadenceMs": 680,
+      "missileProfiles": [
+        {
+          "id": "hezbollah-katyusha",
+          "label": "short-range rocket",
+          "weight": 5,
+          "minRangeKm": 0,
+          "maxRangeKm": 45,
+          "rocketColor": 16756045,
+          "trailOuterColor": 16756045,
+          "trailInnerColor": 16773536,
+          "flameColor": 16771200,
+          "durationMin": 3800,
+          "durationMax": 5500,
+          "impactScale": 0.9
+        },
+        {
+          "id": "hezbollah-medium-range",
+          "label": "medium-range missile",
+          "weight": 3,
+          "minRangeKm": 40,
+          "maxRangeKm": 200,
+          "rocketColor": 16752256,
+          "trailOuterColor": 16746496,
+          "trailInnerColor": 16766464,
+          "flameColor": 16764928,
+          "durationMin": 5200,
+          "durationMax": 7800,
+          "impactScale": 1.15
+        },
+        {
+          "id": "hezbollah-long-range",
+          "label": "long-range ballistic",
+          "weight": 1,
+          "minRangeKm": 150,
+          "maxRangeKm": 500,
+          "rocketColor": 16738816,
+          "trailOuterColor": 14483456,
+          "trailInnerColor": 16760320,
+          "flameColor": 16756480,
+          "durationMin": 7500,
+          "durationMax": 10500,
+          "impactScale": 1.35
+        }
+      ]
     },
     {
       "id": "houthis-yemen",
@@ -129,7 +173,37 @@
       "impactMultiplier": 1.2,
       "durationMin": 6200,
       "durationMax": 9800,
-      "launchCadenceMs": 820
+      "launchCadenceMs": 820,
+      "missileProfiles": [
+        {
+          "id": "houthis-medium-cruise",
+          "label": "cruise missile",
+          "weight": 3,
+          "minRangeKm": 200,
+          "maxRangeKm": 800,
+          "rocketColor": 16746375,
+          "trailOuterColor": 16735324,
+          "trailInnerColor": 16773152,
+          "flameColor": 16770560,
+          "durationMin": 6200,
+          "durationMax": 8600,
+          "impactScale": 1.15
+        },
+        {
+          "id": "houthis-long-range-ballistic",
+          "label": "long-range ballistic",
+          "weight": 2,
+          "minRangeKm": 600,
+          "maxRangeKm": 2200,
+          "rocketColor": 16729088,
+          "trailOuterColor": 14483456,
+          "trailInnerColor": 16760320,
+          "flameColor": 16756480,
+          "durationMin": 8000,
+          "durationMax": 11500,
+          "impactScale": 1.4
+        }
+      ]
     },
     {
       "id": "iran-regime",
@@ -202,7 +276,51 @@
       "impactMultiplier": 1.25,
       "durationMin": 7000,
       "durationMax": 11200,
-      "launchCadenceMs": 920
+      "launchCadenceMs": 920,
+      "missileProfiles": [
+        {
+          "id": "iran-medium-ballistic",
+          "label": "medium-range ballistic",
+          "weight": 3,
+          "minRangeKm": 300,
+          "maxRangeKm": 1000,
+          "rocketColor": 14055167,
+          "trailOuterColor": 13003007,
+          "trailInnerColor": 15466495,
+          "flameColor": 15138815,
+          "durationMin": 7000,
+          "durationMax": 9500,
+          "impactScale": 1.2
+        },
+        {
+          "id": "iran-long-range-ballistic",
+          "label": "long-range ballistic",
+          "weight": 2,
+          "minRangeKm": 800,
+          "maxRangeKm": 2500,
+          "rocketColor": 11403263,
+          "trailOuterColor": 9961471,
+          "trailInnerColor": 13408767,
+          "flameColor": 12624895,
+          "durationMin": 9000,
+          "durationMax": 12500,
+          "impactScale": 1.5
+        },
+        {
+          "id": "iran-cruise-missile",
+          "label": "cruise missile",
+          "weight": 1,
+          "minRangeKm": 200,
+          "maxRangeKm": 1800,
+          "rocketColor": 15048959,
+          "trailOuterColor": 14055167,
+          "trailInnerColor": 15728639,
+          "flameColor": 15400959,
+          "durationMin": 8500,
+          "durationMax": 11800,
+          "impactScale": 1.35
+        }
+      ]
     }
   ]
 }
