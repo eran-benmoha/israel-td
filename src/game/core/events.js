@@ -11,4 +11,8 @@ export const Events = {
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
   UI_WAVE_PROGRESS: "ui/wave-progress",
+  THREAT_MISSILE_LAUNCHED: "threat/missile-launched",
+  THREAT_MISSILE_INTERCEPTED: "threat/missile-intercepted",
+  THREAT_MISSILE_IMPACT: "threat/missile-impact",
+  UI_THREAT_UPDATE: "ui/threat-update",
 };

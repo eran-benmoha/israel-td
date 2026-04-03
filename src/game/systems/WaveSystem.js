@@ -31,11 +31,13 @@ export class WaveSystem {
     });
     this.impactSystem = new ImpactSystem({
       scene,
+      eventBus,
       mapSystem,
       resourceSystem,
     });
     this.projectileSystem = new ProjectileSystem({
       scene,
+      eventBus,
       mapSystem,
       factionSystem,
       targets: this.targets,

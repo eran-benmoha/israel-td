@@ -36,6 +36,17 @@
           </div>
         </div>
       </header>
+      <section class="threat-bar" aria-label="Threat intelligence">
+        <div id="threat-badge" class="threat__badge">
+          <span class="threat__badge-icon">⚠️</span>
+          <span class="threat__badge-text">THREAT: <span id="threat-level-label">LOW</span></span>
+          <span id="threat-score" class="threat__badge-score">0</span>
+          <button id="threat-toggle" class="threat__expand" type="button" aria-expanded="false" aria-controls="threat-details">▼</button>
+        </div>
+        <div id="threat-details" class="threat__details" hidden>
+          <div id="threat-faction-list" class="threat__faction-list"></div>
+        </div>
+      </section>
       <main id="game-root" aria-label="Game canvas"></main>
       <button id="debug-toggle" class="debug-toggle" type="button" aria-expanded="false">🛠️</button>
       <section id="debug-panel" class="debug-panel" hidden>

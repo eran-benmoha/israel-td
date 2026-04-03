@@ -61,6 +61,7 @@ export class InterceptionSystem {
         rocket.container.destroy();
         this.createInterceptionFlash(interceptPoint.x, interceptPoint.y);
         const activeFactionId = this.state.wave.activeFactionId;
+        this.eventBus.emit(Events.THREAT_MISSILE_INTERCEPTED, { factionId: activeFactionId });
         this.eventBus.emit(Events.UI_DEBUG_STATUS, {
           message: `🛡️ Iron Dome intercepted ${this.factionSystem.describe(activeFactionId)} missile.`,
         });
