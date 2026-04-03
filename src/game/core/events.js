@@ -11,4 +11,7 @@ export const Events = {
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
   UI_WAVE_PROGRESS: "ui/wave-progress",
+  ACHIEVEMENT_UNLOCKED: "achievement/unlocked",
+  UI_ACHIEVEMENT: "ui/achievement",
+  UI_ACHIEVEMENT_LIST: "ui/achievement-list",
 };
