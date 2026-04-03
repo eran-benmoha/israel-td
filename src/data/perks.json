@@ -1,0 +1,85 @@
+{
+  "pointsPerWave": 1,
+  "perks": [
+    {
+      "id": "reinforced-dome",
+      "name": "Reinforced Dome",
+      "description": "Iron Dome interception chance +8%",
+      "icon": "🛡️",
+      "cost": 1,
+      "category": "defense",
+      "effect": { "type": "interception_bonus", "value": 0.08 },
+      "requires": null
+    },
+    {
+      "id": "advanced-tracking",
+      "name": "Advanced Tracking",
+      "description": "Iron Dome interception chance +12%",
+      "icon": "🎯",
+      "cost": 2,
+      "category": "defense",
+      "effect": { "type": "interception_bonus", "value": 0.12 },
+      "requires": "reinforced-dome"
+    },
+    {
+      "id": "hardened-shelters",
+      "name": "Hardened Shelters",
+      "description": "Missile impact damage reduced by 25%",
+      "icon": "🏗️",
+      "cost": 1,
+      "category": "defense",
+      "effect": { "type": "impact_reduction", "value": 0.25 },
+      "requires": null
+    },
+    {
+      "id": "deep-bunkers",
+      "name": "Deep Bunkers",
+      "description": "Missile impact damage reduced by 20% more",
+      "icon": "⛏️",
+      "cost": 2,
+      "category": "defense",
+      "effect": { "type": "impact_reduction", "value": 0.20 },
+      "requires": "hardened-shelters"
+    },
+    {
+      "id": "war-economy",
+      "name": "War Economy",
+      "description": "Wave income increased by 30%",
+      "icon": "💹",
+      "cost": 1,
+      "category": "economy",
+      "effect": { "type": "income_bonus", "value": 0.30 },
+      "requires": null
+    },
+    {
+      "id": "arms-dealer",
+      "name": "Arms Dealer",
+      "description": "Unit purchase costs reduced by 15%",
+      "icon": "🤝",
+      "cost": 2,
+      "category": "economy",
+      "effect": { "type": "cost_reduction", "value": 0.15 },
+      "requires": "war-economy"
+    },
+    {
+      "id": "rally-the-troops",
+      "name": "Rally the Troops",
+      "description": "Morale loss from impacts reduced by 30%",
+      "icon": "📢",
+      "cost": 1,
+      "category": "morale",
+      "effect": { "type": "morale_shield", "value": 0.30 },
+      "requires": null
+    },
+    {
+      "id": "national-resolve",
+      "name": "National Resolve",
+      "description": "+2 morale recovery per wave survived",
+      "icon": "🇮🇱",
+      "cost": 2,
+      "category": "morale",
+      "effect": { "type": "morale_regen", "value": 2.0 },
+      "requires": "rally-the-troops"
+    }
+  ]
+}

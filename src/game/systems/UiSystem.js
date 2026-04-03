@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { PerkView } from "../ui/PerkView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -24,6 +25,11 @@ export class UiSystem {
       shopStatus: document.getElementById("shop-status"),
       shopMoney: document.getElementById("shop-money"),
       shopToggleButton: document.getElementById("shop-toggle"),
+      perkPanel: document.getElementById("perk-panel"),
+      perkToggleButton: document.getElementById("perk-toggle"),
+      perkItems: document.getElementById("perk-items"),
+      perkPoints: document.getElementById("perk-points"),
+      perkToast: document.getElementById("perk-toast"),
       resourceValues: {
         money: document.getElementById("resource-money-value"),
         morale: document.getElementById("resource-morale-value"),
@@ -35,11 +41,13 @@ export class UiSystem {
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.perkView = new PerkView({ eventBus, elements: this.elements });
   }
 
   start() {
     this.debugView.bindDomEvents();
     this.shopView.bindDomEvents();
+    this.perkView.bindDomEvents();
     this.bindBusEvents();
   }
 
@@ -48,6 +56,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.perkView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +69,8 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_PERKS, (payload) => this.perkView.onPerkState(payload)),
+      this.eventBus.on(Events.UI_PERK_UNLOCKED, (payload) => this.perkView.onPerkUnlocked(payload)),
     );
   }
 }

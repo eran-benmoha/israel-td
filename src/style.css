@@ -408,6 +408,205 @@ body {
   text-overflow: ellipsis;
 }
 
+/* ====== COMMANDER PERKS ====== */
+
+.perk-toggle {
+  position: fixed;
+  left: 0.9rem;
+  top: calc(max(env(safe-area-inset-top), 0.75rem) + 3.35rem);
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid rgba(255, 213, 136, 0.5);
+  border-radius: 999px;
+  background: rgba(20, 30, 50, 0.7);
+  color: var(--gold);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  z-index: 45;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.perk-toggle:active {
+  box-shadow: 0 0 12px rgba(255, 213, 136, 0.4);
+}
+
+.perk-panel {
+  position: fixed;
+  left: 0.9rem;
+  top: calc(max(env(safe-area-inset-top), 0.75rem) + 5.8rem);
+  width: min(82vw, 300px);
+  max-height: min(55dvh, 420px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 213, 136, 0.3);
+  border-radius: 14px;
+  z-index: 44;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.perk-panel.is-collapsed {
+  display: none;
+}
+
+.perk-panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.perk-panel__title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.perk-panel__points {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(255, 213, 136, 0.12);
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 213, 136, 0.25);
+}
+
+.perk-panel__items {
+  overflow-y: auto;
+  padding: 0.4rem 0.55rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.perk__category {
+  margin-bottom: 0.5rem;
+}
+
+.perk__category-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #9fb8d0;
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid rgba(80, 140, 200, 0.15);
+}
+
+.perk__item {
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(14, 28, 44, 0.7);
+  padding: 0.45rem;
+  margin-bottom: 0.35rem;
+  transition: border-color 0.15s, opacity 0.15s;
+}
+
+.perk__item--unlocked {
+  border-color: rgba(100, 220, 140, 0.4);
+  background: rgba(20, 50, 35, 0.6);
+}
+
+.perk__item--available {
+  border-color: rgba(255, 213, 136, 0.4);
+}
+
+.perk__item--locked {
+  opacity: 0.55;
+}
+
+.perk__item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.2rem;
+}
+
+.perk__item-icon {
+  font-size: 0.9rem;
+}
+
+.perk__item-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #daeaff;
+  flex: 1;
+}
+
+.perk__item-cost {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.perk__item-desc {
+  font-size: 0.6rem;
+  color: #8aaccc;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.perk__buy {
+  width: 100%;
+  min-height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #7a5a1a, #b8892a);
+  color: #fff8e8;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.12s, transform 0.1s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.perk__buy:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.perk__buy:disabled {
+  background: rgba(40, 55, 70, 0.6);
+  color: #5a7a95;
+  box-shadow: none;
+  cursor: default;
+}
+
+.perk__buy:disabled:active {
+  transform: none;
+  opacity: 1;
+}
+
+.perk-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(12, 40, 70, 0.95);
+  border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.6rem 1.2rem;
+  white-space: nowrap;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  box-shadow: 0 0 30px rgba(255, 213, 136, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.perk-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
 /* ====== TUTORIAL TOOLTIP ====== */
 
 .tutorial-tooltip {

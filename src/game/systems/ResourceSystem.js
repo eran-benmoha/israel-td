@@ -2,10 +2,11 @@ import Phaser from "phaser";
 import { Events } from "../core/events";
 
 export class ResourceSystem {
-  constructor({ eventBus, gameState, unitsConfig }) {
+  constructor({ eventBus, gameState, unitsConfig, perkSystem }) {
     this.eventBus = eventBus;
     this.state = gameState;
     this.units = unitsConfig.units ?? [];
+    this.perkSystem = perkSystem ?? null;
     this.unsubscribePurchase = null;
   }
 
@@ -28,14 +29,24 @@ export class ResourceSystem {
     this.state.resources[resourceName] = Phaser.Math.Clamp(current + delta, 0, max);
   }
 
-  onWaveLaunched(waveNumber) {
-    this.adjust("money", 28 + waveNumber * 3);
+  onWaveLaunched(waveNumber, perkSystem) {
+    let income = 28 + waveNumber * 3;
+    if (perkSystem) {
+      const incomeBonus = perkSystem.getEffectTotal("income_bonus");
+      income = Math.round(income * (1 + incomeBonus));
+      const moraleRegen = perkSystem.getEffectTotal("morale_regen");
+      if (moraleRegen > 0) {
+        this.adjust("morale", moraleRegen);
+      }
+    }
+    this.adjust("money", income);
     this.adjust("army", 0.75);
     this.publishResourceState();
   }
 
-  onImpact(impactScale) {
-    this.adjust("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale);
+  onImpact(impactScale, moraleShield = 0) {
+    const moraleDamage = Phaser.Math.FloatBetween(0.45, 1.2) * impactScale * (1 - moraleShield);
+    this.adjust("morale", -moraleDamage);
     this.adjust("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale);
     this.adjust("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale);
     this.adjust("money", -Phaser.Math.FloatBetween(1, 4) * impactScale);
@@ -49,18 +60,21 @@ export class ResourceSystem {
       return;
     }
 
-    if (this.state.resources.money < unit.cost) {
+    const costReduction = this.perkSystem ? this.perkSystem.getEffectTotal("cost_reduction") : 0;
+    const effectiveCost = Math.max(1, Math.round(unit.cost * (1 - costReduction)));
+
+    if (this.state.resources.money < effectiveCost) {
       this.eventBus.emit(Events.UI_SHOP_RESULT, { success: false, message: `Not enough money for ${unit.name}.` });
       return;
     }
 
-    this.adjust("money", -unit.cost);
+    this.adjust("money", -effectiveCost);
     this.adjust("army", unit.armyBoost);
     this.adjust("morale", unit.moraleBoost);
     this.state.purchasedUnits[unit.id] = (this.state.purchasedUnits[unit.id] ?? 0) + 1;
     this.publishResourceState();
     this.eventBus.emit(Events.UI_DEBUG_STATUS, { message: `Purchased ${unit.name}.` });
-    this.eventBus.emit(Events.UI_SHOP_RESULT, { success: true, message: `Purchased ${unit.name} for ${unit.cost}.` });
+    this.eventBus.emit(Events.UI_SHOP_RESULT, { success: true, message: `Purchased ${unit.name} for ${effectiveCost}.` });
   }
 
   publishResourceState() {

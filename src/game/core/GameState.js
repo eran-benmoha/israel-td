@@ -24,5 +24,10 @@ export class GameState {
     };
 
     this.purchasedUnits = {};
+
+    this.perks = {
+      points: 0,
+      unlocked: {},
+    };
   }
 }
