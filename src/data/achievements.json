@@ -1,0 +1,112 @@
+{
+  "achievements": [
+    {
+      "id": "first-shield",
+      "name": "First Shield",
+      "description": "Purchase your first Iron Dome Battery",
+      "icon": "🛡️",
+      "category": "defense",
+      "trigger": "purchase_unit",
+      "condition": { "unitId": "iron-dome-battery", "count": 1 }
+    },
+    {
+      "id": "iron-wall",
+      "name": "Iron Wall",
+      "description": "Own 3 Iron Dome Batteries",
+      "icon": "🏰",
+      "category": "defense",
+      "trigger": "purchase_unit",
+      "condition": { "unitId": "iron-dome-battery", "count": 3 }
+    },
+    {
+      "id": "arrow-ready",
+      "name": "Arrow Ready",
+      "description": "Purchase your first Arrow Interceptor",
+      "icon": "🏹",
+      "category": "defense",
+      "trigger": "purchase_unit",
+      "condition": { "unitId": "arrow-system", "count": 1 }
+    },
+    {
+      "id": "arsenal",
+      "name": "Arsenal",
+      "description": "Purchase 5 total units",
+      "icon": "⚔️",
+      "category": "military",
+      "trigger": "total_purchases",
+      "condition": { "count": 5 }
+    },
+    {
+      "id": "war-machine",
+      "name": "War Machine",
+      "description": "Purchase 10 total units",
+      "icon": "🎖️",
+      "category": "military",
+      "trigger": "total_purchases",
+      "condition": { "count": 10 }
+    },
+    {
+      "id": "survivor",
+      "name": "Survivor",
+      "description": "Survive 3 waves",
+      "icon": "🌊",
+      "category": "survival",
+      "trigger": "wave_survived",
+      "condition": { "waveNumber": 3 }
+    },
+    {
+      "id": "veteran",
+      "name": "Veteran",
+      "description": "Survive 6 waves",
+      "icon": "⭐",
+      "category": "survival",
+      "trigger": "wave_survived",
+      "condition": { "waveNumber": 6 }
+    },
+    {
+      "id": "endurance",
+      "name": "Endurance",
+      "description": "Survive all 12 waves",
+      "icon": "🏆",
+      "category": "survival",
+      "trigger": "wave_survived",
+      "condition": { "waveNumber": 12 }
+    },
+    {
+      "id": "big-spender",
+      "name": "Big Spender",
+      "description": "Spend 500 money total on purchases",
+      "icon": "💸",
+      "category": "economy",
+      "trigger": "total_spent",
+      "condition": { "amount": 500 }
+    },
+    {
+      "id": "wealthy-nation",
+      "name": "Wealthy Nation",
+      "description": "Accumulate 500 money at once",
+      "icon": "💎",
+      "category": "economy",
+      "trigger": "money_held",
+      "condition": { "amount": 500 }
+    },
+    {
+      "id": "full-spectrum",
+      "name": "Full Spectrum",
+      "description": "Purchase at least one unit from each category",
+      "icon": "🌐",
+      "category": "military",
+      "trigger": "all_categories",
+      "condition": { "categories": ["air-defense", "air-force", "ground-troops"] }
+    },
+    {
+      "id": "air-superiority",
+      "name": "Air Superiority",
+      "description": "Purchase 3 air-force units",
+      "icon": "✈️",
+      "category": "military",
+      "trigger": "category_purchases",
+      "condition": { "category": "air-force", "count": 3 }
+    }
+  ]
+}

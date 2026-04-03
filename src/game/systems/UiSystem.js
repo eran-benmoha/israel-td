@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { AchievementView } from "../ui/AchievementView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -31,15 +32,22 @@ export class UiSystem {
         army: document.getElementById("resource-army-value"),
         economy: document.getElementById("resource-economy-value"),
       },
+      achievementToastContainer: document.getElementById("achievement-toasts"),
+      achievementPanelList: document.getElementById("achievement-list"),
+      achievementPanelCounter: document.getElementById("achievement-counter"),
+      achievementPanelToggle: document.getElementById("achievement-toggle"),
+      achievementPanel: document.getElementById("achievement-panel"),
     };
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.achievementView = new AchievementView({ elements: this.elements });
   }
 
   start() {
     this.debugView.bindDomEvents();
     this.shopView.bindDomEvents();
+    this.achievementView.bindDomEvents();
     this.bindBusEvents();
   }
 
@@ -48,6 +56,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.achievementView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +69,8 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_ACHIEVEMENT, (payload) => this.achievementView.onAchievementUnlocked(payload)),
+      this.eventBus.on(Events.UI_ACHIEVEMENT_LIST, (payload) => this.achievementView.onAchievementList(payload)),
     );
   }
 }
