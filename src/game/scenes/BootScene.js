@@ -59,6 +59,7 @@ export class BootScene extends Phaser.Scene {
       factionSystem: this.factionSystem,
       mapSystem: this.mapSystem,
       resourceSystem: this.resourceSystem,
+      unitsConfig,
     });
 
     this.resourceSystem.start();

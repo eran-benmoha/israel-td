@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getPurchasedUnitCount, getWaveDefinition, getUpcomingFactionId } from "../src/game/core/selectors";
+import { getPurchasedUnitCount, getUnitLevel, getWaveDefinition, getUpcomingFactionId } from "../src/game/core/selectors";
 
 const levelConfig = {
   waves: [
@@ -17,6 +17,17 @@ describe("getPurchasedUnitCount", () => {
   it("returns correct count for purchased units", () => {
     const state = { purchasedUnits: { "iron-dome-battery": 3 } };
     expect(getPurchasedUnitCount(state, "iron-dome-battery")).toBe(3);
+  });
+});
+
+describe("getUnitLevel", () => {
+  it("returns 0 for units with no level set", () => {
+    expect(getUnitLevel({ unitLevels: {} }, "iron-dome-battery")).toBe(0);
+  });
+
+  it("returns correct level for upgraded units", () => {
+    const state = { unitLevels: { "iron-dome-battery": 2 } };
+    expect(getUnitLevel(state, "iron-dome-battery")).toBe(2);
   });
 });
 

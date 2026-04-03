@@ -6,7 +6,11 @@
       "category": "air-defense",
       "cost": 120,
       "moraleBoost": 0.8,
-      "armyBoost": 2.2
+      "armyBoost": 2.2,
+      "upgrades": [
+        { "level": 2, "cost": 72, "armyBoost": 1.0, "moraleBoost": 0.4, "interceptionBonus": 0.12 },
+        { "level": 3, "cost": 120, "armyBoost": 1.8, "moraleBoost": 0.8, "interceptionBonus": 0.25 }
+      ]
     },
     {
       "id": "arrow-system",
@@ -14,7 +18,11 @@
       "category": "air-defense",
       "cost": 180,
       "moraleBoost": 1.1,
-      "armyBoost": 3
+      "armyBoost": 3,
+      "upgrades": [
+        { "level": 2, "cost": 108, "armyBoost": 1.5, "moraleBoost": 0.6, "interceptionBonus": 0.10 },
+        { "level": 3, "cost": 180, "armyBoost": 2.5, "moraleBoost": 1.0, "interceptionBonus": 0.20 }
+      ]
     },
     {
       "id": "fighter-sortie",
@@ -22,7 +30,11 @@
       "category": "air-force",
       "cost": 160,
       "moraleBoost": 1,
-      "armyBoost": 2.7
+      "armyBoost": 2.7,
+      "upgrades": [
+        { "level": 2, "cost": 96, "armyBoost": 1.5, "moraleBoost": 0.8 },
+        { "level": 3, "cost": 160, "armyBoost": 3.0, "moraleBoost": 1.5 }
+      ]
     },
     {
       "id": "precision-strike",
@@ -30,7 +42,11 @@
       "category": "air-force",
       "cost": 210,
       "moraleBoost": 1.4,
-      "armyBoost": 3.5
+      "armyBoost": 3.5,
+      "upgrades": [
+        { "level": 2, "cost": 126, "armyBoost": 2.0, "moraleBoost": 1.0 },
+        { "level": 3, "cost": 210, "armyBoost": 4.0, "moraleBoost": 2.0 }
+      ]
     },
     {
       "id": "reserve-brigade",
@@ -38,7 +54,11 @@
       "category": "ground-troops",
       "cost": 90,
       "moraleBoost": 0.6,
-      "armyBoost": 1.8
+      "armyBoost": 1.8,
+      "upgrades": [
+        { "level": 2, "cost": 54, "armyBoost": 1.2, "moraleBoost": 0.5 },
+        { "level": 3, "cost": 90, "armyBoost": 2.5, "moraleBoost": 1.0 }
+      ]
     },
     {
       "id": "border-defense-line",
@@ -46,7 +66,11 @@
       "category": "ground-troops",
       "cost": 140,
       "moraleBoost": 0.9,
-      "armyBoost": 2.4
+      "armyBoost": 2.4,
+      "upgrades": [
+        { "level": 2, "cost": 84, "armyBoost": 1.5, "moraleBoost": 0.7 },
+        { "level": 3, "cost": 140, "armyBoost": 3.0, "moraleBoost": 1.4 }
+      ]
     }
   ]
 }

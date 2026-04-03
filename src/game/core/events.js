@@ -1,6 +1,7 @@
 export const Events = {
   DEBUG_LAUNCH_WAVE: "debug/launch-wave",
   SHOP_PURCHASE_UNIT: "shop/purchase-unit",
+  SHOP_UPGRADE_UNIT: "shop/upgrade-unit",
   UI_WAVE: "ui/wave",
   UI_RESOURCES: "ui/resources",
   UI_SHOP_CATALOG: "ui/shop-catalog",

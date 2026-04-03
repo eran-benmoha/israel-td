@@ -1,17 +1,18 @@
 import Phaser from "phaser";
 import { Events } from "../../core/events";
-import { getPurchasedUnitCount } from "../../core/selectors";
+import { getPurchasedUnitCount, getUnitLevel } from "../../core/selectors";
 
 const IRON_DOME_UNIT_ID = "iron-dome-battery";
 
 export class InterceptionSystem {
-  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets }) {
+  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets, unitsConfig }) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
     this.factionSystem = factionSystem;
     this.mapSystem = mapSystem;
     this.targets = targets;
+    this.unitsConfig = unitsConfig ?? null;
   }
 
   tryScheduleInterception({
@@ -72,7 +73,22 @@ export class InterceptionSystem {
     const maxRangeKm = missileProfile.maxRangeKm ?? 250;
     const rangeModifier = maxRangeKm <= 70 ? 1 : maxRangeKm <= 250 ? 0.78 : 0.48;
     const baseChance = 0.22 + batteryCount * 0.16;
-    return Phaser.Math.Clamp(baseChance * rangeModifier, 0.08, 0.9);
+    const upgradeBonus = this.getUpgradeInterceptionBonus(IRON_DOME_UNIT_ID);
+    return Phaser.Math.Clamp(baseChance * rangeModifier + upgradeBonus, 0.08, 0.95);
+  }
+
+  getUpgradeInterceptionBonus(unitId) {
+    const level = getUnitLevel(this.state, unitId);
+    if (level <= 1) return 0;
+    const unit = this.unitsConfig?.units?.find((u) => u.id === unitId);
+    if (!unit?.upgrades) return 0;
+    let totalBonus = 0;
+    for (const upgrade of unit.upgrades) {
+      if (upgrade.level <= level && upgrade.interceptionBonus) {
+        totalBonus += upgrade.interceptionBonus;
+      }
+    }
+    return totalBonus;
   }
 
   getClosestDefensePoint(target) {

@@ -152,6 +152,20 @@ describe("units.json", () => {
     const ids = unitsConfig.units.map((u) => u.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("each unit has valid upgrade tiers", () => {
+    unitsConfig.units.forEach((u) => {
+      expect(Array.isArray(u.upgrades)).toBe(true);
+      const levels = u.upgrades.map((up) => up.level);
+      expect(levels).toEqual([2, 3]);
+      u.upgrades.forEach((up) => {
+        expect(typeof up.cost).toBe("number");
+        expect(up.cost).toBeGreaterThan(0);
+        expect(typeof up.armyBoost).toBe("number");
+        expect(typeof up.moraleBoost).toBe("number");
+      });
+    });
+  });
 });
 
 describe("level-01.json", () => {

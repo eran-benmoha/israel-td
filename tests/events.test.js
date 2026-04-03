@@ -6,6 +6,7 @@ describe("Events constants", () => {
     const required = [
       "DEBUG_LAUNCH_WAVE",
       "SHOP_PURCHASE_UNIT",
+      "SHOP_UPGRADE_UNIT",
       "UI_WAVE",
       "UI_RESOURCES",
       "UI_SHOP_CATALOG",
