@@ -3,21 +3,23 @@ import Phaser from "phaser";
 const EARTH_RADIUS_KM = 6371;
 
 export class ProjectileSystem {
-  constructor({ scene, mapSystem, factionSystem, targets, interceptionSystem, impactSystem }) {
+  constructor({ scene, mapSystem, factionSystem, targets, interceptionSystem, impactSystem, gameState }) {
     this.scene = scene;
     this.mapSystem = mapSystem;
     this.factionSystem = factionSystem;
     this.targets = targets;
     this.interceptionSystem = interceptionSystem;
     this.impactSystem = impactSystem;
+    this.state = gameState;
   }
 
   spawnRocketWave(faction, wave, waveNumber) {
     const intensityBonus = wave.intensityBonus ?? 0;
+    const volleyMultiplier = this.state?.difficulty?.modifiers?.volleySizeMultiplier ?? 1;
     const rocketCount = Phaser.Math.Clamp(
-      faction.baseVolley + waveNumber + intensityBonus,
+      Math.round((faction.baseVolley + waveNumber + intensityBonus) * volleyMultiplier),
       faction.baseVolley,
-      faction.maxVolley,
+      Math.round(faction.maxVolley * Math.max(volleyMultiplier, 1)),
     );
     const launchCadenceMs = faction.launchCadenceMs ?? 700;
 

@@ -29,16 +29,18 @@ export class ResourceSystem {
   }
 
   onWaveLaunched(waveNumber) {
-    this.adjust("money", 28 + waveNumber * 3);
+    const incomeMultiplier = this.state.difficulty?.modifiers?.incomeMultiplier ?? 1;
+    this.adjust("money", (28 + waveNumber * 3) * incomeMultiplier);
     this.adjust("army", 0.75);
     this.publishResourceState();
   }
 
   onImpact(impactScale) {
-    this.adjust("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale);
-    this.adjust("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale);
-    this.adjust("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale);
-    this.adjust("money", -Phaser.Math.FloatBetween(1, 4) * impactScale);
+    const damageMultiplier = this.state.difficulty?.modifiers?.impactDamageMultiplier ?? 1;
+    this.adjust("morale", -Phaser.Math.FloatBetween(0.45, 1.2) * impactScale * damageMultiplier);
+    this.adjust("population", -Phaser.Math.FloatBetween(0.35, 0.95) * impactScale * damageMultiplier);
+    this.adjust("army", -Phaser.Math.FloatBetween(0.28, 0.78) * impactScale * damageMultiplier);
+    this.adjust("money", -Phaser.Math.FloatBetween(1, 4) * impactScale * damageMultiplier);
     this.publishResourceState();
   }
 

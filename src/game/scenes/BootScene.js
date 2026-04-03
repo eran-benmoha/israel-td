@@ -7,11 +7,13 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { DifficultySystem } from "../systems/DifficultySystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
 import israelData from "../../data/israel.json";
 import level01 from "../../data/levels/level-01.json";
+import difficultyConfig from "../../data/difficulty.json";
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -22,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.difficultySystem = null;
   }
 
   preload() {
@@ -45,6 +48,13 @@ export class BootScene extends Phaser.Scene {
 
     this.mapSystem.create();
     this.factionSystem = new FactionSystem(factionsConfig);
+    this.difficultySystem = new DifficultySystem({
+      eventBus,
+      gameState: this.state,
+      difficultyConfig,
+    });
+    this.difficultySystem.start();
+
     this.resourceSystem = new ResourceSystem({
       eventBus,
       gameState: this.state,
@@ -75,6 +85,7 @@ export class BootScene extends Phaser.Scene {
   destroySystems() {
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
+    this.difficultySystem?.destroy();
     this.mapSystem?.destroy();
   }
 }

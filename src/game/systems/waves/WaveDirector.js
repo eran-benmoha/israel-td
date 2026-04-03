@@ -105,7 +105,9 @@ export class WaveDirector {
   }
 
   getRandomWaveDelayMs() {
-    return Phaser.Math.Between(this.level.waveTiming.minDelayMs, this.level.waveTiming.maxDelayMs);
+    const base = Phaser.Math.Between(this.level.waveTiming.minDelayMs, this.level.waveTiming.maxDelayMs);
+    const multiplier = this.state.difficulty?.modifiers?.waveTimingMultiplier ?? 1;
+    return Math.round(base * multiplier);
   }
 
   scheduleNextWave(delayMs, onWaveDue) {

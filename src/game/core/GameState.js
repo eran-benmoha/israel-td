@@ -24,5 +24,17 @@ export class GameState {
     };
 
     this.purchasedUnits = {};
+
+    this.difficulty = {
+      id: "normal",
+      modifiers: {
+        startingMoney: 120,
+        waveTimingMultiplier: 1.0,
+        impactDamageMultiplier: 1.0,
+        volleySizeMultiplier: 1.0,
+        incomeMultiplier: 1.0,
+        interceptionBonus: 0.0,
+      },
+    };
   }
 }

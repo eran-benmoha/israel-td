@@ -1,0 +1,47 @@
+{
+  "difficulties": [
+    {
+      "id": "easy",
+      "name": "Recruit",
+      "description": "Relaxed pacing with generous resources. Perfect for learning the ropes.",
+      "icon": "🟢",
+      "modifiers": {
+        "startingMoney": 200,
+        "waveTimingMultiplier": 1.5,
+        "impactDamageMultiplier": 0.6,
+        "volleySizeMultiplier": 0.7,
+        "incomeMultiplier": 1.4,
+        "interceptionBonus": 0.1
+      }
+    },
+    {
+      "id": "normal",
+      "name": "Commander",
+      "description": "Balanced challenge with standard wave pacing and resources.",
+      "icon": "🟡",
+      "modifiers": {
+        "startingMoney": 120,
+        "waveTimingMultiplier": 1.0,
+        "impactDamageMultiplier": 1.0,
+        "volleySizeMultiplier": 1.0,
+        "incomeMultiplier": 1.0,
+        "interceptionBonus": 0.0
+      }
+    },
+    {
+      "id": "hard",
+      "name": "General",
+      "description": "Relentless waves and scarce funding. Only the best survive.",
+      "icon": "🔴",
+      "modifiers": {
+        "startingMoney": 80,
+        "waveTimingMultiplier": 0.65,
+        "impactDamageMultiplier": 1.5,
+        "volleySizeMultiplier": 1.4,
+        "incomeMultiplier": 0.7,
+        "interceptionBonus": -0.08
+      }
+    }
+  ],
+  "default": "normal"
+}
