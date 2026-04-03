@@ -7,6 +7,7 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { ScoreSystem } from "../systems/ScoreSystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
@@ -22,6 +23,7 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.scoreSystem = null;
   }
 
   preload() {
@@ -61,7 +63,14 @@ export class BootScene extends Phaser.Scene {
       resourceSystem: this.resourceSystem,
     });
 
+    this.scoreSystem = new ScoreSystem({
+      eventBus,
+      gameState: this.state,
+      levelConfig: level01,
+    });
+
     this.resourceSystem.start();
+    this.scoreSystem.start();
     this.waveSystem.start();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
@@ -73,6 +82,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   destroySystems() {
+    this.scoreSystem?.destroy();
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
     this.mapSystem?.destroy();

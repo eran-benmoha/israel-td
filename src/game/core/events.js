@@ -11,4 +11,11 @@ export const Events = {
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
   UI_WAVE_PROGRESS: "ui/wave-progress",
+  MISSILE_INTERCEPTED: "missile/intercepted",
+  MISSILE_IMPACTED: "missile/impacted",
+  MISSILE_LAUNCHED: "missile/launched",
+  WAVE_COMPLETED: "wave/completed",
+  UI_SCORE: "ui/score",
+  GAME_OVER: "game/over",
+  GAME_VICTORY: "game/victory",
 };

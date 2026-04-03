@@ -39,6 +39,13 @@ export class HudView {
     });
   }
 
+  updateScoreHud({ points, wavesCompleted, totalWaves, interceptionRate }) {
+    const el = this.elements.scoreDisplay;
+    if (!el) return;
+    const rate = Math.round(interceptionRate * 100);
+    el.textContent = `⭐ ${points.toLocaleString()} pts · ${wavesCompleted}/${totalWaves} waves · ${rate}% intercepted`;
+  }
+
   formatResourceChip(resourceKey, value, max, percent) {
     const roundedPercent = `${Math.round(percent)}%`;
     switch (resourceKey) {

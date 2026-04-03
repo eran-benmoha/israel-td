@@ -132,6 +132,130 @@ body {
   color: #7fa4c4;
 }
 
+/* ====== SCORE DISPLAY ====== */
+
+.score-display {
+  font-size: 0.62rem;
+  color: var(--gold);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* ====== END SCREEN ====== */
+
+.end-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 14, 0.88);
+  backdrop-filter: blur(12px);
+  animation: end-screen-fade-in 0.6s ease-out;
+}
+
+.end-screen[hidden] {
+  display: none;
+}
+
+@keyframes end-screen-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.end-screen__card {
+  width: min(92vw, 380px);
+  background: rgba(10, 22, 38, 0.95);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  animation: end-card-pop 0.4s ease-out 0.15s both;
+}
+
+@keyframes end-card-pop {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.end-screen__title {
+  margin: 0 0 0.3rem;
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.end-screen--victory .end-screen__title {
+  color: #5bff8a;
+  text-shadow: 0 0 24px rgba(91, 255, 138, 0.4);
+}
+
+.end-screen--defeat .end-screen__title {
+  color: var(--danger);
+  text-shadow: 0 0 24px rgba(255, 106, 58, 0.4);
+}
+
+.end-screen__reason {
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  color: #9fb8d0;
+}
+
+.end-screen__score-row {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.end-screen__score-label {
+  font-size: 0.78rem;
+  color: #8aaccc;
+  font-weight: 600;
+}
+
+.end-screen__score-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px rgba(255, 213, 136, 0.4);
+}
+
+.end-screen__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.end-screen__stat {
+  background: rgba(20, 40, 65, 0.6);
+  border: 1px solid rgba(80, 140, 200, 0.15);
+  border-radius: 10px;
+  padding: 0.55rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.end-screen__stat-label {
+  font-size: 0.58rem;
+  color: #7fa4c4;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.end-screen__stat-value {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #e0f0ff;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ====== GAME CANVAS ====== */
 
 #game-root {
