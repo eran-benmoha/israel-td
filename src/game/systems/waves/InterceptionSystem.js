@@ -72,7 +72,8 @@ export class InterceptionSystem {
     const maxRangeKm = missileProfile.maxRangeKm ?? 250;
     const rangeModifier = maxRangeKm <= 70 ? 1 : maxRangeKm <= 250 ? 0.78 : 0.48;
     const baseChance = 0.22 + batteryCount * 0.16;
-    return Phaser.Math.Clamp(baseChance * rangeModifier, 0.08, 0.9);
+    const interceptionBonus = this.state.difficulty?.modifiers?.interceptionBonus ?? 0;
+    return Phaser.Math.Clamp(baseChance * rangeModifier + interceptionBonus, 0.08, 0.92);
   }
 
   getClosestDefensePoint(target) {

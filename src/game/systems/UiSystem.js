@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { DifficultyView } from "../ui/DifficultyView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -35,6 +36,7 @@ export class UiSystem {
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.difficultyView = new DifficultyView({ eventBus });
   }
 
   start() {
@@ -48,6 +50,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.difficultyView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +63,9 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_DIFFICULTY, ({ difficulties, selectedId }) =>
+        this.difficultyView.show(difficulties, selectedId),
+      ),
     );
   }
 }

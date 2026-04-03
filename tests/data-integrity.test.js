@@ -4,6 +4,7 @@ import factionsConfig from "../src/data/factions.json";
 import mapViewConfig from "../src/data/map-view.json";
 import unitsConfig from "../src/data/units.json";
 import level01 from "../src/data/levels/level-01.json";
+import difficultyConfig from "../src/data/difficulty.json";
 
 describe("israel.json", () => {
   it("has a non-empty outline with lat/lon pairs", () => {
@@ -170,6 +171,48 @@ describe("level-01.json", () => {
     expect(level01.waves.length).toBeGreaterThan(0);
     level01.waves.forEach((wave) => {
       expect(factionIds.has(wave.factionId)).toBe(true);
+    });
+  });
+});
+
+describe("difficulty.json", () => {
+  it("has at least 2 difficulty presets", () => {
+    expect(difficultyConfig.difficulties.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("each difficulty has required fields", () => {
+    difficultyConfig.difficulties.forEach((d) => {
+      expect(d.id).toBeTruthy();
+      expect(d.name).toBeTruthy();
+      expect(d.description).toBeTruthy();
+      expect(d.icon).toBeTruthy();
+      expect(d.modifiers).toBeDefined();
+      expect(typeof d.modifiers.startingMoney).toBe("number");
+      expect(typeof d.modifiers.waveTimingMultiplier).toBe("number");
+      expect(typeof d.modifiers.impactDamageMultiplier).toBe("number");
+      expect(typeof d.modifiers.volleySizeMultiplier).toBe("number");
+      expect(typeof d.modifiers.incomeMultiplier).toBe("number");
+      expect(typeof d.modifiers.interceptionBonus).toBe("number");
+    });
+  });
+
+  it("difficulty ids are unique", () => {
+    const ids = difficultyConfig.difficulties.map((d) => d.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("default references a valid difficulty id", () => {
+    const ids = difficultyConfig.difficulties.map((d) => d.id);
+    expect(ids).toContain(difficultyConfig.default);
+  });
+
+  it("modifiers have positive multipliers", () => {
+    difficultyConfig.difficulties.forEach((d) => {
+      expect(d.modifiers.startingMoney).toBeGreaterThan(0);
+      expect(d.modifiers.waveTimingMultiplier).toBeGreaterThan(0);
+      expect(d.modifiers.impactDamageMultiplier).toBeGreaterThan(0);
+      expect(d.modifiers.volleySizeMultiplier).toBeGreaterThan(0);
+      expect(d.modifiers.incomeMultiplier).toBeGreaterThan(0);
     });
   });
 });

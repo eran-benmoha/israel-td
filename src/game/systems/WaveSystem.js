@@ -41,6 +41,7 @@ export class WaveSystem {
       targets: this.targets,
       interceptionSystem: this.interceptionSystem,
       impactSystem: this.impactSystem,
+      gameState,
     });
   }
 
