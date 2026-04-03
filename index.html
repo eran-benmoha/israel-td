@@ -25,6 +25,7 @@
             <span id="resource-army-value" class="resource-chip">🪖 100%</span>
             <span id="resource-economy-value" class="resource-chip">📈 100%</span>
           </div>
+          <div id="score-display" class="score-display">⭐ 0 pts · 0/12 waves · 0% intercepted</div>
         </div>
         <div class="hud__wave" aria-live="polite">
           <span id="wave-indicator">Wave 0</span>
@@ -59,6 +60,17 @@
       <div id="tutorial-tooltip" class="tutorial-tooltip">
         <span class="tutorial-tooltip__arrow"></span>
         <span class="tutorial-tooltip__text">Buy an Iron Dome to intercept incoming missiles!</span>
+      </div>
+      <div id="end-screen-overlay" class="end-screen" hidden>
+        <div class="end-screen__card">
+          <h1 id="end-screen-title" class="end-screen__title">Game Over</h1>
+          <p id="end-screen-reason" class="end-screen__reason"></p>
+          <div class="end-screen__score-row">
+            <span class="end-screen__score-label">Final Score</span>
+            <span id="end-screen-score" class="end-screen__score-value">0</span>
+          </div>
+          <div id="end-screen-stats" class="end-screen__stats"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="./src/main.js"></script>

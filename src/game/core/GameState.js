@@ -24,5 +24,16 @@ export class GameState {
     };
 
     this.purchasedUnits = {};
+
+    this.score = {
+      points: 0,
+      missilesIntercepted: 0,
+      missilesImpacted: 0,
+      wavesCompleted: 0,
+      totalMissilesFired: 0,
+    };
+
+    this.gameOver = false;
+    this.victory = false;
   }
 }

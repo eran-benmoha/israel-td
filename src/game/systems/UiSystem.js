@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { EndScreenView } from "../ui/EndScreenView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -24,6 +25,7 @@ export class UiSystem {
       shopStatus: document.getElementById("shop-status"),
       shopMoney: document.getElementById("shop-money"),
       shopToggleButton: document.getElementById("shop-toggle"),
+      scoreDisplay: document.getElementById("score-display"),
       resourceValues: {
         money: document.getElementById("resource-money-value"),
         morale: document.getElementById("resource-morale-value"),
@@ -35,6 +37,7 @@ export class UiSystem {
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.endScreenView = new EndScreenView();
   }
 
   start() {
@@ -60,6 +63,9 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_SCORE, (payload) => this.hudView.updateScoreHud(payload)),
+      this.eventBus.on(Events.GAME_OVER, (payload) => this.endScreenView.show({ isVictory: false, ...payload })),
+      this.eventBus.on(Events.GAME_VICTORY, (payload) => this.endScreenView.show({ isVictory: true, reason: "All waves defended successfully!", ...payload })),
     );
   }
 }
