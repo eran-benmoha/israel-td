@@ -1,0 +1,37 @@
+{
+  "decayMs": 8000,
+  "tiers": [
+    {
+      "id": "nice",
+      "label": "Nice!",
+      "minStreak": 2,
+      "moneyBonus": 5,
+      "moraleBonus": 0.3,
+      "color": "#5bb8ff"
+    },
+    {
+      "id": "great",
+      "label": "Great!",
+      "minStreak": 5,
+      "moneyBonus": 12,
+      "moraleBonus": 0.6,
+      "color": "#40e0a0"
+    },
+    {
+      "id": "amazing",
+      "label": "Amazing!",
+      "minStreak": 10,
+      "moneyBonus": 25,
+      "moraleBonus": 1.2,
+      "color": "#ffd588"
+    },
+    {
+      "id": "legendary",
+      "label": "LEGENDARY!",
+      "minStreak": 20,
+      "moneyBonus": 50,
+      "moraleBonus": 2.5,
+      "color": "#ff6af0"
+    }
+  ]
+}

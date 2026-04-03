@@ -31,6 +31,7 @@ export class WaveSystem {
     });
     this.impactSystem = new ImpactSystem({
       scene,
+      eventBus,
       mapSystem,
       resourceSystem,
     });

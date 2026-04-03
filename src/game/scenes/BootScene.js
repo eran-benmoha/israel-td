@@ -7,11 +7,13 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { ComboSystem } from "../systems/ComboSystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
 import israelData from "../../data/israel.json";
 import level01 from "../../data/levels/level-01.json";
+import comboConfig from "../../data/combo-config.json";
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -22,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.comboSystem = null;
   }
 
   preload() {
@@ -61,8 +64,15 @@ export class BootScene extends Phaser.Scene {
       resourceSystem: this.resourceSystem,
     });
 
+    this.comboSystem = new ComboSystem({
+      eventBus,
+      resourceSystem: this.resourceSystem,
+      comboConfig,
+    });
+
     this.resourceSystem.start();
     this.waveSystem.start();
+    this.comboSystem.start();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
@@ -73,6 +83,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   destroySystems() {
+    this.comboSystem?.destroy();
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
     this.mapSystem?.destroy();

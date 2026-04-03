@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { ComboView } from "../ui/ComboView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -24,6 +25,10 @@ export class UiSystem {
       shopStatus: document.getElementById("shop-status"),
       shopMoney: document.getElementById("shop-money"),
       shopToggleButton: document.getElementById("shop-toggle"),
+      comboContainer: document.getElementById("combo-container"),
+      comboStreak: document.getElementById("combo-streak"),
+      comboLabel: document.getElementById("combo-label"),
+      comboBest: document.getElementById("combo-best"),
       resourceValues: {
         money: document.getElementById("resource-money-value"),
         morale: document.getElementById("resource-morale-value"),
@@ -35,6 +40,7 @@ export class UiSystem {
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.comboView = new ComboView({ elements: this.elements });
   }
 
   start() {
@@ -60,6 +66,7 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_COMBO, (payload) => this.comboView.update(payload)),
     );
   }
 }
