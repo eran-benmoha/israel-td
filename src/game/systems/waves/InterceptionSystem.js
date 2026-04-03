@@ -5,13 +5,14 @@ import { getPurchasedUnitCount } from "../../core/selectors";
 const IRON_DOME_UNIT_ID = "iron-dome-battery";
 
 export class InterceptionSystem {
-  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets }) {
+  constructor({ scene, eventBus, gameState, factionSystem, mapSystem, targets, perkSystem }) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
     this.factionSystem = factionSystem;
     this.mapSystem = mapSystem;
     this.targets = targets;
+    this.perkSystem = perkSystem ?? null;
   }
 
   tryScheduleInterception({
@@ -72,7 +73,8 @@ export class InterceptionSystem {
     const maxRangeKm = missileProfile.maxRangeKm ?? 250;
     const rangeModifier = maxRangeKm <= 70 ? 1 : maxRangeKm <= 250 ? 0.78 : 0.48;
     const baseChance = 0.22 + batteryCount * 0.16;
-    return Phaser.Math.Clamp(baseChance * rangeModifier, 0.08, 0.9);
+    const perkBonus = this.perkSystem ? this.perkSystem.getEffectTotal("interception_bonus") : 0;
+    return Phaser.Math.Clamp(baseChance * rangeModifier + perkBonus, 0.08, 0.95);
   }
 
   getClosestDefensePoint(target) {

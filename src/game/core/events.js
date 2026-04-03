@@ -1,6 +1,7 @@
 export const Events = {
   DEBUG_LAUNCH_WAVE: "debug/launch-wave",
   SHOP_PURCHASE_UNIT: "shop/purchase-unit",
+  PERK_UNLOCK: "perk/unlock",
   UI_WAVE: "ui/wave",
   UI_RESOURCES: "ui/resources",
   UI_SHOP_CATALOG: "ui/shop-catalog",
@@ -11,4 +12,6 @@ export const Events = {
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
   UI_WAVE_PROGRESS: "ui/wave-progress",
+  UI_PERKS: "ui/perks",
+  UI_PERK_UNLOCKED: "ui/perk-unlocked",
 };

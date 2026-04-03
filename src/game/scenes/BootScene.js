@@ -7,11 +7,13 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { PerkSystem } from "../systems/PerkSystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
 import israelData from "../../data/israel.json";
 import level01 from "../../data/levels/level-01.json";
+import perksConfig from "../../data/perks.json";
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -22,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.perkSystem = null;
   }
 
   preload() {
@@ -45,10 +48,16 @@ export class BootScene extends Phaser.Scene {
 
     this.mapSystem.create();
     this.factionSystem = new FactionSystem(factionsConfig);
+    this.perkSystem = new PerkSystem({
+      eventBus,
+      gameState: this.state,
+      perksConfig,
+    });
     this.resourceSystem = new ResourceSystem({
       eventBus,
       gameState: this.state,
       unitsConfig,
+      perkSystem: this.perkSystem,
     });
     this.waveSystem = new WaveSystem({
       scene: this,
@@ -59,8 +68,10 @@ export class BootScene extends Phaser.Scene {
       factionSystem: this.factionSystem,
       mapSystem: this.mapSystem,
       resourceSystem: this.resourceSystem,
+      perkSystem: this.perkSystem,
     });
 
+    this.perkSystem.start();
     this.resourceSystem.start();
     this.waveSystem.start();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
@@ -74,6 +85,7 @@ export class BootScene extends Phaser.Scene {
 
   destroySystems() {
     this.waveSystem?.destroy();
+    this.perkSystem?.destroy();
     this.resourceSystem?.destroy();
     this.mapSystem?.destroy();
   }

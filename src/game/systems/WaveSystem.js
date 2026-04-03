@@ -5,13 +5,14 @@ import { InterceptionSystem } from "./waves/InterceptionSystem";
 import { ImpactSystem } from "./waves/ImpactSystem";
 
 export class WaveSystem {
-  constructor({ scene, eventBus, gameState, levelConfig, israelData, factionSystem, mapSystem, resourceSystem }) {
+  constructor({ scene, eventBus, gameState, levelConfig, israelData, factionSystem, mapSystem, resourceSystem, perkSystem }) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
     this.targets = israelData.targets ?? [];
     this.factionSystem = factionSystem;
     this.resourceSystem = resourceSystem;
+    this.perkSystem = perkSystem ?? null;
     this.unsubscribeDebugLaunch = null;
 
     this.director = new WaveDirector({
@@ -28,11 +29,13 @@ export class WaveSystem {
       factionSystem,
       mapSystem,
       targets: this.targets,
+      perkSystem: this.perkSystem,
     });
     this.impactSystem = new ImpactSystem({
       scene,
       mapSystem,
       resourceSystem,
+      perkSystem: this.perkSystem,
     });
     this.projectileSystem = new ProjectileSystem({
       scene,
@@ -60,7 +63,10 @@ export class WaveSystem {
 
     const { wave, faction } = launchResult;
     this.projectileSystem.spawnRocketWave(faction, wave, this.state.wave.number);
-    this.resourceSystem.onWaveLaunched(this.state.wave.number);
+    this.resourceSystem.onWaveLaunched(this.state.wave.number, this.perkSystem);
+    if (this.perkSystem) {
+      this.perkSystem.onWaveSurvived();
+    }
     this.eventBus.emit(Events.UI_DEBUG_STATUS, {
       message:
         source === "debug"
