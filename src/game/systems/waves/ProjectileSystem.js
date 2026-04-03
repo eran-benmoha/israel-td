@@ -1,10 +1,12 @@
 import Phaser from "phaser";
+import { Events } from "../../core/events";
 
 const EARTH_RADIUS_KM = 6371;
 
 export class ProjectileSystem {
-  constructor({ scene, mapSystem, factionSystem, targets, interceptionSystem, impactSystem }) {
+  constructor({ scene, eventBus, mapSystem, factionSystem, targets, interceptionSystem, impactSystem }) {
     this.scene = scene;
+    this.eventBus = eventBus;
     this.mapSystem = mapSystem;
     this.factionSystem = factionSystem;
     this.targets = targets;
@@ -23,7 +25,10 @@ export class ProjectileSystem {
 
     for (let i = 0; i < rocketCount; i += 1) {
       const missileProfile = this.factionSystem.pickMissileProfile(faction.id);
-      this.scene.time.delayedCall(i * launchCadenceMs, () => this.spawnRocket(faction, missileProfile));
+      this.scene.time.delayedCall(i * launchCadenceMs, () => {
+        this.eventBus.emit(Events.THREAT_MISSILE_LAUNCHED, { factionId: faction.id });
+        this.spawnRocket(faction, missileProfile);
+      });
     }
   }
 

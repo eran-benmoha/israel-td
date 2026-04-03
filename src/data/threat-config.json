@@ -1,0 +1,17 @@
+{
+  "threatLevels": [
+    { "id": "low", "label": "LOW", "color": "#4caf6a", "minScore": 0, "maxScore": 25 },
+    { "id": "guarded", "label": "GUARDED", "color": "#5bb8ff", "minScore": 25, "maxScore": 50 },
+    { "id": "elevated", "label": "ELEVATED", "color": "#ffc107", "minScore": 50, "maxScore": 70 },
+    { "id": "high", "label": "HIGH", "color": "#ff8a3a", "minScore": 70, "maxScore": 85 },
+    { "id": "severe", "label": "SEVERE", "color": "#ff4444", "minScore": 85, "maxScore": 100 }
+  ],
+  "scoring": {
+    "launchPoints": 2,
+    "impactPoints": 8,
+    "interceptPoints": -3,
+    "decayPerSecond": 0.4,
+    "maxScore": 100
+  },
+  "updateIntervalMs": 500
+}

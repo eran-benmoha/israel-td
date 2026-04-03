@@ -1,6 +1,9 @@
+import { Events } from "../../core/events";
+
 export class ImpactSystem {
-  constructor({ scene, mapSystem, resourceSystem }) {
+  constructor({ scene, eventBus, mapSystem, resourceSystem }) {
     this.scene = scene;
+    this.eventBus = eventBus;
     this.mapSystem = mapSystem;
     this.resourceSystem = resourceSystem;
   }
@@ -8,6 +11,7 @@ export class ImpactSystem {
   createImpact(x, y, faction, missileProfile) {
     const impactScale = (faction.impactMultiplier ?? 1) * (missileProfile.impactScale ?? 1);
     this.resourceSystem.onImpact(impactScale);
+    this.eventBus.emit(Events.THREAT_MISSILE_IMPACT, { factionId: faction.id });
 
     const sf = this.mapSystem.getOverlayScaleFactor?.() ?? 1;
     const impact = this.scene.add.circle(x, y, 12 * sf, missileProfile.rocketColor ?? faction.rocketColor, 0.95);
