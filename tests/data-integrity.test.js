@@ -4,6 +4,7 @@ import factionsConfig from "../src/data/factions.json";
 import mapViewConfig from "../src/data/map-view.json";
 import unitsConfig from "../src/data/units.json";
 import level01 from "../src/data/levels/level-01.json";
+import earlyWarningConfig from "../src/data/early-warning.json";
 
 describe("israel.json", () => {
   it("has a non-empty outline with lat/lon pairs", () => {
@@ -171,5 +172,36 @@ describe("level-01.json", () => {
     level01.waves.forEach((wave) => {
       expect(factionIds.has(wave.factionId)).toBe(true);
     });
+  });
+});
+
+describe("early-warning.json", () => {
+  it("has a positive forecastDepth", () => {
+    expect(earlyWarningConfig.forecastDepth).toBeGreaterThan(0);
+  });
+
+  it("has a positive warningThresholdMs", () => {
+    expect(earlyWarningConfig.warningThresholdMs).toBeGreaterThan(0);
+  });
+
+  it("has at least 2 threat levels in ascending minScore order", () => {
+    const levels = earlyWarningConfig.threatLevels;
+    expect(levels.length).toBeGreaterThanOrEqual(2);
+    for (let i = 1; i < levels.length; i++) {
+      expect(levels[i].minScore).toBeGreaterThan(levels[i - 1].minScore);
+    }
+  });
+
+  it("each threat level has required fields", () => {
+    earlyWarningConfig.threatLevels.forEach((level) => {
+      expect(level.id).toBeTruthy();
+      expect(level.label).toBeTruthy();
+      expect(typeof level.minScore).toBe("number");
+      expect(level.color).toBeTruthy();
+    });
+  });
+
+  it("first threat level starts at minScore 0", () => {
+    expect(earlyWarningConfig.threatLevels[0].minScore).toBe(0);
   });
 });

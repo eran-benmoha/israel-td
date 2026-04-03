@@ -132,6 +132,114 @@ body {
   color: #7fa4c4;
 }
 
+/* ====== EARLY WARNING / INTEL FORECAST ====== */
+
+.ew {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0;
+  transition: border-color 0.3s;
+}
+
+.ew--alert {
+  border-bottom-color: var(--danger);
+  animation: ew-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes ew-pulse {
+  from { border-bottom-color: var(--danger); }
+  to { border-bottom-color: rgba(255, 106, 58, 0.3); }
+}
+
+.ew__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+}
+
+.ew__title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #9fb8d0;
+  letter-spacing: 0.03em;
+}
+
+.ew__toggle {
+  width: 24px;
+  height: 22px;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  background: rgba(20, 40, 60, 0.6);
+  color: #9fb8d0;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.ew__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0 0.7rem 0.35rem;
+}
+
+.ew__body[hidden] {
+  display: none;
+}
+
+.ew__entry {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(14, 28, 44, 0.55);
+  border: 1px solid rgba(80, 140, 200, 0.12);
+}
+
+.ew__wave-num {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 26px;
+}
+
+.ew__faction {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #daeaff;
+}
+
+.ew__territory {
+  font-size: 0.58rem;
+  color: #7fa4c4;
+  margin-left: auto;
+}
+
+.ew__badge {
+  font-size: 0.54rem;
+  font-weight: 800;
+  color: #0a0e14;
+  padding: 0.08rem 0.3rem;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.ew__empty {
+  font-size: 0.62rem;
+  color: #5a7a95;
+  text-align: center;
+  padding: 0.25rem 0;
+}
+
 /* ====== GAME CANVAS ====== */
 
 #game-root {

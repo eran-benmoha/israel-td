@@ -1,0 +1,10 @@
+{
+  "forecastDepth": 3,
+  "warningThresholdMs": 3000,
+  "threatLevels": [
+    { "id": "low", "label": "LOW", "minScore": 0, "color": "#4ade80" },
+    { "id": "moderate", "label": "MOD", "minScore": 1.5, "color": "#facc15" },
+    { "id": "high", "label": "HIGH", "minScore": 2.5, "color": "#f97316" },
+    { "id": "severe", "label": "SEV", "minScore": 3.5, "color": "#ef4444" }
+  ]
+}
