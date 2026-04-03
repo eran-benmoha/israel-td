@@ -11,6 +11,7 @@ export class ShopView {
       activeCategory: "air-defense",
       money: 0,
       purchased: {},
+      levels: {},
     };
     this._tutorialDismissed = false;
     this._tutorialEl = document.getElementById("tutorial-tooltip");
@@ -40,6 +41,11 @@ export class ShopView {
       const onItemClick = (event) => {
         const target = event.target;
         if (!(target instanceof HTMLElement)) {
+          return;
+        }
+        const upgradeId = target.dataset.upgradeId;
+        if (upgradeId) {
+          this.eventBus.emit(Events.SHOP_UPGRADE_UNIT, { unitId: upgradeId });
           return;
         }
         const unitId = target.dataset.unitId;
@@ -79,9 +85,10 @@ export class ShopView {
     this._tutorialEl.style.bottom = `${window.innerHeight - shopRect.top + 8}px`;
   }
 
-  onShopState(money, purchased) {
+  onShopState(money, purchased, levels) {
     this.state.money = money;
     this.state.purchased = purchased;
+    this.state.levels = levels ?? {};
     this.render();
   }
 
@@ -143,11 +150,32 @@ export class ShopView {
     this.elements.shopItems.innerHTML = filtered
       .map((unit) => {
         const owned = this.state.purchased[unit.id] ?? 0;
+        const level = this.state.levels[unit.id] ?? 0;
         const canAfford = this.state.money >= unit.cost;
         const icon = this.categoryEmoji(unit.category);
-        return `<div class="shop__item"><div class="shop__item-name">${icon} ${unit.name}</div><div class="shop__item-meta"><span>💰 ${unit.cost}</span>${owned > 0 ? `<span>x${owned}</span>` : ""}</div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "Buy" : "No funds"}</button></div>`;
+        const upgradeHtml = this.renderUpgradeButton(unit, level, owned);
+        const levelBadge = owned > 0 ? `<span class="shop__level">${this.levelStars(level)}</span>` : "";
+        return `<div class="shop__item"><div class="shop__item-name">${icon} ${unit.name}${levelBadge}</div><div class="shop__item-meta"><span>💰 ${unit.cost}</span>${owned > 0 ? `<span>x${owned}</span>` : ""}</div><button class="shop__buy" type="button" data-unit-id="${unit.id}" ${canAfford ? "" : "disabled"}>${canAfford ? "Buy" : "No funds"}</button>${upgradeHtml}</div>`;
       })
       .join("");
+  }
+
+  renderUpgradeButton(unit, level, owned) {
+    if (owned <= 0 || level <= 0) return "";
+    const upgrades = unit.upgrades ?? [];
+    const maxLevel = upgrades.length > 0 ? Math.max(...upgrades.map((u) => u.level)) : 1;
+    if (level >= maxLevel) {
+      return `<div class="shop__upgrade-max">MAX</div>`;
+    }
+    const next = upgrades.find((u) => u.level === level + 1);
+    if (!next) return "";
+    const canAfford = this.state.money >= next.cost;
+    return `<button class="shop__upgrade" type="button" data-upgrade-id="${unit.id}" ${canAfford ? "" : "disabled"}>⬆ Lv.${next.level} · 💰 ${next.cost}</button>`;
+  }
+
+  levelStars(level) {
+    if (level <= 0) return "";
+    return " " + "★".repeat(Math.min(level, 3));
   }
 
   categoryShortLabel(categoryKey) {

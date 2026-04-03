@@ -5,7 +5,7 @@ import { InterceptionSystem } from "./waves/InterceptionSystem";
 import { ImpactSystem } from "./waves/ImpactSystem";
 
 export class WaveSystem {
-  constructor({ scene, eventBus, gameState, levelConfig, israelData, factionSystem, mapSystem, resourceSystem }) {
+  constructor({ scene, eventBus, gameState, levelConfig, israelData, factionSystem, mapSystem, resourceSystem, unitsConfig }) {
     this.scene = scene;
     this.eventBus = eventBus;
     this.state = gameState;
@@ -28,6 +28,7 @@ export class WaveSystem {
       factionSystem,
       mapSystem,
       targets: this.targets,
+      unitsConfig,
     });
     this.impactSystem = new ImpactSystem({
       scene,

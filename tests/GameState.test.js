@@ -24,6 +24,11 @@ describe("GameState", () => {
     expect(state.purchasedUnits).toEqual({});
   });
 
+  it("initialises with empty unitLevels", () => {
+    const state = new GameState();
+    expect(state.unitLevels).toEqual({});
+  });
+
   it("max resources are set correctly", () => {
     const state = new GameState();
     expect(state.maxResources.money).toBe(1000);

@@ -2,6 +2,10 @@ export function getPurchasedUnitCount(gameState, unitId) {
   return gameState.purchasedUnits[unitId] ?? 0;
 }
 
+export function getUnitLevel(gameState, unitId) {
+  return gameState.unitLevels[unitId] ?? 0;
+}
+
 export function getWaveDefinition(levelConfig, waveNumber) {
   const waves = levelConfig.waves ?? [];
   if (waves.length === 0) {

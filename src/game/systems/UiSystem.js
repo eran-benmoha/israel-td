@@ -56,7 +56,7 @@ export class UiSystem {
       this.eventBus.on(Events.UI_WAVE_PROGRESS, (payload) => this.hudView.updateWaveProgress(payload)),
       this.eventBus.on(Events.UI_RESOURCES, (payload) => this.hudView.updateResourceHud(payload)),
       this.eventBus.on(Events.UI_SHOP_CATALOG, ({ units }) => this.shopView.onShopCatalog(units)),
-      this.eventBus.on(Events.UI_SHOP_STATE, ({ money, purchased }) => this.shopView.onShopState(money, purchased)),
+      this.eventBus.on(Events.UI_SHOP_STATE, ({ money, purchased, levels }) => this.shopView.onShopState(money, purchased, levels)),
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),

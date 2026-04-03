@@ -24,5 +24,6 @@ export class GameState {
     };
 
     this.purchasedUnits = {};
+    this.unitLevels = {};
   }
 }
