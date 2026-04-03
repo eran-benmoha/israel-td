@@ -11,4 +11,6 @@ export const Events = {
   CAMERA_FLY_TO: "camera/fly-to",
   CAMERA_FLY_TO_PRESET: "camera/fly-to-preset",
   UI_WAVE_PROGRESS: "ui/wave-progress",
+  UI_EARLY_WARNING: "ui/early-warning",
+  UI_EARLY_WARNING_ALERT: "ui/early-warning-alert",
 };

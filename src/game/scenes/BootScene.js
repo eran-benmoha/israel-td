@@ -7,11 +7,13 @@ import { InputSystem } from "../systems/InputSystem";
 import { FactionSystem } from "../systems/FactionSystem";
 import { ResourceSystem } from "../systems/ResourceSystem";
 import { WaveSystem } from "../systems/WaveSystem";
+import { EarlyWarningSystem } from "../systems/EarlyWarningSystem";
 import mapViewConfig from "../../data/map-view.json";
 import factionsConfig from "../../data/factions.json";
 import unitsConfig from "../../data/units.json";
 import israelData from "../../data/israel.json";
 import level01 from "../../data/levels/level-01.json";
+import earlyWarningConfig from "../../data/early-warning.json";
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -22,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     this.factionSystem = null;
     this.resourceSystem = null;
     this.waveSystem = null;
+    this.earlyWarningSystem = null;
   }
 
   preload() {
@@ -61,8 +64,17 @@ export class BootScene extends Phaser.Scene {
       resourceSystem: this.resourceSystem,
     });
 
+    this.earlyWarningSystem = new EarlyWarningSystem({
+      eventBus,
+      gameState: this.state,
+      levelConfig: level01,
+      factionSystem: this.factionSystem,
+      earlyWarningConfig,
+    });
+
     this.resourceSystem.start();
     this.waveSystem.start();
+    this.earlyWarningSystem.start();
     eventBus.emit(Events.UI_DEBUG_STATUS, { message: "Debug ready." });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroySystems, this);
@@ -73,6 +85,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   destroySystems() {
+    this.earlyWarningSystem?.destroy();
     this.waveSystem?.destroy();
     this.resourceSystem?.destroy();
     this.mapSystem?.destroy();

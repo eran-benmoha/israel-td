@@ -2,6 +2,7 @@ import { Events } from "../core/events";
 import { HudView } from "../ui/HudView";
 import { DebugView } from "../ui/DebugView";
 import { ShopView } from "../ui/ShopView";
+import { EarlyWarningView } from "../ui/EarlyWarningView";
 
 export class UiSystem {
   constructor({ eventBus }) {
@@ -31,15 +32,20 @@ export class UiSystem {
         army: document.getElementById("resource-army-value"),
         economy: document.getElementById("resource-economy-value"),
       },
+      earlyWarningPanel: document.getElementById("early-warning-panel"),
+      earlyWarningToggle: document.getElementById("early-warning-toggle"),
+      earlyWarningBody: document.getElementById("early-warning-body"),
     };
     this.hudView = new HudView({ elements: this.elements });
     this.debugView = new DebugView({ eventBus, elements: this.elements });
     this.shopView = new ShopView({ eventBus, elements: this.elements });
+    this.earlyWarningView = new EarlyWarningView({ elements: this.elements });
   }
 
   start() {
     this.debugView.bindDomEvents();
     this.shopView.bindDomEvents();
+    this.earlyWarningView.bindDomEvents();
     this.bindBusEvents();
   }
 
@@ -48,6 +54,7 @@ export class UiSystem {
     this.unsubscribers = [];
     this.debugView.destroy();
     this.shopView.destroy();
+    this.earlyWarningView.destroy();
   }
 
   bindBusEvents() {
@@ -60,6 +67,8 @@ export class UiSystem {
       this.eventBus.on(Events.UI_SHOP_RESULT, ({ success, message }) => this.shopView.onShopResult(success, message)),
       this.eventBus.on(Events.UI_DEBUG_STATUS, ({ message }) => this.debugView.onDebugStatus(message)),
       this.eventBus.on(Events.UI_DEBUG_ZOOM, ({ zoom }) => this.debugView.onDebugZoom(zoom)),
+      this.eventBus.on(Events.UI_EARLY_WARNING, (payload) => this.earlyWarningView.onForecast(payload)),
+      this.eventBus.on(Events.UI_EARLY_WARNING_ALERT, (payload) => this.earlyWarningView.onAlert(payload)),
     );
   }
 }

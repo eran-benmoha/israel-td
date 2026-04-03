@@ -16,6 +16,8 @@ describe("Events constants", () => {
       "CAMERA_FLY_TO",
       "CAMERA_FLY_TO_PRESET",
       "UI_WAVE_PROGRESS",
+      "UI_EARLY_WARNING",
+      "UI_EARLY_WARNING_ALERT",
     ];
     required.forEach((key) => {
       expect(Events).toHaveProperty(key);
